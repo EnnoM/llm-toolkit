@@ -1,0 +1,26 @@
+# Aktivieren: pip install pre-commit && pre-commit install
+repos:
+  # Blockt Commits, die API-Keys oder andere Secrets enthalten
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.0
+    hooks:
+      - id: gitleaks
+
+  # Linter (mit Auto-Fix) und Formatter
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.8
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format
+
+  # Modultabelle im README aus docs/modules.yaml erzeugen
+  - repo: local
+    hooks:
+      - id: readme-modules
+        name: README-Modultabelle aktualisieren
+        entry: python -m core.readme
+        language: python
+        additional_dependencies: [pydantic>=2.13, pyyaml>=6.0]
+        files: ^(docs/modules\.yaml|README\.md|core/(modules|readme)\.py)$
+        pass_filenames: false

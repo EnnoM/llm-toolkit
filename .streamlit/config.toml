@@ -1,0 +1,37 @@
+# Design nach docs/design.md. Gestaltung nur hier, kein eigenes CSS.
+
+[theme]
+base = "light"                        # nur heller Modus
+primaryColor = "#44586C"              # dunkles Graublau: Buttons, Fokus, aktive Elemente
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F2F4F7"  # Eingabefelder, Flächen
+textColor = "#000000"
+borderColor = "#D0D7DE"
+dataframeHeaderBackgroundColor = "#F2F4F7"
+grayTextColor = "#000000"             # graue Badges (z. B. Status): schwarze Schrift
+grayBackgroundColor = "#E3E8ED"
+blueColor = "#44586C"                 # "Blau" = Graublau, z. B. für st.info
+blueTextColor = "#000000"
+blueBackgroundColor = "#DDE4EB"
+font = "Cutive"                       # selbst gehostet, siehe [[theme.fontFaces]]
+
+# Cutive (SIL OFL 1.1) liegt in static/fonts/, damit keine Anfrage an Google geht
+[[theme.fontFaces]]
+family = "Cutive"
+url = "app/static/fonts/Cutive-Regular.ttf"
+weight = 400
+
+[theme.sidebar]
+backgroundColor = "#C8D2DC"           # Graublau
+secondaryBackgroundColor = "#B6C2CE"  # etwas dunkler: Hover und aktive Seite
+textColor = "#000000"
+borderColor = "#A7B4C1"
+
+[server]
+enableStaticServing = true            # liefert static/ unter app/static/ aus (für die Schrift)
+# Bei Codeänderungen sofort neu ausführen. Nur so lädt Streamlit geänderte Module aus core/
+# nach; ohne das bleibt nach einem Neuladen der Seite der alte Stand im Speicher.
+runOnSave = true
+
+[browser]
+gatherUsageStats = false              # keine Nutzungsstatistik der Besucher an Streamlit senden

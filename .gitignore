@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Umgebung und Secrets
+.venv/
+.env
+.streamlit/secrets.toml
+
+# Werkzeuge
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# System und Editor
+.DS_Store
+.idea/
+.vscode/
+
+# Streamlit-Skills für KI-Agenten (Symlinks in die lokale .venv)
+.agents/
+.claude/skills/developing-with-streamlit

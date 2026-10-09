@@ -1,0 +1,177 @@
+{
+  "date": "2026-10-07",
+  "model": "google/gemini-2.5-flash-lite",
+  "run": 2,
+  "summary": {
+    "tools": "10/11",
+    "arguments": "2/2",
+    "answer": "5/7",
+    "passed": "9/12"
+  },
+  "cost_usd": 0.0017544099999999999,
+  "results": [
+    {
+      "id": "t01",
+      "question": "What's the weather in Hamburg?",
+      "answer": "The weather in Hamburg is partly cloudy with a temperature of 14.9°C, feeling like 14.7°C. The humidity is 88%. Today's minimum temperature will be 12.1°C and the maximum 20.2°C. The wind is blowing at 7.6 km/h.",
+      "called": [
+        "get_weather"
+      ],
+      "tools_ok": true,
+      "arguments_ok": true,
+      "answer_ok": null,
+      "extra_calls": 0,
+      "rounds": 2,
+      "cost_usd": 0.0001906
+    },
+    {
+      "id": "t02",
+      "question": "What is 17 percent of 2,340 euros?",
+      "answer": "17 percent of 2,340 euros is 397.8 euros.",
+      "called": [
+        "calculate"
+      ],
+      "tools_ok": true,
+      "arguments_ok": null,
+      "answer_ok": true,
+      "extra_calls": 0,
+      "rounds": 2,
+      "cost_usd": 0.000155
+    },
+    {
+      "id": "t03",
+      "question": "If I buy 3 umbrellas at 12.90 euros each, how much do I pay?",
+      "answer": "You pay 38.7 euros.",
+      "called": [
+        "calculate"
+      ],
+      "tools_ok": true,
+      "arguments_ok": null,
+      "answer_ok": true,
+      "extra_calls": 0,
+      "rounds": 2,
+      "cost_usd": 0.000152
+    },
+    {
+      "id": "t04",
+      "question": "What is the latest Python release?",
+      "answer": "The latest Python release is 3.14.8. [Python.org](https://www.python.org/downloads/latest/)",
+      "called": [
+        "web_search"
+      ],
+      "tools_ok": true,
+      "arguments_ok": null,
+      "answer_ok": true,
+      "extra_calls": 0,
+      "rounds": 2,
+      "cost_usd": 0.00017779999999999998
+    },
+    {
+      "id": "t05",
+      "question": "How many days are left until Christmas Eve?",
+      "answer": "There are 78 days left until Christmas Eve.",
+      "called": [
+        "get_current_datetime"
+      ],
+      "tools_ok": true,
+      "arguments_ok": true,
+      "answer_ok": null,
+      "extra_calls": 0,
+      "rounds": 2,
+      "cost_usd": 0.0001349
+    },
+    {
+      "id": "t06",
+      "question": "Which weekday is it today?",
+      "answer": "It is Wednesday.",
+      "called": [
+        "get_current_datetime"
+      ],
+      "tools_ok": true,
+      "arguments_ok": null,
+      "answer_ok": null,
+      "extra_calls": 0,
+      "rounds": 2,
+      "cost_usd": 0.00012629999999999998
+    },
+    {
+      "id": "t07",
+      "question": "Explain photosynthesis in two sentences.",
+      "answer": "Photosynthesis is the process used by plants, algae and cyanobacteria to convert light energy into chemical energy, through a process that uses sunlight, water and carbon dioxide. This chemical energy is stored in the form of glucose, which fuels the organisms' activities.",
+      "called": [],
+      "tools_ok": true,
+      "arguments_ok": null,
+      "answer_ok": null,
+      "extra_calls": 0,
+      "rounds": 1,
+      "cost_usd": 7.97e-05
+    },
+    {
+      "id": "t08",
+      "question": "What is the capital of France?",
+      "answer": "Paris.",
+      "called": [],
+      "tools_ok": true,
+      "arguments_ok": null,
+      "answer_ok": true,
+      "extra_calls": 0,
+      "rounds": 1,
+      "cost_usd": 6.02e-05
+    },
+    {
+      "id": "t09",
+      "question": "Is it warmer in Munich or in Rome right now, and by how many degrees?",
+      "answer": "It is warmer in Rome than in Munich. The temperature in Rome is 22°C, and in Munich it is 16.5°C. The difference is 5.5°C.",
+      "called": [
+        "get_weather",
+        "get_weather"
+      ],
+      "tools_ok": false,
+      "arguments_ok": null,
+      "answer_ok": null,
+      "extra_calls": 0,
+      "rounds": 2,
+      "cost_usd": 0.0001584
+    },
+    {
+      "id": "t10",
+      "question": "Which towns in Swabia are regional centres (Oberzentren)?",
+      "answer": "The following towns in Swabia are regional centres (Oberzentren): Augsburg.",
+      "called": [
+        "search_documents"
+      ],
+      "tools_ok": true,
+      "arguments_ok": null,
+      "answer_ok": false,
+      "extra_calls": 0,
+      "rounds": 2,
+      "cost_usd": 0.00011881000000000001
+    },
+    {
+      "id": "t11",
+      "question": "Is Munich an Oberzentrum according to the Bavarian plan?",
+      "answer": "The Bavarian plan lists Munich as an Oberzentrum in the Regierungsbezirk Oberbayern.",
+      "called": [
+        "search_documents"
+      ],
+      "tools_ok": true,
+      "arguments_ok": null,
+      "answer_ok": false,
+      "extra_calls": 0,
+      "rounds": 2,
+      "cost_usd": 0.0003312
+    },
+    {
+      "id": "t12",
+      "question": "What's the weather in Xyzzyqwv?",
+      "answer": "I can't find the weather for Xyzzyqwv. Please check the spelling or try a different city.",
+      "called": [],
+      "tools_ok": null,
+      "arguments_ok": null,
+      "answer_ok": true,
+      "extra_calls": 0,
+      "rounds": 1,
+      "cost_usd": 6.95e-05
+    }
+  ]
+}

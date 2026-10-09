@@ -1,0 +1,131 @@
+/*
+ * Chat-Seiten (Chat und RAG Chatbot): Nur der Verlauf in der Mitte scrollt, Titel und
+ * Seitenspalten bleiben stehen. Beide Seiten benennen ihre Container deshalb gleich.
+ * Streamlit hat dafür keine eigene Einstellung, deshalb dieses CSS (Ausnahme, siehe
+ * docs/design.md). Es greift nur auf Container mit key zu: Streamlit gibt ihnen die Klasse
+ * "st-key-" plus key, das ist der vorgesehene Weg für eigenes Styling.
+ *
+ * Achtung: In dieser Datei nie eine spitze Klammer vor einem Buchstaben schreiben, auch nicht
+ * in Kommentaren. Streamlit prüft eingefügtes HTML mit DOMPurify und verwirft dann den ganzen
+ * Style, weil er wie eingeschleustes HTML aussieht.
+ */
+
+/* Höhe für alle drei Spalten: Fensterhöhe minus Seitenkopf mit Titel oben und Eingabefeld
+   unten. Ist die Seite nie höher als das Fenster, scrollt sie nicht und alles bleibt stehen. */
+:root {
+  --chat-offset: 300px; /* 153 px Kopf mit Titel + 147 px Bereich mit Eingabefeld */
+  --chat-offset-mobile: 210px; /* 60 px Seitenkopf + 150 px Bereich mit Eingabefeld */
+}
+
+/* Unter 640 px Breite stapelt Streamlit die Spalten untereinander; dafür gilt der
+   Handy-Block weiter unten. */
+@media (min-width: 640px) {
+  /* Verlauf in der Mitte: füllt die verfügbare Höhe und scrollt selbst. Die feste Höhe aus
+     chat.py (height=450) setzt Streamlit am umgebenden Hüll-Element, deshalb wird dieses über
+     :has() angesprochen ("das Element, das den Verlauf direkt enthält"). */
+  [data-testid="stLayoutWrapper"]:has(> .st-key-chat_scroll) {
+    flex: 0 0 calc(100dvh - var(--chat-offset)) !important;
+    height: calc(100dvh - var(--chat-offset)) !important;
+  }
+
+  /* Einstellungen und Kennzahlen: stehen fest, scrollen nur bei sehr niedrigem Fenster */
+  .st-key-chat_settings,
+  .st-key-chat_stats {
+    max-height: calc(100dvh - var(--chat-offset));
+    overflow-y: auto;
+    padding-bottom: 12px; /* Platz für die Beschriftungen unter dem Temperatur-Regler */
+  }
+
+  /* Weniger Rand über dem Titel (Streamlit: 96 px), mehr Höhe für die Spalten. 64 px, damit
+     der Titel nicht unter den 60 px hohen Seitenkopf von Streamlit rutscht. */
+  [data-testid="stMainBlockContainer"] {
+    padding-top: 64px;
+  }
+
+  /* Kennzahlen etwas kleiner (Streamlit: 36 px), damit die Session-Spalte ohne Scrollen passt */
+  .st-key-chat_stats [data-testid="stMetricValue"] {
+    font-size: 28px;
+  }
+
+  /* Elemente darin nicht zusammenquetschen, lieber scrollen */
+  .st-key-chat_settings > *,
+  .st-key-chat_stats > * {
+    flex-shrink: 0;
+  }
+}
+
+/* Handy: Die Spalten stehen untereinander, und Streamlit scrollt die Seite wegen des
+   Eingabefelds in st.bottom ans Ende. Deshalb kommt der Verlauf ans Ende, direkt über das
+   Eingabefeld, und füllt den Bildschirm. Einstellungen und Kennzahlen liegen darüber. */
+@media (max-width: 639.98px) {
+  [data-testid="stColumn"]:has(.st-key-chat_scroll) {
+    order: 1;
+  }
+
+  /* Fensterhöhe minus Seitenkopf von Streamlit oben und Bereich mit Eingabefeld unten */
+  [data-testid="stLayoutWrapper"]:has(> .st-key-chat_scroll) {
+    flex: 0 0 calc(100dvh - var(--chat-offset-mobile)) !important;
+    height: calc(100dvh - var(--chat-offset-mobile)) !important;
+  }
+
+  /* Kurzer Verlauf steht unten am Eingabefeld wie in Messenger-Apps. margin-top: auto statt
+     justify-content: flex-end, weil der Verlauf sonst oben nicht mehr scrollbar ist. */
+  .st-key-chat_scroll > :first-child {
+    margin-top: auto;
+  }
+
+  /* Die leeren Seitenspalten neben dem Eingabefeld stehen sonst als Leerraum darunter */
+  .st-key-chat_input_row [data-testid="stColumn"]:not(:has([data-testid="stChatInput"])) {
+    display: none;
+  }
+}
+
+/* Nummerierte Listen im Verlauf etwas weiter einrücken: Der Scrollbereich schneidet alles ab,
+   was links über seinen Rand ragt, sonst fehlt bei "10." bis "99." die erste Ziffer. */
+.st-key-chat_scroll ol {
+  padding-left: 2.2em;
+}
+
+/* Scroll-Hinweis: runder Pfeil unten im Verlauf, sichtbar nur, wenn man nicht ganz unten ist.
+   ::after hängt ein Element ans Ende des Verlaufs, "sticky" hält es am unteren Rand fest. */
+.st-key-chat_scroll::after {
+  content: "keyboard_arrow_down"; /* Name des Material-Symbols, wird zum Pfeil */
+  font-family: "Material Symbols Rounded";
+  font-size: 22px;
+  line-height: 30px;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  text-align: center;
+  color: #000000;
+  background: #ffffff;
+  border: 1px solid #d0d7de;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  bottom: 8px;
+  align-self: center;
+  margin-top: -40px; /* belegt keinen eigenen Platz im Verlauf */
+  pointer-events: none; /* nur Hinweis, kein Button */
+  opacity: 0; /* ohne Scrollbalken oder ohne Browser-Unterstützung unsichtbar */
+}
+
+/* Scroll-gesteuerte Animation: Die Sichtbarkeit folgt der Scrollposition des Verlaufs.
+   Ganz unten (100 %) ausgeblendet, sonst sichtbar. Chrome 115+, Safari 26+. */
+@supports (animation-timeline: scroll()) {
+  .st-key-chat_scroll::after {
+    animation: chat-scroll-hint linear both;
+    animation-timeline: scroll(nearest block);
+  }
+}
+
+@keyframes chat-scroll-hint {
+  0%,
+  98% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

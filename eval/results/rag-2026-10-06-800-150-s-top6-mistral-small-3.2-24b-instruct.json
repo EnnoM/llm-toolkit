@@ -1,0 +1,184 @@
+{
+  "date": "2026-10-06",
+  "settings": "800-150-s",
+  "top_k": 6,
+  "model": "mistralai/mistral-small-3.2-24b-instruct",
+  "summary": {
+    "found": "8/8",
+    "correct": "9/10",
+    "cited": "7/8"
+  },
+  "cost_usd": 0.0033616999999999996,
+  "results": [
+    {
+      "id": "q01",
+      "question": "Welche Gemeinden im Regierungsbezirk Schwaben sind Oberzentren?",
+      "answer": "Aichach, Bad Wörishofen, Buchloe, Burgau, Dinkelscherben/Zusmarshausen, Friedberg, Füssen, Gersthofen/Langweid a.Lech, Ichenhausen, Illertissen, Königsbrunn, Krumbach (Schwaben), Lindenberg i.Allgäu, Marktoberdorf, Meitingen, Mindelheim, Oberstdorf, Rain, Schwabmünchen, Senden/Vöhringen, Weißenhorn, Wertingen (LEP_Anhang_1_Zentrale_Orte_2018.pdf, p. 2–3).\n\nDillingen a.d.Donau/Lauingen (Donau), Donauwörth, Günzburg/Leipheim, Kaufbeuren, Kempten (Allgäu), Lindau (Bodensee) (/Bregenz), Memmingen, (Ulm/)Neu-Ulm, Nördlingen, Sonthofen/Immenstadt i.Allgäu (LEP_Anhang_1_Zentrale_Orte_2018.pdf, p. 3–4).",
+      "found": true,
+      "correct": true,
+      "cited": true,
+      "hits": [
+        "LEP_Anhang_1_Zentrale_Orte_2018.pdf, p. 2–3",
+        "LEP_Anhang_1_Zentrale_Orte_2018.pdf, p. 3",
+        "LEP_Anhang_1_Zentrale_Orte_2018.pdf, p. 3–4",
+        "LEP_Anhang_1_Zentrale_Orte_2018.pdf, p. 1",
+        "LEP_Anhang_1_Zentrale_Orte_2018.pdf, p. 1–2",
+        "LEP_Anhang_1_Zentrale_Orte_2018.pdf, p. 2"
+      ],
+      "cost_usd": 0.00019773500000000002
+    },
+    {
+      "id": "q02",
+      "question": "Ist München ein Oberzentrum?",
+      "answer": "The documents do not cover this.",
+      "found": true,
+      "correct": false,
+      "cited": false,
+      "hits": [
+        "LEP_Bayern_2013.pdf, p. 24–25",
+        "LEP_Anhang_1_Zentrale_Orte_2018.pdf, p. 3",
+        "LEP_Anhang_1_Zentrale_Orte_2018.pdf, p. 3–4",
+        "LEP_Bayern_2013.pdf, p. 30",
+        "LEP_Bayern_2013.pdf, p. 25",
+        "LEP_Bayern_2013.pdf, p. 23"
+      ],
+      "cost_usd": 0.00012161
+    },
+    {
+      "id": "q03",
+      "question": "Ab welcher Größe kommen zusammenhängende Flächen als Vorranggebiet für die Landwirtschaft in Frage?",
+      "answer": "Zusammenhängende Flächen kommen ab ca. 10 ha als Vorranggebiet für die Landwirtschaft in Frage (Hinweise_Vorranggebiete_Landwirtschaft_2025.pdf, p. 2).",
+      "found": true,
+      "correct": true,
+      "cited": true,
+      "hits": [
+        "Hinweise_Vorranggebiete_Landwirtschaft_2025.pdf, p. 2",
+        "Hinweise_Vorranggebiete_Landwirtschaft_2025.pdf, p. 3",
+        "Hinweise_Vorranggebiete_Landwirtschaft_2025.pdf, p. 4–5",
+        "Hinweise_Vorranggebiete_Landwirtschaft_2025.pdf, p. 2",
+        "Hinweise_Vorranggebiete_Landwirtschaft_2025.pdf, p. 3–4",
+        "Hinweise_Vorranggebiete_Landwirtschaft_2025.pdf, p. 1"
+      ],
+      "cost_usd": 0.00011886500000000001
+    },
+    {
+      "id": "q04",
+      "question": "Sind Freiflächen-Photovoltaikanlagen in einem Vorranggebiet für die Landwirtschaft erlaubt?",
+      "answer": "Nein, Freiflächen-Photovoltaikanlagen sind in einem Vorranggebiet für die Landwirtschaft nicht erlaubt (Hinweise_Vorranggebiete_Landwirtschaft_2025.pdf, p. 4–5).",
+      "found": true,
+      "correct": true,
+      "cited": true,
+      "hits": [
+        "Hinweise_Vorranggebiete_Landwirtschaft_2025.pdf, p. 4",
+        "LEP_Bayern_2013.pdf, p. 73",
+        "Hinweise_Vorranggebiete_Landwirtschaft_2025.pdf, p. 4",
+        "Hinweise_Vorranggebiete_Landwirtschaft_2025.pdf, p. 4",
+        "Hinweise_Vorranggebiete_Landwirtschaft_2025.pdf, p. 4–5",
+        "Hinweise_Vorranggebiete_Landwirtschaft_2025.pdf, p. 2"
+      ],
+      "cost_usd": 0.00013331
+    },
+    {
+      "id": "q05",
+      "question": "Sind Agri-PV-Anlagen mit Vorranggebieten für die Landwirtschaft vereinbar?",
+      "answer": "Ja, Agri-PV-Anlagen im Sinne der DIN SPEC 91434 sind mit Vorranggebieten für die Landwirtschaft vereinbar (Hinweise_Vorranggebiete_Landwirtschaft_2025.pdf, p. 4).",
+      "found": true,
+      "correct": true,
+      "cited": true,
+      "hits": [
+        "Hinweise_Vorranggebiete_Landwirtschaft_2025.pdf, p. 4",
+        "Hinweise_Vorranggebiete_Landwirtschaft_2025.pdf, p. 4",
+        "Hinweise_Vorranggebiete_Landwirtschaft_2025.pdf, p. 4",
+        "Hinweise_Vorranggebiete_Landwirtschaft_2025.pdf, p. 4–5",
+        "Hinweise_Vorranggebiete_Landwirtschaft_2025.pdf, p. 3",
+        "Hinweise_Vorranggebiete_Landwirtschaft_2025.pdf, p. 3"
+      ],
+      "cost_usd": 0.000131235
+    },
+    {
+      "id": "q06",
+      "question": "Was bedeuten die Kürzel (Z) und (G) im Landesentwicklungsprogramm?",
+      "answer": "Die Kürzel (Z) und (G) im Landesentwicklungsprogramm stehen für:\n\n- (Z) Ziele, die von allen öffentlichen Stellen und Personen des Privatrechts gemäß Art. 3 des Bayerischen Landesplanungsgesetzes (BayLplG) als rechtsverbindliche Vorgaben zu beachten sind (LEP_Bayern_2013.pdf, p. 10).\n- (G) Grundsätze, die von allen öffentlichen Stellen und Personen des Privatrechtes gemäß Art. 3 BayLplG bei Abwägungs- und Ermessensentscheidungen zu berücksichtigen sind (LEP_Bayern_2013.pdf, p. 10).",
+      "found": true,
+      "correct": true,
+      "cited": true,
+      "hits": [
+        "LEP_Bayern_2013.pdf, p. 10",
+        "LEP_Bayern_2013.pdf, p. 32–33",
+        "LEP_Bayern_2013.pdf, p. 10",
+        "LEP_Bayern_2013.pdf, p. 10",
+        "LEP_Bayern_2013.pdf, p. 31",
+        "LEP_Bayern_2013.pdf, p. 10–11"
+      ],
+      "cost_usd": 0.0001341
+    },
+    {
+      "id": "q07",
+      "question": "Muss eine Gemeinde zuerst Flächen im Ort nutzen, bevor sie am Ortsrand neues Bauland ausweist?",
+      "answer": "Ja, in den Siedlungsgebieten sind die vorhandenen Potenziale der Innenentwicklung möglichst vorrangig zu nutzen (LEP_Bayern_2013.pdf, p. 43–44). Ausnahmen sind zulässig, wenn Potenziale der Innenentwicklung nicht zur Verfügung stehen (LEP_Bayern_2013.pdf, p. 44).\n\nDie Dokumente enthalten keine spezifischen Informationen über die Nutzung von Flächen am Ortsrand.",
+      "found": true,
+      "correct": true,
+      "cited": true,
+      "hits": [
+        "LEP_Bayern_2013.pdf, p. 44–45",
+        "LEP_Bayern_2013.pdf, p. 60",
+        "LEP_Bayern_2013.pdf, p. 43",
+        "LEP_Bayern_2013.pdf, p. 38",
+        "Hinweise_Vorranggebiete_Landwirtschaft_2025.pdf, p. 4–5",
+        "LEP_Bayern_2013.pdf, p. 43–44"
+      ],
+      "cost_usd": 0.00017915999999999999
+    },
+    {
+      "id": "q08",
+      "question": "Within how many years after the LEP came into force did the regional plans have to designate priority areas for wind turbines?",
+      "answer": "Within two years after the LEP came into force, the regional plans had to designate priority areas for wind turbines (LEP_Bayern_2013.pdf, p. 1).",
+      "found": true,
+      "correct": true,
+      "cited": true,
+      "hits": [
+        "LEP_Bayern_2013.pdf, p. 1",
+        "LEP_Bayern_2013.pdf, p. 72",
+        "LEP_Bayern_2013.pdf, p. 71",
+        "LEP_Bayern_2013.pdf, p. 72–73",
+        "LEP_Bayern_2013.pdf, p. 72",
+        "LEP_Bayern_2013.pdf, p. 72"
+      ],
+      "cost_usd": 0.00014776
+    },
+    {
+      "id": "q09",
+      "question": "Wie hoch ist die Hundesteuer in München?",
+      "answer": "The documents do not cover this.",
+      "found": null,
+      "correct": true,
+      "cited": null,
+      "hits": [
+        "LEP_Bayern_2013.pdf, p. 55",
+        "LEP_Bayern_2013.pdf, p. 50–51",
+        "LEP_Bayern_2013.pdf, p. 51",
+        "LEP_Bayern_2013.pdf, p. 51",
+        "LEP_Bayern_2013.pdf, p. 52",
+        "LEP_Bayern_2013.pdf, p. 53"
+      ],
+      "cost_usd": 0.000118275
+    },
+    {
+      "id": "q10",
+      "question": "Wie viele Einwohner hat Rosenheim?",
+      "answer": "The documents do not cover this.",
+      "found": null,
+      "correct": true,
+      "cited": null,
+      "hits": [
+        "LEP_Anhang_1_Zentrale_Orte_2018.pdf, p. 1",
+        "LEP_Anhang_1_Zentrale_Orte_2018.pdf, p. 1–2",
+        "LEP_Anhang_1_Zentrale_Orte_2018.pdf, p. 2",
+        "LEP_Anhang_1_Zentrale_Orte_2018.pdf, p. 2–3",
+        "LEP_Anhang_1_Zentrale_Orte_2018.pdf, p. 1",
+        "LEP_Anhang_1_Zentrale_Orte_2018.pdf, p. 3"
+      ],
+      "cost_usd": 0.00015045
+    }
+  ]
+}

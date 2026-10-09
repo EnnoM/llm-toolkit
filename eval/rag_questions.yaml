@@ -1,0 +1,81 @@
+# Fragenkatalog für den RAG-Chatbot, ausgewertet mit: python -m core.rag_eval
+#
+# Felder pro Frage:
+#   id, question
+#   source: Datei, in der die Antwort steht; pages: PDF-Seiten, auf denen sie steht
+#   expect: Begriffe, die in der Antwort vorkommen müssen (Groß-/Kleinschreibung egal);
+#           Alternativen mit „|“ getrennt, z. B. "zwei|two"
+#   not_covered: true, wenn die Antwort in keinem Dokument steht. Dann muss der feste Satz
+#                „The documents do not cover this.“ kommen; source, pages, expect entfallen.
+#   why: was die Frage prüft (nur zur Doku)
+#
+# Erstellt am 06.10.2026 aus dem Text der drei Beispiel-PDFs in data/samples/.
+
+- id: q01
+  question: Welche Gemeinden im Regierungsbezirk Schwaben sind Oberzentren?
+  source: LEP_Anhang_1_Zentrale_Orte_2018.pdf
+  pages: [4]
+  expect: [Kempten, Memmingen, Kaufbeuren, Nördlingen]
+  why: Liste, deren Überschrift „2. Oberzentren“ eine Seite vorher steht; ohne Überschriften-Pfad
+    weiß der Abschnitt nicht, dass es um Oberzentren geht
+
+- id: q02
+  question: Ist München ein Oberzentrum?
+  source: LEP_Anhang_1_Zentrale_Orte_2018.pdf
+  pages: [4]
+  expect: [Metropole]
+  why: Falle aus dem Antworttest vom 05.10.2026 (gpt-4.1-nano sagte „Ja“); München ist Metropole
+
+- id: q03
+  question: Ab welcher Größe kommen zusammenhängende Flächen als Vorranggebiet für die Landwirtschaft in Frage?
+  source: Hinweise_Vorranggebiete_Landwirtschaft_2025.pdf
+  pages: [2]
+  expect: [10 ha|10 Hektar]
+  why: einzelne Zahl in einem langen Absatz
+
+- id: q04
+  question: Sind Freiflächen-Photovoltaikanlagen in einem Vorranggebiet für die Landwirtschaft erlaubt?
+  source: Hinweise_Vorranggebiete_Landwirtschaft_2025.pdf
+  pages: [5]
+  expect: [nicht]
+  why: Gegenstück zu q05, beide Abschnitte sind sich sehr ähnlich
+
+- id: q05
+  question: Sind Agri-PV-Anlagen mit Vorranggebieten für die Landwirtschaft vereinbar?
+  source: Hinweise_Vorranggebiete_Landwirtschaft_2025.pdf
+  pages: [4]
+  expect: [vereinbar]
+  why: Gegenstück zu q04 (Agri-PV ja, Freiflächen-PV nein)
+
+- id: q06
+  question: Was bedeuten die Kürzel (Z) und (G) im Landesentwicklungsprogramm?
+  source: LEP_Bayern_2013.pdf
+  pages: [1, 10]
+  expect: [Ziel, Grundsätz]
+  why: Erklärung steht nur in der Verordnung (p. 1) und im Leitbild (p. 10), die Kürzel aber auf
+    fast jeder Seite. Zuerst war nur p. 1 eingetragen; der erste Lauf fand p. 10 und zeigte den
+    Fehler im Katalog.
+
+- id: q07
+  question: Muss eine Gemeinde zuerst Flächen im Ort nutzen, bevor sie am Ortsrand neues Bauland ausweist?
+  source: LEP_Bayern_2013.pdf
+  pages: [43]
+  expect: [Innenentwicklung]
+  why: Umschreibung ohne die Begriffe des Dokuments („Innenentwicklung vor Außenentwicklung“)
+
+- id: q08
+  question: Within how many years after the LEP came into force did the regional plans have to designate priority areas for wind turbines?
+  source: LEP_Bayern_2013.pdf
+  pages: [1]
+  expect: [zwei|two|2 years|2 Jahre]
+  why: englische Frage an ein deutsches Dokument
+
+- id: q09
+  question: Wie hoch ist die Hundesteuer in München?
+  not_covered: true
+  why: nichts davon in den Dokumenten, München kommt aber vor
+
+- id: q10
+  question: Wie viele Einwohner hat Rosenheim?
+  not_covered: true
+  why: Rosenheim steht in der Liste der Oberzentren, die Einwohnerzahl nirgends

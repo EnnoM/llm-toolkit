@@ -1,0 +1,88 @@
+# Fragenkatalog für das Modul Tool Use, ausgewertet mit: python -m core.tool_eval
+#
+# Felder pro Frage:
+#   id, question
+#   tools: Werkzeuge, die aufgerufen werden müssen ([] = keins, die Frage braucht kein Werkzeug;
+#          fehlt das Feld, wird die Werkzeugwahl nicht geprüft)
+#   arguments: optional, Werkzeug -> Text, der in dessen Argumenten vorkommen muss
+#              (Groß-/Kleinschreibung egal, Alternativen mit „|“)
+#   expect: optional, Begriffe, die in der Antwort stehen müssen (Alternativen mit „|“)
+#   forbid: optional, Begriffe, die nicht in der Antwort stehen dürfen (z. B. erfundene Werte)
+#   why: was die Frage prüft
+#
+# Geprüft wird: richtige Werkzeuge (alle erwarteten aufgerufen; bei [] gar keins), passende
+# Argumente, erwartete Begriffe in der Antwort. Zusätzliche Aufrufe werden gezählt, gelten aber
+# nicht als Fehler, außer bei Fragen ohne Werkzeugbedarf.
+#
+# Erstellt am 07.10.2026. Antworten mit Live-Daten (Wetter, Websuche) lassen sich nicht auf
+# feste Werte prüfen; dort zählen nur Werkzeug und Argumente.
+
+- id: t01
+  question: What's the weather in Hamburg?
+  tools: [get_weather]
+  arguments: {get_weather: hamburg}
+  why: Akzeptanzkriterium 1
+
+- id: t02
+  question: What is 17 percent of 2,340 euros?
+  tools: [calculate]
+  expect: ["397.8"]
+  why: Akzeptanzkriterium 3, Prozent als Dezimalzahl
+
+- id: t03
+  question: If I buy 3 umbrellas at 12.90 euros each, how much do I pay?
+  tools: [calculate]
+  expect: ["38.7"]
+  why: Rechnung in einem Satz versteckt
+
+- id: t04
+  question: What is the latest Python release?
+  tools: [web_search]
+  expect: ["](http"]
+  why: Akzeptanzkriterium 2, Quelle als Markdown-Link
+
+- id: t05
+  question: How many days are left until Christmas Eve?
+  tools: [get_current_datetime]
+  arguments: {get_current_datetime: "12-24"}
+  why: Datumsrechnung im Werkzeug; Falle mit geratenem Jahr (2024-12-24)
+
+- id: t06
+  question: Which weekday is it today?
+  tools: [get_current_datetime]
+  why: Wissen, das nur der Server hat
+
+- id: t07
+  question: Explain photosynthesis in two sentences.
+  tools: []
+  why: Akzeptanzkriterium 4, Allgemeinwissen ohne Werkzeug
+
+- id: t08
+  question: What is the capital of France?
+  tools: []
+  expect: [Paris]
+  why: Allgemeinwissen, kein Werkzeug nötig
+
+- id: t09
+  question: Is it warmer in Munich or in Rome right now, and by how many degrees?
+  tools: [get_weather, calculate]
+  why: zwei Wetteraufrufe und die Differenz über den Rechner (Regel im System-Prompt)
+
+- id: t10
+  question: Which towns in Swabia are regional centres (Oberzentren)?
+  tools: [search_documents]
+  expect: [Kempten, Memmingen]
+  why: Dokumentsuche mit englischer Frage, Liste aus Anhang 1
+
+- id: t11
+  question: Is Munich an Oberzentrum according to the Bavarian plan?
+  tools: [search_documents]
+  expect: [Metropol]
+  why: Falle aus dem RAG-Kapitel, München ist Metropole
+
+- id: t12
+  question: What's the weather in Xyzzyqwv?
+  forbid: ["°C", "°F", "degrees"]
+  why: Ort gibt es nicht. Das Modell darf kein Wetter erfinden. Ob es dafür das Werkzeug fragt
+    (das „No place named …“ meldet) oder gleich nachfragt, ist beides in Ordnung; im ersten Lauf
+    am 07.10.2026 riefen zwei von vier Modellen das Werkzeug gar nicht auf.
