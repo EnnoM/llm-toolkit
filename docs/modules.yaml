@@ -1,5 +1,5 @@
-# Arbeits-Checkliste des Projekts. Die Startseite (app_pages/home.py) zeigt diese Datei an.
-# Nach einer Änderung auf der Startseite über der Tabelle auf „Neu laden“ klicken.
+# Arbeits-Checkliste des Projekts. Die interne Seite „Start“ (app_pages/start.py) zeigt diese
+# Datei an. Nach einer Änderung dort über der Tabelle auf „Neu laden“ klicken.
 #
 # Felder pro Modul (alle Pflicht):
 #   id, name, phase (1-6), status, kurz (ein Satz für die Tabelle),

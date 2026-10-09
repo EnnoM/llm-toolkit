@@ -396,6 +396,30 @@ mistral-small-3.2 11/12, gemini-2.5-flash-lite 9/12, gpt-4.1-nano 7/12.
 
 ---
 
+## Startseiten: öffentliches Home, internes Start
+
+**Gebaut:** Die bisherige Startseite (Arbeits-Checkliste) heißt jetzt „Start“
+(`app_pages/start.py`) und erscheint nur lokal. Neu ist „Home“ (`app_pages/home.py`) als
+öffentliche Startseite auf Englisch: fertige Module als Karten mit Link, geplante ausgegraut
+mit „WIP“. Texte, Icons und Seiten stehen in `core/catalog.py`.
+
+**Entscheidungen**
+
+- **Eigener Schalter `SHOW_INTERNAL_PAGES` statt Erkennung der Umgebung.** Ob die App auf
+  Streamlit Cloud läuft, lässt sich nur über undokumentierte Merkmale raten. Ein Schalter in der
+  lokalen `.env` ist eindeutig, und ohne ihn fehlt die Seite: sicher als Standard. Die Seite
+  ist dann nicht nur versteckt, sondern gar nicht registriert, also auch per URL nicht erreichbar.
+  Geheim ist ihr Inhalt trotzdem nicht, `docs/modules.yaml` liegt im öffentlichen Repo.
+- **Englische Texte in `core/catalog.py`, nicht in `docs/modules.yaml`.** Die YAML bleibt laut
+  Design-Richtlinien deutsch. Ein Test prüft, dass Katalog und YAML dieselben Module in derselben
+  Reihenfolge haben und genau die geplanten Module keine Seite haben; ein neues Modul kann auf
+  Home also nicht vergessen werden.
+- **Eine Quelle für die Navigation.** `app.py` baut die Modulseiten aus dem Katalog, Titel und
+  Icons stehen nicht mehr doppelt.
+- **Ausgegraut mit `st.caption`, ohne eigenes CSS.** Die Hinweisschrift ist im Theme schon grau.
+
+---
+
 ## Offene Punkte
 
 - Deployment auf Streamlit Community Cloud für alle drei Module der Phase 2 (Projektregel:

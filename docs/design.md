@@ -7,12 +7,12 @@ nur über Container mit `key` (Klasse `st-key-...`). Bisher einzige Ausnahme: `a
 
 ## Sprache
 
-- **Module und Login auf Englisch:** Die Login-Seite und jede Modulseite in `app_pages/` (außer der
-  Startseite) sind komplett englisch: Titel, Beschriftungen, Hilfetexte, Platzhalter,
+- **Öffentliche Seiten auf Englisch:** Die Login-Seite, die Startseite „Home“ und jede Modulseite
+  in `app_pages/` sind komplett englisch: Titel, Beschriftungen, Hilfetexte, Platzhalter,
   Beispielfragen, Standard-Prompts und alle Meldungen, auch Fehlermeldungen aus `core/`, die im
   Modul erscheinen.
 - Zahlen im Modul im englischen Format mit Dezimalpunkt (`0.000040 USD`).
-- **Auf Deutsch bleiben:** die Startseite (Arbeits-Checkliste), `docs/modules.yaml` und
+- **Auf Deutsch bleiben:** die interne Seite „Start“ (Arbeits-Checkliste, nur lokal), `docs/modules.yaml` und
   Code-Kommentare. In `docs/modules.yaml` stehen Beschriftungen der Oberfläche trotzdem so,
   wie sie im Modul erscheinen, also englisch (z. B. Button „Clear chat“).
 

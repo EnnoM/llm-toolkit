@@ -14,7 +14,8 @@ cp .env.example .env          # Key, Modell und Passwort eintragen
 streamlit run app.py
 ```
 
-Für die Entwicklung schaltet `SKIP_LOGIN=true` in `.env` die Passwortabfrage ab (nie in den Cloud-Secrets setzen).
+Für die Entwicklung schaltet `SKIP_LOGIN=true` in `.env` die Passwortabfrage ab, `SHOW_INTERNAL_PAGES=true` zeigt
+die interne Arbeits-Checkliste „Start“. Beide nie in den Cloud-Secrets setzen.
 
 Tests: `pytest` · Secret-Scan und Linting vor jedem Commit: `pip install pre-commit && pre-commit install`
 
@@ -39,7 +40,8 @@ Auf Streamlit Cloud kommen dieselben Werte aus `.env.example` in die App-Secrets
 <!-- modules:end -->
 
 Die Tabelle entsteht aus `docs/modules.yaml` (pre-commit-Hook oder `python -m core.readme`).
-Dort stehen auch Beschreibung, Akzeptanzkriterien und Arbeitsstand jedes Moduls; die Startseite der App zeigt sie an.
+Dort stehen auch Beschreibung, Akzeptanzkriterien und Arbeitsstand jedes Moduls; die interne Seite „Start“ zeigt sie an.
+Die öffentliche Startseite „Home“ stellt die Module auf Englisch vor, Texte in `core/catalog.py`.
 
 Aufbau: Logik in `core/`, Oberfläche in `app_pages/`, Tests in `tests/`, Plan in `docs/`, Testsets in `eval/`.
 
