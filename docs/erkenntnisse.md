@@ -396,9 +396,9 @@ mistral-small-3.2 11/12, gemini-2.5-flash-lite 9/12, gpt-4.1-nano 7/12.
 
 ---
 
-## KI-Datenanalyst (Schritt 1: Datensatz und Schutz)
+## KI-Datenanalyst (in Arbeit)
 
-**Gebaut:** `core/analyst.py` erzeugt einen erfundenen Online-Shop (Kunden, Produkte,
+**Schritt 1: Datensatz und Schutz.** `core/analyst.py` erzeugt einen erfundenen Online-Shop (Kunden, Produkte,
 Bestellungen, Positionen von 2023 bis 2025), schreibt ihn als DuckDB-Datei in den Temp-Ordner
 und öffnet ihn nur lesend. `check_sql()` lässt nur eine einzelne SELECT-Anweisung durch,
 `run_query()` liefert höchstens 1000 Zeilen, `schema_description()` beschreibt Tabellen und
@@ -424,6 +424,28 @@ Spalten für den Prompt. Noch ohne Modell und ohne Oberfläche.
 - **Erlaubte Werte stehen im Schema-Text.** Für kurze Textspalten (Kategorie, Land, Kanal) nennt
   der Prompt die vorkommenden Werte. Sonst rät das Modell Schreibweisen wie „electronics“ und
   bekommt eine leere Tabelle statt eines Fehlers, also eine falsche Antwort, die richtig aussieht.
+
+**Schritt 2: Text-to-SQL.** `ask()` schickt die Frage mit dem Schema an das Modell und
+bekommt per Structured Outputs nur `{"sql": "..."}` zurück. Das SQL läuft durch `run_query()`;
+scheitert es, geht die Fehlermeldung einmal zurück ans Modell. `core/analyst_eval.py` vergleicht
+fünf Fragen mit von Hand geschriebenem Referenz-SQL.
+
+- **Antwort als JSON mit genau einem Feld.** Freitext mit SQL in Markdown müsste man erst
+  herausschneiden, und das Modell könnte Erklärungen davor setzen. Mit Structured Outputs gibt
+  es nur das SQL, sonst nichts.
+- **Auch eine abgelehnte Anweisung darf korrigiert werden.** Schreibt das Modell DELETE, wird
+  es nie ausgeführt; die Meldung „Only SELECT queries are allowed“ geht zurück, damit es eine
+  Leseabfrage versucht. Nach einem Korrekturversuch ist Schluss (Akzeptanzkriterium).
+- **Verglichen werden Ergebnisse, nicht SQL.** Dieselbe Antwort lässt sich auf viele Arten
+  schreiben (JOIN ... USING oder ON, EXTRACT oder year()). Gleich sein müssen die Werte,
+  Spaltennamen und Reihenfolge nicht.
+- **Der stille Fehler ist echt.** Im Probelauf filterte mistral-small „2024“ mit
+  `order_date >= '2024-01-01'` ohne Obergrenze. Die Tabelle sah völlig normal aus, nur waren
+  2025er Umsätze mitgezählt. Es gab keine Fehlermeldung und damit keine Korrektur; gefunden
+  hat es nur der Vergleich mit dem Referenz-SQL. Genau deshalb zeigt die Seite das SQL immer an.
+- **Der Prüfer war zuerst selbst zu streng.** Monate als „2025-01“ statt 1 galten als falsch,
+  obwohl die Zahlen stimmten. Eine Auswertung muss das prüfen, worauf es ankommt (die Zahlen),
+  nicht die Form.
 
 ---
 
@@ -488,7 +510,6 @@ mit „WIP“. Texte, Icons und Seiten stehen in `core/catalog.py`.
 
 ## Offene Punkte
 
-- KI-Datenanalyst: Text-to-SQL mit einem Korrekturversuch, fünf Beispielfragen mit
-  Referenz-SQL, dann die Seite mit Tabelle, Diagramm und Code.
+- KI-Datenanalyst: Seite mit Tabelle, Diagramm, SQL und Zusammenfassung.
 - Optional im Tool Use: Embedding-Tokens getrennt von den Chat-Tokens anzeigen, damit „Tokens
   in“ nicht nach einem Fehler aussieht.

@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-21",
+  "model": "openai/gpt-4.1-nano",
+  "run": 1,
+  "passed": "5/5",
+  "cost_usd": 0.0003167,
+  "results": [
+    {
+      "id": "a01",
+      "question": "What was the total revenue per year?",
+      "sql": "WITH yearly_revenue AS (SELECT strftime('%Y', order_date) AS year, SUM(order_items.quantity * order_items.unit_price) AS revenue FROM orders JOIN order_items ON orders.order_id = order_items.order_id GROUP BY year) SELECT year, ROUND(revenue, 2) AS total_revenue FROM yearly_revenue ORDER BY year",
+      "passed": true,
+      "corrections": 0,
+      "error": null,
+      "cost_usd": 7.13e-05
+    },
+    {
+      "id": "a02",
+      "question": "Which product category had the highest revenue in 2024? Show all categories, highest first.",
+      "sql": "WITH category_revenue AS (SELECT p.category, ROUND(SUM(oi.quantity * oi.unit_price), 2) AS revenue FROM order_items oi JOIN products p ON oi.product_id = p.product_id JOIN orders o ON oi.order_id = o.order_id WHERE o.order_date >= '2024-01-01' AND o.order_date < '2025-01-01' GROUP BY p.category) SELECT category, revenue FROM category_revenue ORDER BY revenue DESC",
+      "passed": true,
+      "corrections": 0,
+      "error": null,
+      "cost_usd": 8.28e-05
+    },
+    {
+      "id": "a03",
+      "question": "How many orders came in through each sales channel?",
+      "sql": "SELECT channel, COUNT(DISTINCT order_id) AS orders FROM orders GROUP BY channel",
+      "passed": true,
+      "corrections": 0,
+      "error": null,
+      "cost_usd": 5.07e-05
+    },
+    {
+      "id": "a04",
+      "question": "How many orders were placed in each month of 2025?",
+      "sql": "SELECT strftime('%Y-%m', order_date) AS month, COUNT(*) AS orders FROM orders WHERE strftime('%Y', order_date) = '2025' GROUP BY month ORDER BY month",
+      "passed": true,
+      "corrections": 0,
+      "error": null,
+      "cost_usd": 6.02e-05
+    },
+    {
+      "id": "a05",
+      "question": "Which country has the most customers? List all countries with their number of customers.",
+      "sql": "SELECT country, COUNT(*) AS customer_count FROM customers GROUP BY country ORDER BY customer_count DESC",
+      "passed": true,
+      "corrections": 0,
+      "error": null,
+      "cost_usd": 5.17e-05
+    }
+  ]
+}

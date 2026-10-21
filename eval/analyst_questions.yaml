@@ -1,0 +1,62 @@
+# Fragenkatalog für den KI-Datenanalysten, ausgewertet mit: python -m core.analyst_eval
+#
+# Felder pro Frage:
+#   id, question (englisch, wie im Modul)
+#   reference_sql: von Hand geschriebenes SQL, dessen Ergebnis als richtig gilt
+#   compare: optional, nur diese Referenzspalten vergleichen (wenn die Darstellung einer
+#            Spalte frei ist, z. B. Monat als 1, „2025-01“ oder Datum)
+#   why: was die Frage prüft
+#
+# Bestanden ist eine Frage, wenn das Ergebnis des Modells dieselben Werte enthält wie die
+# Referenz: gleich viele Zeilen, und jede Spalte der Referenz kommt mit denselben Werten
+# (gerundet auf 2 Stellen, Reihenfolge egal) auch beim Modell vor. Spaltennamen und
+# zusätzliche Spalten zählen nicht, sonst scheitert eine richtige Antwort an „revenue“ statt
+# „total_revenue“.
+#
+# Erstellt am 21.10.2026 für den Datensatz mit Seed 42 (core/analyst.py).
+
+- id: a01
+  question: What was the total revenue per year?
+  reference_sql: |
+    SELECT year(o.order_date) AS year,
+           round(sum(i.quantity * i.unit_price), 2) AS revenue
+    FROM orders o JOIN order_items i USING (order_id)
+    GROUP BY 1 ORDER BY 1
+  why: Join über zwei Tabellen, Umsatzformel, Gruppierung nach Jahr
+
+- id: a02
+  question: Which product category had the highest revenue in 2024? Show all categories, highest first.
+  reference_sql: |
+    SELECT p.category, round(sum(i.quantity * i.unit_price), 2) AS revenue
+    FROM orders o
+    JOIN order_items i USING (order_id)
+    JOIN products p USING (product_id)
+    WHERE year(o.order_date) = 2024
+    GROUP BY 1 ORDER BY 2 DESC
+  why: Beispielfrage aus der Modulbeschreibung; drei Tabellen und ein Jahresfilter
+
+- id: a03
+  question: How many orders came in through each sales channel?
+  reference_sql: |
+    SELECT channel, count(*) AS orders
+    FROM orders
+    GROUP BY 1 ORDER BY 2 DESC
+  why: Einfache Zählung auf einer Tabelle
+
+- id: a04
+  question: How many orders were placed in each month of 2025?
+  reference_sql: |
+    SELECT month(order_date) AS month, count(*) AS orders
+    FROM orders
+    WHERE year(order_date) = 2025
+    GROUP BY 1 ORDER BY 1
+  compare: [orders]
+  why: Datumsfunktionen; zwölf Zeilen, Grundlage für ein Liniendiagramm
+
+- id: a05
+  question: Which country has the most customers? List all countries with their number of customers.
+  reference_sql: |
+    SELECT country, count(*) AS customers
+    FROM customers
+    GROUP BY 1 ORDER BY 2 DESC
+  why: Textwerte müssen exakt passen (Germany, nicht DE oder germany)

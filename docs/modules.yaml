@@ -584,6 +584,21 @@
       DELETE, UPDATE, INSERT, CREATE, ATTACH, COPY, SET und „SELECT 1; DELETE“ werden
       abgelehnt; read_csv auf eine Datei des Servers schlägt fehl; Daten bleiben unverändert
       (tests/test_analyst.py, ohne API).
+    - Text-to-SQL am 21.10.2026 (ask() in core/analyst.py): Schema mit erlaubten Werten im
+      System-Prompt, Antwort per Structured Outputs als {"sql": ...}, Temperatur 0, bei einem
+      Fehler genau ein Korrekturversuch mit der Fehlermeldung. Kosten pro Frage rund
+      0.00004 USD (gemini, mistral, nano) bis 0.0009 USD (claude-haiku-4.5).
+    - Fragenkatalog am 21.10.2026 (eval/analyst_questions.yaml, fünf Fragen mit Referenz-SQL,
+      python -m core.analyst_eval, je zwei Läufe): claude-haiku-4.5, gpt-4.1-nano und
+      mistral-small-3.2 5/5 in beiden Läufen, gemini-2.5-flash-lite 5/5 (im ersten Lauf zwei
+      Fragen mit „Too many requests“ vom Anbieter, kein SQL-Fehler). Keine Korrektur nötig.
+    - Stiller Fehler im Probelauf: mistral-small-3.2 filterte „2024“ mit
+      order_date >= '2024-01-01' ohne Obergrenze, zählte also 2025 mit. Die Tabelle sah
+      plausibel aus (Electronics 343070 statt 155000), kein Fehler, keine Korrektur. Nur der
+      Vergleich mit dem Referenz-SQL hat es gezeigt. Im nächsten Lauf war es richtig.
+    - Vergleich zuerst zu streng: Monate als „2025-01“ oder Datum statt 1 bis 12 und Jahre
+      als Text galten als falsch, obwohl die Zahlen stimmten. Jetzt werden Zahlen auch in Text
+      erkannt, und eine Frage kann nur bestimmte Spalten vergleichen (compare).
     - Status bleibt „geplant“, bis die Seite existiert: Laut core/catalog.py bekommt jedes
       Modul, das nicht geplant ist, eine verlinkte Karte auf der öffentlichen Startseite.
     - DuckDB-Doku: https://duckdb.org/docs/

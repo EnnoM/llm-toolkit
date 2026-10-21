@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-21",
+  "model": "anthropic/claude-haiku-4.5",
+  "run": 2,
+  "passed": "5/5",
+  "cost_usd": 0.004496,
+  "results": [
+    {
+      "id": "a01",
+      "question": "What was the total revenue per year?",
+      "sql": "SELECT EXTRACT(YEAR FROM o.order_date) AS year, ROUND(SUM(oi.quantity * oi.unit_price), 2) AS revenue FROM orders o JOIN order_items oi ON o.order_id = oi.order_id GROUP BY EXTRACT(YEAR FROM o.order_date) ORDER BY year",
+      "passed": true,
+      "corrections": 0,
+      "error": null,
+      "cost_usd": 0.001027
+    },
+    {
+      "id": "a02",
+      "question": "Which product category had the highest revenue in 2024? Show all categories, highest first.",
+      "sql": "SELECT p.category, ROUND(SUM(oi.quantity * oi.unit_price), 2) AS revenue FROM products p JOIN order_items oi ON p.product_id = oi.product_id JOIN orders o ON oi.order_id = o.order_id WHERE YEAR(o.order_date) = 2024 GROUP BY p.category ORDER BY revenue DESC",
+      "passed": true,
+      "corrections": 0,
+      "error": null,
+      "cost_usd": 0.001098
+    },
+    {
+      "id": "a03",
+      "question": "How many orders came in through each sales channel?",
+      "sql": "SELECT channel, COUNT(*) as orders FROM orders GROUP BY channel ORDER BY orders DESC",
+      "passed": true,
+      "corrections": 0,
+      "error": null,
+      "cost_usd": 0.000724
+    },
+    {
+      "id": "a04",
+      "question": "How many orders were placed in each month of 2025?",
+      "sql": "SELECT DATE_TRUNC('month', order_date)::DATE AS month, COUNT(*) AS orders FROM orders WHERE YEAR(order_date) = 2025 GROUP BY DATE_TRUNC('month', order_date) ORDER BY month",
+      "passed": true,
+      "corrections": 0,
+      "error": null,
+      "cost_usd": 0.000917
+    },
+    {
+      "id": "a05",
+      "question": "Which country has the most customers? List all countries with their number of customers.",
+      "sql": "SELECT country, COUNT(*) as customers FROM customers GROUP BY country ORDER BY customers DESC",
+      "passed": true,
+      "corrections": 0,
+      "error": null,
+      "cost_usd": 0.00073
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-21",
+  "model": "openai/gpt-4.1-nano",
+  "run": 2,
+  "passed": "5/5",
+  "cost_usd": 0.0003315,
+  "results": [
+    {
+      "id": "a01",
+      "question": "What was the total revenue per year?",
+      "sql": "WITH yearly_revenue AS (\n    SELECT\n        EXTRACT(year FROM o.order_date) AS year,\n        SUM(oi.quantity * oi.unit_price) AS total_revenue\n    FROM orders o\n    JOIN order_items oi ON o.order_id = oi.order_id\n    GROUP BY year\n)\nSELECT\n    year,\n    ROUND(total_revenue, 2) AS revenue\nFROM yearly_revenue\nORDER BY year",
+      "passed": true,
+      "corrections": 0,
+      "error": null,
+      "cost_usd": 7.97e-05
+    },
+    {
+      "id": "a02",
+      "question": "Which product category had the highest revenue in 2024? Show all categories, highest first.",
+      "sql": "WITH category_revenue AS (\n    SELECT p.category, ROUND(SUM(oi.quantity * oi.unit_price), 2) AS revenue\n    FROM order_items oi\n    JOIN products p ON oi.product_id = p.product_id\n    JOIN orders o ON oi.order_id = o.order_id\n    WHERE o.order_date >= '2024-01-01' AND o.order_date < '2025-01-01'\n    GROUP BY p.category\n)\nSELECT category, revenue\nFROM category_revenue\nORDER BY revenue DESC",
+      "passed": true,
+      "corrections": 0,
+      "error": null,
+      "cost_usd": 8.92e-05
+    },
+    {
+      "id": "a03",
+      "question": "How many orders came in through each sales channel?",
+      "sql": "SELECT channel, COUNT(DISTINCT order_id) AS orders FROM orders GROUP BY channel",
+      "passed": true,
+      "corrections": 0,
+      "error": null,
+      "cost_usd": 5.07e-05
+    },
+    {
+      "id": "a04",
+      "question": "How many orders were placed in each month of 2025?",
+      "sql": "SELECT strftime('%Y-%m', order_date) AS month, COUNT(*) AS orders FROM orders WHERE strftime('%Y', order_date) = '2025' GROUP BY month ORDER BY month",
+      "passed": true,
+      "corrections": 0,
+      "error": null,
+      "cost_usd": 6.02e-05
+    },
+    {
+      "id": "a05",
+      "question": "Which country has the most customers? List all countries with their number of customers.",
+      "sql": "SELECT country, COUNT(*) AS customer_count FROM customers GROUP BY country ORDER BY customer_count DESC",
+      "passed": true,
+      "corrections": 0,
+      "error": null,
+      "cost_usd": 5.17e-05
+    }
+  ]
+}

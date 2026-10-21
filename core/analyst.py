@@ -1,4 +1,4 @@
-"""KI-Datenanalyst: Datensatz, nur lesende Datenbank und SQL-Schutz. Keine Oberfläche.
+"""KI-Datenanalyst: Datensatz, nur lesende Datenbank, SQL-Schutz und Text-to-SQL. Keine Oberfläche.
 
 Der Datensatz ist ein erfundener Online-Shop (Kunden, Produkte, Bestellungen, Positionen),
 den generate_sales() aus einem festen Startwert erzeugt. Damit gibt es keine Lizenzfragen,
@@ -10,6 +10,9 @@ Zwei Schutzschichten, bewusst doppelt:
    Textsuche nach „DELETE“, die man mit Kommentaren oder Groß-/Kleinschreibung umgeht).
 2. Die Verbindung ist read_only und darf keine Dateien lesen oder schreiben. Selbst wenn
    Schicht 1 einen Fehler hätte, kann die Abfrage nichts verändern und nichts vom Server holen.
+
+ask() lässt das Modell aus einer Frage SQL schreiben (Structured Outputs, Schema im Prompt),
+führt es aus und gibt bei einem Fehler genau einmal die Meldung zurück zur Korrektur.
 """
 
 import random
@@ -20,6 +23,11 @@ from pathlib import Path
 
 import duckdb
 import pandas as pd
+from openai import OpenAI
+from pydantic import BaseModel, ConfigDict, Field
+
+from core.extraction import PROVIDER_PREFERENCES, strict_json_schema
+from core.llm import Message, Usage, complete, get_client
 
 SEED = 42  # fester Startwert: gleiche Daten bei jedem Lauf
 FIRST_DAY = date(2023, 1, 1)
@@ -210,6 +218,7 @@ def generate_sales(seed: int = SEED) -> dict[str, pd.DataFrame]:
 
 # Bedeutung der Spalten für den Prompt; Englisch, weil das Modell es liest
 COLUMN_NOTES = {
+    "order_items.quantity": "units; revenue of a line is quantity * unit_price",
     "customers.signup_date": "date the customer registered",
     "orders.channel": "sales channel",
     "order_items.unit_price": "price per unit in EUR at the time of the order",
@@ -315,3 +324,138 @@ def schema_description() -> str:
                 line += f", values: {', '.join(values)}"
             lines.append(line)
     return "\n".join(lines)
+
+
+# ------------------------------------------------------------------ Text-to-SQL
+
+MAX_CORRECTIONS = 1  # Akzeptanzkriterium: höchstens ein automatischer Korrekturversuch
+TEMPERATURE = 0.0  # SQL soll wiederholbar sein, nicht kreativ
+
+SYSTEM_PROMPT = """You translate questions about a small online shop into one DuckDB SQL query.
+
+Database schema:
+{schema}
+
+Rules:
+- Write exactly one SELECT statement (WITH ... SELECT is fine). Never modify data.
+- Use only the tables and columns above. Text values must match the listed values exactly.
+- Revenue means sum(order_items.quantity * order_items.unit_price), in EUR.
+- Give every computed column a short, readable alias such as revenue or orders.
+- Round money to 2 decimals. Sort the result in the order a reader would expect.
+- If the question cannot be answered with this data, return a query that selects a single
+  column named message with a short explanation as text."""
+
+
+class SQLAnswer(BaseModel):
+    """Was das Modell zurückgibt. Nur das SQL, damit nichts anderes ausgeführt werden kann."""
+
+    model_config = ConfigDict(extra="forbid")
+    sql: str = Field(
+        description="One DuckDB SELECT statement, without a trailing semicolon"
+    )
+
+
+RESPONSE_FORMAT = {
+    "type": "json_schema",
+    "json_schema": {
+        "name": "SQLAnswer",
+        "strict": True,
+        "schema": strict_json_schema(SQLAnswer),
+    },
+}
+
+
+class Attempt(BaseModel):
+    """Ein Versuch des Modells: sein SQL und, falls es scheiterte, die Fehlermeldung."""
+
+    sql: str
+    error: str | None = None
+    usage: Usage
+
+
+class AnalystResult(BaseModel):
+    """Ergebnis einer Frage. table ist None, wenn auch die Korrektur scheiterte."""
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    question: str
+    model: str
+    attempts: list[Attempt]
+    table: pd.DataFrame | None = None
+
+    @property
+    def sql(self) -> str:
+        return self.attempts[-1].sql
+
+    @property
+    def error(self) -> str | None:
+        return None if self.table is not None else self.attempts[-1].error
+
+    @property
+    def usage(self) -> Usage:
+        return sum((a.usage for a in self.attempts), Usage())
+
+
+def build_messages(question: str) -> list[Message]:
+    return [
+        {
+            "role": "system",
+            "content": SYSTEM_PROMPT.format(schema=schema_description()),
+        },
+        {"role": "user", "content": question},
+    ]
+
+
+def parse_sql(raw: str) -> str:
+    """SQL aus der JSON-Antwort; ein Semikolon am Ende stört check_sql nicht, wird aber entfernt."""
+    return SQLAnswer.model_validate_json(raw).sql.strip().rstrip(";").strip()
+
+
+def correction_message(error: str) -> Message:
+    return {
+        "role": "user",
+        "content": f"The query failed with this error:\n{error}\n\n"
+        "Fix the query and return the corrected SQL.",
+    }
+
+
+def ask(question: str, model: str, client: OpenAI | None = None) -> AnalystResult:
+    """Frage -> SQL -> Ergebnis, mit höchstens einem Korrekturversuch.
+
+    Korrigiert werden darf jeder Fehler beim Ausführen, auch eine abgelehnte Anweisung: Die
+    Meldung sagt dem Modell, dass nur SELECT erlaubt ist. Ausgeführt wird sie trotzdem nie.
+    API-Fehler (Key fehlt, Modell nicht verfügbar) kommen als LLMError.
+    """
+    client = client or get_client()
+    messages = build_messages(question)
+    attempts: list[Attempt] = []
+    for _ in range(1 + MAX_CORRECTIONS):
+        response = complete(
+            messages,
+            model,
+            temperature=TEMPERATURE,
+            response_format=RESPONSE_FORMAT,
+            extra_body=PROVIDER_PREFERENCES,
+            client=client,
+        )
+        try:
+            sql = parse_sql(response.text)
+        except ValueError as err:  # kein gültiges JSON nach Schema
+            sql, error = response.text, f"Invalid response format: {err}"
+        else:
+            try:
+                table = run_query(sql)
+            except (duckdb.Error, UnsafeSQLError) as err:
+                error = str(err)
+            else:
+                attempts.append(Attempt(sql=sql, usage=response.usage))
+                return AnalystResult(
+                    question=question, model=model, attempts=attempts, table=table
+                )
+        attempts.append(Attempt(sql=sql, error=error, usage=response.usage))
+        messages = [
+            *messages,
+            {"role": "assistant", "content": response.text},
+            correction_message(error),
+        ]
+    return AnalystResult(question=question, model=model, attempts=attempts)

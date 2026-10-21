@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-21",
+  "model": "google/gemini-2.5-flash-lite",
+  "run": 1,
+  "passed": "3/5",
+  "cost_usd": 0.0001815,
+  "results": [
+    {
+      "id": "a01",
+      "question": "What was the total revenue per year?",
+      "sql": "SELECT STRFTIME('%Y', order_date) AS order_year, ROUND(SUM(quantity * unit_price), 2) AS total_revenue FROM orders JOIN order_items USING (order_id) GROUP BY order_year ORDER BY order_year",
+      "passed": true,
+      "corrections": 0,
+      "error": null,
+      "cost_usd": 6.4e-05
+    },
+    {
+      "id": "a02",
+      "question": "Which product category had the highest revenue in 2024? Show all categories, highest first.",
+      "sql": "",
+      "passed": false,
+      "corrections": 0,
+      "error": "Too many requests. Wait a moment and try again.",
+      "cost_usd": 0.0
+    },
+    {
+      "id": "a03",
+      "question": "How many orders came in through each sales channel?",
+      "sql": "",
+      "passed": false,
+      "corrections": 0,
+      "error": "Too many requests. Wait a moment and try again.",
+      "cost_usd": 0.0
+    },
+    {
+      "id": "a04",
+      "question": "How many orders were placed in each month of 2025?",
+      "sql": "SELECT STRFTIME('%Y-%m', order_date) AS order_month, COUNT(order_id) AS orders FROM orders WHERE STRFTIME('%Y', order_date) = '2025' GROUP BY order_month ORDER BY order_month",
+      "passed": true,
+      "corrections": 0,
+      "error": null,
+      "cost_usd": 6.51e-05
+    },
+    {
+      "id": "a05",
+      "question": "Which country has the most customers? List all countries with their number of customers.",
+      "sql": "SELECT country, COUNT(customer_id) AS num_customers FROM customers GROUP BY country ORDER BY num_customers DESC",
+      "passed": true,
+      "corrections": 0,
+      "error": null,
+      "cost_usd": 5.24e-05
+    }
+  ]
+}
