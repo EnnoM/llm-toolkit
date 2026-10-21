@@ -572,8 +572,20 @@
   arbeitsstand: "noch nicht begonnen"
   naechster_schritt: "noch nicht begonnen"
   notizen: |
-    - Offen: welcher Datensatz? Idee: Verkaufsdaten per Skript selbst erzeugen, dann gibt es
-      keine Lizenzfragen.
+    - Entschieden am 21.10.2026: Datensatz selbst erzeugt (erfundener Online-Shop, Seed 42,
+      generate_sales() in core/analyst.py), dadurch keine Lizenzfragen und bei jedem Lauf
+      dieselben Zahlen. Vier Tabellen: customers (400), products (40, fünf Kategorien),
+      orders (6981, 2023 bis 2025, Kanal web/app/marketplace), order_items (12234).
+      Umsatz pro Jahr 332270 / 438902 / 493259 Euro, Weihnachtsspitze im Nov/Dez, Gartenartikel
+      im Frühling und Sommer, damit Diagramme etwas zeigen.
+    - Schutz in zwei Schichten, Stand 21.10.2026 mit DuckDB 2.0: check_sql() lässt über
+      duckdb.extract_statements nur genau eine SELECT-Anweisung durch, und die Verbindung ist
+      read_only mit enable_external_access=false und lock_configuration=true. Getestet: DROP,
+      DELETE, UPDATE, INSERT, CREATE, ATTACH, COPY, SET und „SELECT 1; DELETE“ werden
+      abgelehnt; read_csv auf eine Datei des Servers schlägt fehl; Daten bleiben unverändert
+      (tests/test_analyst.py, ohne API).
+    - Status bleibt „geplant“, bis die Seite existiert: Laut core/catalog.py bekommt jedes
+      Modul, das nicht geplant ist, eine verlinkte Karte auf der öffentlichen Startseite.
     - DuckDB-Doku: https://duckdb.org/docs/
 
 # ---------------------------------------------------------------- Phase 4: Fortgeschritten

@@ -46,3 +46,10 @@ Die öffentliche Startseite „Home“ stellt die Module auf Englisch vor, Texte
 Aufbau: Logik in `core/`, Oberfläche in `app_pages/`, Tests in `tests/`, Plan in `docs/`, Testsets in `eval/`.
 
 Entscheidungen und Erkenntnisse pro Modul: [`docs/erkenntnisse.md`](docs/erkenntnisse.md).
+
+## Daten
+
+- **Shop-Datensatz (KI-Datenanalyst):** frei erfunden, kein realer Shop und keine echten Personen.
+  `generate_sales()` in `core/analyst.py` erzeugt ihn bei jedem Start aus einem festen Startwert
+  (Kunden, Produkte, Bestellungen 2023 bis 2025), deshalb liegt keine Datendatei im Repo. Da er
+  selbst erzeugt ist, gelten keine fremden Lizenzen oder Nutzungsbedingungen.

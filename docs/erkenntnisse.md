@@ -396,6 +396,37 @@ mistral-small-3.2 11/12, gemini-2.5-flash-lite 9/12, gpt-4.1-nano 7/12.
 
 ---
 
+## KI-Datenanalyst (Schritt 1: Datensatz und Schutz)
+
+**Gebaut:** `core/analyst.py` erzeugt einen erfundenen Online-Shop (Kunden, Produkte,
+Bestellungen, Positionen von 2023 bis 2025), schreibt ihn als DuckDB-Datei in den Temp-Ordner
+und öffnet ihn nur lesend. `check_sql()` lässt nur eine einzelne SELECT-Anweisung durch,
+`run_query()` liefert höchstens 1000 Zeilen, `schema_description()` beschreibt Tabellen und
+Spalten für den Prompt. Noch ohne Modell und ohne Oberfläche.
+
+**Entscheidungen**
+
+- **Datensatz selbst erzeugt statt öffentlicher Daten.** Keine Lizenzfragen, keine echten
+  Personen, und ein fester Startwert liefert bei jedem Lauf exakt dieselben Zahlen. Das braucht
+  das Akzeptanzkriterium „Beispielfragen liefern dieselben Ergebnisse wie von Hand geschriebenes
+  SQL“. Saisonmuster (Weihnachten, Gartenartikel im Sommer) und Wachstum pro Jahr sind
+  eingebaut, damit Diagramme etwas zu zeigen haben.
+- **Datei im Temp-Ordner, nicht im Repo.** Sie entsteht in einer Viertelsekunde aus dem Code;
+  eine eingecheckte Binärdatei wäre nur ein Duplikat, das veralten kann. Gebaut wird unter
+  einem Zwischennamen und erst am Ende umbenannt, damit ein zweiter Prozess nie eine halbe
+  Datei öffnet.
+- **Zwei Schutzschichten statt einer.** Schicht 1 fragt DuckDBs eigenen Parser nach dem Typ der
+  Anweisung. Eine Textsuche nach „DELETE“ ließe sich mit Kommentaren oder Kleinschreibung
+  umgehen und würde harmlose Spaltennamen fälschlich sperren. Schicht 2 ist die Verbindung
+  selbst: `read_only`, dazu `enable_external_access=false`. Ohne diese Einstellung ist auch ein
+  reines SELECT gefährlich: `SELECT * FROM read_csv('/etc/passwd')` liest Dateien des Servers.
+  `lock_configuration=true` verhindert, dass eine Abfrage die Sperren per `SET` wieder aufhebt.
+- **Erlaubte Werte stehen im Schema-Text.** Für kurze Textspalten (Kategorie, Land, Kanal) nennt
+  der Prompt die vorkommenden Werte. Sonst rät das Modell Schreibweisen wie „electronics“ und
+  bekommt eine leere Tabelle statt eines Fehlers, also eine falsche Antwort, die richtig aussieht.
+
+---
+
 ## Startseiten: öffentliches Home, internes Start
 
 **Gebaut:** Die bisherige Startseite (Arbeits-Checkliste) heißt jetzt „Start“
@@ -449,6 +480,7 @@ mit „WIP“. Texte, Icons und Seiten stehen in `core/catalog.py`.
 
 ## Offene Punkte
 
-- Nächstes Modul: KI-Datenanalyst (Phase 3).
+- KI-Datenanalyst: Text-to-SQL mit einem Korrekturversuch, fünf Beispielfragen mit
+  Referenz-SQL, dann die Seite mit Tabelle, Diagramm und Code.
 - Optional im Tool Use: Embedding-Tokens getrennt von den Chat-Tokens anzeigen, damit „Tokens
   in“ nicht nach einem Fehler aussieht.
