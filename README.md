@@ -3,7 +3,7 @@
 Modulare Streamlit-App, mit der ich LLM-Techniken von Chat über RAG bis zu Agenten lerne und vorzeige.
 Alle Modelle laufen über [OpenRouter](https://openrouter.ai), jede Antwort zeigt Tokenverbrauch und Kosten.
 
-**Demo:** _folgt_ (Streamlit Community Cloud, passwortgeschützt)
+**Demo:** https://enno-llm-toolkit.streamlit.app/ (Streamlit Community Cloud, passwortgeschützt)
 
 ## Lokal starten
 
@@ -26,11 +26,11 @@ Auf Streamlit Cloud kommen dieselben Werte aus `.env.example` in die App-Secrets
 <!-- modules:start (automatisch aus docs/modules.yaml, nicht von Hand ändern) -->
 | Modul | Phase | Status | Worum es geht |
 |---|---|---|---|
-| Chat | 2 | in Arbeit | Chatfenster mit gestreamten Antworten, einstellbarem System-Prompt und Anzeige von Tokens und Kosten. |
-| Prompt-Labor | 2 | in Arbeit | Dieselbe Aufgabe mit vier Prompt-Techniken nebeneinander, inklusive Kosten und Antwortzeit. |
-| Datenextraktion | 2 | in Arbeit | Macht aus Freitext wie Rechnungen oder E-Mails geprüfte, strukturierte Daten im JSON-Format. |
-| RAG-Chatbot | 3 | in Arbeit | Beantwortet Fragen zu eigenen PDF-Dokumenten und nennt dabei Datei und Seite als Quelle. |
-| Tool Use | 3 | in Arbeit | Das Modell ruft selbst Werkzeuge wie Rechner, Wetterdienst oder Websuche auf, jeder Aufruf ist sichtbar. |
+| Chat | 2 | fertig | Chatfenster mit gestreamten Antworten, einstellbarem System-Prompt und Anzeige von Tokens und Kosten. |
+| Prompt-Labor | 2 | fertig | Dieselbe Aufgabe mit vier Prompt-Techniken nebeneinander, inklusive Kosten und Antwortzeit. |
+| Datenextraktion | 2 | fertig | Macht aus Freitext wie Rechnungen oder E-Mails geprüfte, strukturierte Daten im JSON-Format. |
+| RAG-Chatbot | 3 | fertig | Beantwortet Fragen zu eigenen PDF-Dokumenten und nennt dabei Datei und Seite als Quelle. |
+| Tool Use | 3 | fertig | Das Modell ruft selbst Werkzeuge wie Rechner, Wetterdienst oder Websuche auf, jeder Aufruf ist sichtbar. |
 | KI-Datenanalyst | 3 | geplant | Übersetzt Fragen in normaler Sprache in SQL, führt sie nur lesend aus und zeigt Tabelle, Diagramm und Code. |
 | Workflow mit Freigabe | 4 | geplant | Eingehende Mails werden klassifiziert und beantwortet, ein Mensch gibt jeden Entwurf frei, alles wird protokolliert. |
 | MCP-Server | 4 | geplant | Stellt Werkzeuge dieses Projekts über das Model Context Protocol für Claude Desktop und andere KI-Apps bereit. |

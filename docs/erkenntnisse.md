@@ -168,7 +168,7 @@ Ergebnis erscheint als Tabelle und JSON, alle Versuche sind einsehbar.
 
 ---
 
-## RAG-Chatbot (lokal fertig, Deployment offen)
+## RAG-Chatbot
 
 **Gebaut (Schritt 1 von 3, Indexieren ohne Embeddings):** PDFs einlesen, säubern und in
 überlappende Abschnitte mit Datei und Seiten zerlegen; die Abschnitte lassen sich in der
@@ -338,7 +338,7 @@ sichtbar.
 
 ---
 
-## Tool Use (lokal fertig, Deployment offen)
+## Tool Use
 
 **Gebaut (07.10.2026):** Seite „Tool Use“ mit fünf Werkzeugen (`core/tools.py`), eigener
 Tool-Schleife (`core/tool_use.py`) und sichtbaren Schritten unter jeder Antwort. `complete()` in
@@ -420,8 +420,35 @@ mit „WIP“. Texte, Icons und Seiten stehen in `core/catalog.py`.
 
 ---
 
+## Deployment auf Streamlit Community Cloud
+
+**Gebaut:** Die App läuft unter https://enno-llm-toolkit.streamlit.app/, gebaut direkt aus
+`main` des öffentlichen GitHub-Repos. Zugang nur mit Passwort (`APP_PASSWORD`); die Schlüssel
+(`OPENROUTER_API_KEY`, `OPENROUTER_MODEL`) stehen in den Secrets der App, nicht im Repo. Am
+21.10.2026 alle fünf Module online geprüft, damit gelten sie nach Projektregel als fertig.
+
+**Entscheidungen**
+
+- **Lokale Schalter bleiben lokal.** `SKIP_LOGIN` und `SHOW_INTERNAL_PAGES` stehen nur in der
+  lokalen `.env`, nie in den Cloud-Secrets. Fehlen sie, gilt der sichere Standard: Login an,
+  interne Seite „Start“ nicht registriert.
+
+**Was sich online gezeigt hat**
+
+- **Die Websuche über ddgs funktioniert auch auf Streamlit Cloud.** Das war die größte
+  Unsicherheit, weil DuckDuckGo Anfragen aus Rechenzentren manchmal blockiert.
+- **Chroma im Speicher läuft auch dort.** Die Festplatte von Streamlit Cloud ist nicht
+  dauerhaft, deshalb war „nur im Speicher, pro Sitzung neu“ von Anfang an die richtige Wahl.
+- **Hohe Tokenzahl beim ersten Mal ist kein Fehler.** Im Tool Use zeigte „Tokens in“ nach einer
+  Frage 100251: Die erste Dokumentsuche pro Serverprozess bettet alle Beispiel-PDFs ein, und
+  diese Embedding-Tokens zählen mit. Die Kosten stimmen (0.0024 USD), nur die Zahl wirkt
+  erschreckend. Wer die Kennzahl liest, sollte wissen, dass sie Chat- und Embedding-Tokens
+  zusammenzählt.
+
+---
+
 ## Offene Punkte
 
-- Deployment auf Streamlit Community Cloud für alle drei Module der Phase 2 (Projektregel:
-  ein Modul ist erst fertig, wenn es online läuft). Bewusst zurückgestellt, der RAG-Chatbot
-  wurde vorher begonnen.
+- Nächstes Modul: KI-Datenanalyst (Phase 3).
+- Optional im Tool Use: Embedding-Tokens getrennt von den Chat-Tokens anzeigen, damit „Tokens
+  in“ nicht nach einem Fehler aussieht.

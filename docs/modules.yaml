@@ -21,7 +21,7 @@
 - id: chat
   name: Chat
   phase: 2
-  status: in_arbeit
+  status: fertig
   kurz: "Chatfenster mit gestreamten Antworten, einstellbarem System-Prompt und Anzeige von Tokens und Kosten."
   beschreibung: |
     Ein Chatfenster wie bei ChatGPT, nur mit Blick unter die Haube: Jede Nachricht geht über
@@ -63,9 +63,16 @@
     - "Die Sitzungskosten entsprechen der Summe der Einzelkosten und stehen nach „Clear chat“ wieder auf 0"
     - "Mit dem System-Prompt „Answer only in German.“ kommt die nächste Antwort auf Deutsch, auch bei englischer Frage"
     - "Fehlt der API-Key, erscheint eine verständliche Fehlermeldung statt eines Tracebacks"
-  arbeitsstand: "Chat-Seite läuft lokal, Oberfläche auf Englisch mit drei Spalten: Streaming, System-Prompt, Temperatur, Auswahl aus vier Modellen, Tokens und Kosten pro Antwort und für die Sitzung, verständliche Fehlermeldungen. Alle fünf Akzeptanzkriterien am 18.09.2026 geprüft, 1 bis 4 im Browser mit echtem Key, 5 per AppTest. Am 23.09.2026 Handy-Ansicht repariert: Unter 640 px steht der Verlauf direkt über dem Eingabefeld, Einstellungen und Kennzahlen darüber. Nach Projektregel fehlt nur noch das Deployment."
-  naechster_schritt: "App auf Streamlit Community Cloud deployen (vorher Repo auf GitHub pushen) und den Chat dort einmal ausprobieren."
+  arbeitsstand: "abgeschlossen"
+  naechster_schritt: "-"
   notizen: |
+    - Online seit Oktober 2026 unter https://enno-llm-toolkit.streamlit.app/ (mit Passwort), am 21.10.2026 dort geprüft.
+    - Stand bei Abschluss: Chat-Seite läuft lokal, Oberfläche auf Englisch mit drei Spalten:
+      Streaming, System-Prompt, Temperatur, Auswahl aus vier Modellen, Tokens und Kosten pro
+      Antwort und für die Sitzung, verständliche Fehlermeldungen. Alle fünf
+      Akzeptanzkriterien am 18.09.2026 geprüft, 1 bis 4 im Browser mit echtem Key, 5 per
+      AppTest. Am 23.09.2026 Handy-Ansicht repariert: Unter 640 px steht der Verlauf direkt
+      über dem Eingabefeld, Einstellungen und Kennzahlen darüber.
     - Entscheidung: Modellauswahl auf vier Modelle begrenzt (MODELS in core/models.py, von allen Modulen genutzt),
       drei günstige und Claude Haiku 4.5 als rund zehnmal teurerer Vergleich.
     - OpenRouter liefert Tokens und Kosten erst im letzten Stück des Streams, also erst nach
@@ -83,7 +90,7 @@
 - id: prompt_labor
   name: Prompt-Labor
   phase: 2
-  status: in_arbeit
+  status: fertig
   kurz: "Dieselbe Aufgabe mit vier Prompt-Techniken nebeneinander, inklusive Kosten und Antwortzeit."
   beschreibung: |
     Ein Prompt ist der Eingabetext, den das Modell bekommt, und schon kleine Änderungen daran
@@ -123,9 +130,15 @@
     - "Jede Variante zeigt Eingabetokens, Ausgabetokens, Kosten in USD und Antwortzeit in Sekunden"
     - "Mindestens drei vorbereitete Beispielaufgaben sind auswählbar"
     - "Ein Test ohne API-Aufruf prüft, dass der Few-Shot-Prompt alle Beispiele und der Chain-of-Thought-Prompt die Schritt-für-Schritt-Anweisung enthält"
-  arbeitsstand: "Seite läuft lokal: drei Beispielaufgaben, vier Techniken parallel, Karten mit Tokens, Kosten und Zeit, gesendete Prompts als Reiter. Alle fünf Akzeptanzkriterien am 21.09.2026 geprüft (1 bis 3 im Browser mit echtem Key, 4 und 5 per Test). Am 23.09.2026 alle drei Aufgaben mit gpt-4.1-nano und claude-haiku-4.5 verglichen, Ergebnis in den Notizen. Nach Projektregel fehlt nur noch das Deployment."
-  naechster_schritt: "App auf Streamlit Community Cloud deployen (vorher Repo auf GitHub pushen) und das Prompt-Labor dort einmal ausprobieren."
+  arbeitsstand: "abgeschlossen"
+  naechster_schritt: "-"
   notizen: |
+    - Online seit Oktober 2026 unter https://enno-llm-toolkit.streamlit.app/ (mit Passwort), am 21.10.2026 dort geprüft.
+    - Stand bei Abschluss: Seite läuft lokal: drei Beispielaufgaben, vier Techniken
+      parallel, Karten mit Tokens, Kosten und Zeit, gesendete Prompts als Reiter. Alle fünf
+      Akzeptanzkriterien am 21.09.2026 geprüft (1 bis 3 im Browser mit echtem Key, 4 und 5
+      per Test). Am 23.09.2026 alle drei Aufgaben mit gpt-4.1-nano und claude-haiku-4.5
+      verglichen, Ergebnis in den Notizen.
     - Vorlagen und Beispielaufgaben liegen in core/prompt_lab.py (TASKS), die Tests in
       tests/test_prompt_lab.py.
     - Heutige Modelle rechnen oft ungefragt Schritt für Schritt. Die Rechenaufgabe verlangt
@@ -165,7 +178,7 @@
 - id: datenextraktion
   name: Datenextraktion
   phase: 2
-  status: in_arbeit
+  status: fertig
   kurz: "Macht aus Freitext wie Rechnungen oder E-Mails geprüfte, strukturierte Daten im JSON-Format."
   beschreibung: |
     Viele Informationen stecken in Freitext, etwa in E-Mails, Rechnungen oder Stellenanzeigen,
@@ -206,9 +219,17 @@
     - "Beträge sind Zahlen, Datumsangaben haben das Format JJJJ-MM-TT"
     - "Nach höchstens zwei erfolglosen Korrekturversuchen erscheint eine klare Fehlermeldung statt eines Tracebacks"
     - "Ein Test ohne API-Aufruf prüft die Validierung mit einem gespeicherten fehlerhaften JSON"
-  arbeitsstand: "Seite läuft lokal: drei Dokumenttypen (Rechnung, Stellenanzeige, Terminanfrage) als Pydantic-Modelle in core/extraction.py, Structured Outputs im Strict Mode, bis zu zwei Korrekturen mit Fehlermeldung, Ergebnis als Tabelle und JSON, alle Versuche einsehbar. Widersprüche im Dokument (Summe, Gehaltsspanne) erscheinen als Hinweis ohne Korrekturversuch. Am 23.09.2026 alle drei Beispieltexte mit allen vier Modellen geprüft (jeweils im ersten Versuch bestanden), Akzeptanzkriterien 1 bis 3 im Browser mit echtem Key, 4 und 5 per Test (20 Tests ohne API). Nach Projektregel fehlt nur noch das Deployment."
-  naechster_schritt: "App auf Streamlit Community Cloud deployen (vorher Repo auf GitHub pushen) und die Datenextraktion dort einmal ausprobieren."
+  arbeitsstand: "abgeschlossen"
+  naechster_schritt: "-"
   notizen: |
+    - Online seit Oktober 2026 unter https://enno-llm-toolkit.streamlit.app/ (mit Passwort), am 21.10.2026 dort geprüft.
+    - Stand bei Abschluss: Seite läuft lokal: drei Dokumenttypen (Rechnung, Stellenanzeige,
+      Terminanfrage) als Pydantic-Modelle in core/extraction.py, Structured Outputs im
+      Strict Mode, bis zu zwei Korrekturen mit Fehlermeldung, Ergebnis als Tabelle und JSON,
+      alle Versuche einsehbar. Widersprüche im Dokument (Summe, Gehaltsspanne) erscheinen
+      als Hinweis ohne Korrekturversuch. Am 23.09.2026 alle drei Beispieltexte mit allen
+      vier Modellen geprüft (jeweils im ersten Versuch bestanden), Akzeptanzkriterien 1 bis
+      3 im Browser mit echtem Key, 4 und 5 per Test (20 Tests ohne API).
     - Nicht jedes Modell unterstützt Structured Outputs:
       https://openrouter.ai/docs/features/structured-outputs
     - Anfragen schicken provider.require_parameters mit, sonst darf OpenRouter an einen
@@ -233,7 +254,7 @@
 - id: rag_chatbot
   name: RAG-Chatbot
   phase: 3
-  status: in_arbeit
+  status: fertig
   kurz: "Beantwortet Fragen zu eigenen PDF-Dokumenten und nennt dabei Datei und Seite als Quelle."
   beschreibung: |
     Ein Sprachmodell kennt die eigenen Dokumente nicht, und ganze PDFs in jede Anfrage zu packen,
@@ -272,9 +293,17 @@
     - "Die für eine Antwort genutzten Textstellen sind in der Oberfläche aufklappbar sichtbar"
     - "Dieselbe Datei zweimal hochzuladen, erzeugt keine doppelten Abschnitte in Chroma"
     - "Ein Test ohne API-Aufruf prüft die Chunking-Funktion (Abschnittsgröße und Überlappung stimmen)"
-  arbeitsstand: "Lokal fertig, nur das Deployment fehlt (Projektregel). PDFs einlesen, säubern und an Sätzen und Überschriften zerlegen, jeder Abschnitt mit Überschriften-Pfad; Embeddings in Chroma (im Speicher, eigene Sammlung pro Sitzung); Chat, der nur aus den 6 ähnlichsten Abschnitten antwortet, Quellen als „file, p. X“ nennt und die Abschnitte unter „Retrieved passages“ zeigt. Fragenkatalog mit 10 Fragen in eval/rag_questions.yaml, Auswertung mit python -m core.rag_eval: am 06.10.2026 10 von 10 richtig (gemini-2.5-flash-lite). Alle fünf Akzeptanzkriterien lokal erfüllt, 46 Tests ohne API."
-  naechster_schritt: "App auf Streamlit Community Cloud deployen (vorher Repo auf GitHub pushen) und den RAG-Chatbot dort mit den Beispiel-PDFs einmal ausprobieren."
+  arbeitsstand: "abgeschlossen"
+  naechster_schritt: "-"
   notizen: |
+    - Online seit Oktober 2026 unter https://enno-llm-toolkit.streamlit.app/ (mit Passwort), am 21.10.2026 dort geprüft.
+    - Stand bei Abschluss: PDFs einlesen, säubern und an Sätzen und Überschriften zerlegen,
+      jeder Abschnitt mit Überschriften-Pfad; Embeddings in Chroma (im Speicher, eigene
+      Sammlung pro Sitzung); Chat, der nur aus den 6 ähnlichsten Abschnitten antwortet,
+      Quellen als „file, p. X“ nennt und die Abschnitte unter „Retrieved passages“ zeigt.
+      Fragenkatalog mit 10 Fragen in eval/rag_questions.yaml, Auswertung mit python -m
+      core.rag_eval: am 06.10.2026 10 von 10 richtig (gemini-2.5-flash-lite). Alle fünf
+      Akzeptanzkriterien lokal erfüllt, 46 Tests ohne API.
     - Chroma-Doku: https://docs.trychroma.com
     - Entscheidungen am 23.09.2026 (mit Enno besprochen):
       - Embeddings über OpenRouter (https://openrouter.ai/docs/api-reference/embeddings), nicht
@@ -390,7 +419,7 @@
 - id: tool_use
   name: Tool Use
   phase: 3
-  status: in_arbeit
+  status: fertig
   kurz: "Das Modell ruft selbst Werkzeuge wie Rechner, Wetterdienst oder Websuche auf, jeder Aufruf ist sichtbar."
   beschreibung: |
     Sprachmodelle rechnen unzuverlässig und kennen keine aktuellen Daten wie das heutige Wetter
@@ -434,9 +463,22 @@
     - "Eine Rechenfrage wird über das Rechner-Werkzeug beantwortet, und das Ergebnis stimmt exakt"
     - "Eine Frage ohne Werkzeugbedarf („Explain photosynthesis“) löst keinen Aufruf aus"
     - "Fällt ein Dienst aus (Wetter-API oder Websuche) oder sind fünf Werkzeug-Runden erreicht, endet der Ablauf mit einer verständlichen Meldung, ohne dass die App abstürzt"
-  arbeitsstand: "Lokal fertig, nur das Deployment fehlt (Projektregel). Fünf Werkzeuge (Rechner ohne eval, Datum mit Tagen bis zu einem Datum, Wetter über Open-Meteo, Websuche über ddgs, Dokumentsuche über die RAG-Suche), eigene Tool-Schleife mit höchstens fünf Runden, Schritte live und danach aufklappbar unter jeder Antwort. Alle fünf Akzeptanzkriterien erfüllt (1 bis 4 im Browser, 5 per Test). Fragenkatalog mit 12 Fragen in eval/tool_questions.yaml, Auswertung mit python -m core.tool_eval: am 07.10.2026 claude-haiku-4.5 12/12, mistral-small-3.2 11/12, gemini-2.5-flash-lite 9/12, gpt-4.1-nano 7/12. 36 Tests ohne API und Netz."
-  naechster_schritt: "App auf Streamlit Community Cloud deployen (vorher Repo auf GitHub pushen) und prüfen, ob die Websuche über ddgs dort funktioniert oder blockiert wird."
+  arbeitsstand: "abgeschlossen"
+  naechster_schritt: "-"
   notizen: |
+    - Online seit Oktober 2026 unter https://enno-llm-toolkit.streamlit.app/ (mit Passwort), am 21.10.2026 dort geprüft.
+    - Stand bei Abschluss: Fünf Werkzeuge (Rechner ohne eval, Datum mit Tagen bis zu einem
+      Datum, Wetter über Open-Meteo, Websuche über ddgs, Dokumentsuche über die RAG-Suche),
+      eigene Tool-Schleife mit höchstens fünf Runden, Schritte live und danach aufklappbar
+      unter jeder Antwort. Alle fünf Akzeptanzkriterien erfüllt (1 bis 4 im Browser, 5 per
+      Test). Fragenkatalog mit 12 Fragen in eval/tool_questions.yaml, Auswertung mit python
+      -m core.tool_eval: am 07.10.2026 claude-haiku-4.5 12/12, mistral-small-3.2 11/12,
+      gemini-2.5-flash-lite 9/12, gpt-4.1-nano 7/12. 36 Tests ohne API und Netz.
+    - Online am 21.10.2026 geprüft (gemini-2.5-flash-lite, Wetter + Rechner + Dokumentsuche
+      in einer Frage, drei Aufrufe): Die Websuche über ddgs funktioniert auch auf Streamlit
+      Cloud. „Tokens in“ zeigte 100251, weil die erste Dokumentsuche pro Serverprozess alle
+      Beispiel-PDFs einbettet und diese Embedding-Tokens mitzählt; die Kosten (0.0024 USD)
+      stimmen, nur die Zahl wirkt hoch.
     - Open-Meteo braucht keinen API-Key: https://open-meteo.com/en/docs
     - Tool Calling bei OpenRouter: https://openrouter.ai/docs/guides/features/tool-calling
     - Nicht jedes Modell unterstützt Tool Calling, vorher auf openrouter.ai/models prüfen.
