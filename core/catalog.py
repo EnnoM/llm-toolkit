@@ -24,8 +24,7 @@ CATALOG = (
         icon=":material/chat:",
         summary=(
             "A chat with streamed answers, an adjustable system prompt and temperature. "
-            "Every answer shows its tokens and cost, which grow with each turn because "
-            "the whole conversation is sent again."
+            "Every answer shows its tokens and cost."
         ),
         techniques=("Streaming", "System prompt", "Token and cost tracking"),
         page="app_pages/chat.py",
@@ -46,9 +45,8 @@ CATALOG = (
         title="Data Extraction",
         icon=":material/data_object:",
         summary=(
-            "Turns free text such as invoices, job ads or appointment requests into "
-            "validated JSON. If the output breaks the schema, the model gets the error "
-            "and corrects itself."
+            "Turns free text such as invoices or job ads into validated JSON. Invalid "
+            "output goes back to the model to correct."
         ),
         techniques=("Structured outputs", "Pydantic validation", "Self-correction"),
         page="app_pages/extraction.py",
@@ -141,8 +139,3 @@ CATALOG = (
 def built_modules() -> list[CatalogEntry]:
     """Module mit eigener Seite, in der Reihenfolge des Katalogs."""
     return [entry for entry in CATALOG if entry.page]
-
-
-def upcoming_modules() -> list[CatalogEntry]:
-    """Module, die noch keine Seite haben (auf Home als WIP)."""
-    return [entry for entry in CATALOG if not entry.page]

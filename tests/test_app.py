@@ -19,8 +19,12 @@ def sign_in(at: AppTest, password: str) -> AppTest:
     return next(b for b in at.button if b.label == "Sign in").click().run()
 
 
+def module_links(at: AppTest) -> list[str]:
+    return [p.label for p in at.get("page_link")]
+
+
 def shows_home(at: AppTest) -> bool:
-    return any(m.value.startswith("#### ") for m in at.markdown)
+    return any("Chat" in label for label in module_links(at))
 
 
 def test_login_is_required_by_default(monkeypatch):
@@ -51,11 +55,11 @@ def test_skip_login_opens_the_app_without_password(monkeypatch):
 
 def test_home_lists_every_module_and_marks_upcoming_as_wip(monkeypatch):
     at = run_app(monkeypatch, "true")
-    headings = [m.value for m in at.markdown if m.value.startswith("#### ")]
-    assert len(headings) == len(built_modules())
-    assert "Module 1: Chat" in headings[0]
+    links = module_links(at)
+    assert len(links) == len(built_modules())
+    assert "Chat" in links[0]
     wip = [c.value for c in at.caption if ":gray-badge[WIP]" in c.value]
-    assert "Module 6: AI Data Analyst" in wip[0]
+    assert "AI Data Analyst" in wip[0]
 
 
 def test_start_is_hidden_without_the_local_switch(monkeypatch):

@@ -448,6 +448,14 @@ mit „WIP“. Texte, Icons und Seiten stehen in `core/catalog.py`.
 - **Eine Quelle für die Navigation.** `app.py` baut die Modulseiten aus dem Katalog, Titel und
   Icons stehen nicht mehr doppelt.
 - **Ausgegraut mit `st.caption`, ohne eigenes CSS.** Die Hinweisschrift ist im Theme schon grau.
+- **Home als Raster (21.10.2026).** Die Seite ist im Lebenslauf verlinkt, deshalb sagt der Text
+  oben jetzt auch, warum es das Projekt gibt: lernen, wie LLM-Anwendungen funktionieren, und
+  zeigen, was ich mit KI bauen kann. Alle elf Module stehen als gleich große Kacheln in drei
+  Spalten über die volle Breite, geplante ausgegraut. Gleich groß wird es über eine feste Höhe
+  (`st.container(height=190)`); vier Spalten waren zu schmal, Titel wurden abgeschnitten und
+  Texte liefen über. Der Titel ist selbst der Link, ein eigener „Open“-Knopf rutschte bei
+  langen Texten aus der Kachel. Zwei Kurzbeschreibungen (Chat, Datenextraktion) sind dafür
+  kürzer geworden.
 
 ---
 
