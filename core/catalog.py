@@ -82,6 +82,7 @@ CATALOG = (
             "shows the table, a chart and the query."
         ),
         techniques=("Text to SQL", "Read-only queries", "Charts"),
+        page="app_pages/analyst.py",
     ),
     CatalogEntry(
         id="workflow_freigabe",

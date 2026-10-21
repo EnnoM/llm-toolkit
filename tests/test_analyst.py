@@ -5,6 +5,7 @@ import json
 import duckdb
 import pandas as pd
 import pytest
+from streamlit.testing.v1 import AppTest
 
 from core import analyst
 from core.analyst import (
@@ -191,3 +192,30 @@ def test_same_result_ignores_names_order_and_extra_columns():
     assert same_result(reference, answer)
     assert not same_result(reference, answer.head(1))
     assert not same_result(reference, answer.assign(n=[5, 11]))
+
+
+# ------------------------------------------------------------------ Seite (AppTest, Fake-Client)
+
+PAGE = "../app_pages/analyst.py"
+
+
+def test_page_renders_with_dataset_overview():
+    at = AppTest.from_file(PAGE, default_timeout=30).run()
+    assert not at.exception
+    assert at.title[0].value == "AI Data Analyst"
+    assert len(at.dataframe) == 4  # Beispielzeilen der vier Tabellen
+
+
+def test_page_shows_answer_chart_table_and_sql(monkeypatch):
+    calls = []
+    sql = "SELECT channel, count(*) AS orders FROM orders GROUP BY 1 ORDER BY 2 DESC"
+    client = fake_client([sql_answer(sql), "Web has the most orders."], calls)
+    monkeypatch.setattr("core.analyst.get_client", lambda: client)
+    at = AppTest.from_file(PAGE, default_timeout=30).run()
+    at.text_input(key="analyst_question").set_value("Orders per channel?")
+    next(b for b in at.button if b.label == "Ask").click().run()
+    assert not at.exception
+    assert any("Web has the most orders." in m.value for m in at.markdown)
+    assert any(sql in c.value for c in at.code)
+    assert at.get("vega_lite_chart")  # Balkendiagramm
+    assert len(calls) == 2  # SQL, dann der Antwortsatz

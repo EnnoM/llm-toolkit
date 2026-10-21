@@ -20,6 +20,7 @@ import tempfile
 from datetime import date, timedelta
 from functools import cache
 from pathlib import Path
+from typing import Literal
 
 import duckdb
 import pandas as pd
@@ -459,3 +460,79 @@ def ask(question: str, model: str, client: OpenAI | None = None) -> AnalystResul
             correction_message(error),
         ]
     return AnalystResult(question=question, model=model, attempts=attempts)
+
+
+# ------------------------------------------------------------------ Darstellung
+
+# Spaltennamen, die eine Zeitachse anzeigen; dann Linie statt Balken
+TIME_WORDS = ("date", "day", "week", "month", "quarter", "year", "period")
+MAX_BARS = 30  # mehr Balken sind nicht mehr lesbar, dann nur die Tabelle
+
+
+class ChartSpec(BaseModel):
+    kind: Literal["bar", "line"]
+    x: str
+    y: str
+
+
+def choose_chart(table: pd.DataFrame) -> ChartSpec | None:
+    """Wählt ein passendes Diagramm oder keins, nach festen Regeln statt per Modell.
+
+    Gebraucht wird eine Spalte für die Achse (Text, Datum oder Zeit-Zahl) und eine Zahlenspalte.
+    Zeitachse mit mehr als drei Punkten -> Linie, sonst Balken. Eine einzelne Zahl oder eine
+    Tabelle ohne Zahlen bekommt kein Diagramm, die Tabelle reicht dort.
+    """
+    if len(table) < 2 or len(table.columns) < 2:
+        return None
+    numeric = [c for c in table.columns if pd.api.types.is_numeric_dtype(table[c])]
+
+    def is_time(column: str) -> bool:
+        return pd.api.types.is_datetime64_any_dtype(table[column]) or any(
+            word in column.lower() for word in TIME_WORDS
+        )
+
+    # Achse: erste Spalte, die Zeit oder Text ist; Zahlen wie year zählen über den Namen
+    axis = next(
+        (c for c in table.columns if is_time(c) or c not in numeric),
+        None,
+    )
+    values = [c for c in numeric if c != axis]
+    if axis is None or not values:
+        return None
+    if is_time(axis) and len(table) > 3:
+        return ChartSpec(kind="line", x=axis, y=values[0])
+    if len(table) > MAX_BARS:
+        return None
+    return ChartSpec(kind="bar", x=axis, y=values[0])
+
+
+SUMMARY_PROMPT = """Answer the user's question in one or two short sentences, using only the
+query result below. Start with the direct answer and include the key figures. If the result is
+empty, say that no data matched. Do not mention SQL, the query or the table. Money is in euros: write amounts like
+169,006.73 EUR, never with a dollar sign.
+
+Question: {question}
+
+Query result ({rows} rows, CSV):
+{csv}"""
+SUMMARY_ROWS = 50  # mehr braucht ein Satz nicht, und der Prompt bleibt billig
+
+
+def summarize(
+    question: str, table: pd.DataFrame, model: str, client: OpenAI | None = None
+) -> tuple[str, Usage]:
+    """Ein Satz Antwort aus der Ergebnistabelle. Das Modell sieht nur das Ergebnis, nicht die DB."""
+    prompt = SUMMARY_PROMPT.format(
+        question=question,
+        rows=len(table),
+        csv=table.head(SUMMARY_ROWS).to_csv(index=False),
+    )
+    response = complete(
+        [{"role": "user", "content": prompt}],
+        model,
+        temperature=TEMPERATURE,
+        max_tokens=200,
+        client=client or get_client(),
+    )
+    # Ein „$“ läse Streamlit als Formel; falls das Modell es trotzdem schreibt, maskieren
+    return response.text.strip().replace("$", "\\$"), response.usage

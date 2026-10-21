@@ -447,6 +447,24 @@ fünf Fragen mit von Hand geschriebenem Referenz-SQL.
   obwohl die Zahlen stimmten. Eine Auswertung muss das prüfen, worauf es ankommt (die Zahlen),
   nicht die Form.
 
+**Schritt 3: Seite.** `app_pages/analyst.py` mit Fragefeld, Beispielen als Pills, Antwortsatz,
+Diagramm, Tabelle, dem SQL und bei Korrekturen allen Versuchen. Rechts Versuche, Kosten, Tokens.
+
+- **Diagramm nach festen Regeln, nicht vom Modell gewählt.** `choose_chart()` nimmt eine
+  Achsenspalte (Text, Datum oder ein Zeitwort wie month oder year im Namen) und die erste
+  Zahlenspalte: Zeitachse mit mehr als drei Punkten wird eine Linie, sonst Balken, mehr als 30
+  Balken oder eine einzelne Zahl kein Diagramm. Das ist kostenlos, vorhersagbar und testbar;
+  ein Modell bräuchte einen weiteren Aufruf und könnte sich anders entscheiden.
+- **Antwortsatz als eigener, kleiner Aufruf.** Das Modell sieht dafür nur die Ergebnistabelle
+  (höchstens 50 Zeilen), nicht die Datenbank. So kann es nur zusammenfassen, was die Abfrage
+  geliefert hat. Ob die Zahlen stimmen, entscheidet weiter das SQL; der Satz ist Komfort.
+- **Ein Modell weigert sich auch ohne Schutzschicht.** Bei „Delete all orders“ schrieb mistral
+  gar kein DELETE, sondern nutzte die Regel aus dem Prompt (Spalte message mit Erklärung). Das
+  ist die erste Verteidigungslinie; verlassen darf man sich darauf nicht, deshalb gibt es die
+  beiden anderen.
+- **Beispiele unter der Frage statt links.** In der schmalen linken Spalte wurden die Knöpfe
+  abgeschnitten; als Pills unter dem Fragefeld haben sie Platz und brechen nicht in sechs Zeilen um.
+
 ---
 
 ## Startseiten: öffentliches Home, internes Start
@@ -510,6 +528,6 @@ mit „WIP“. Texte, Icons und Seiten stehen in `core/catalog.py`.
 
 ## Offene Punkte
 
-- KI-Datenanalyst: Seite mit Tabelle, Diagramm, SQL und Zusammenfassung.
+- KI-Datenanalyst: online testen und auf fertig setzen.
 - Optional im Tool Use: Embedding-Tokens getrennt von den Chat-Tokens anzeigen, damit „Tokens
   in“ nicht nach einem Fehler aussieht.

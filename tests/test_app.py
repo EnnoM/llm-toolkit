@@ -59,7 +59,7 @@ def test_home_lists_every_module_and_marks_upcoming_as_wip(monkeypatch):
     assert len(links) == len(built_modules())
     assert "Chat" in links[0]
     wip = [c.value for c in at.caption if ":gray-badge[WIP]" in c.value]
-    assert "AI Data Analyst" in wip[0]
+    assert "Approval Workflow" in wip[0]
 
 
 def test_start_is_hidden_without_the_local_switch(monkeypatch):

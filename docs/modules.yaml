@@ -535,7 +535,7 @@
 - id: ki_datenanalyst
   name: KI-Datenanalyst
   phase: 3
-  status: geplant
+  status: in_arbeit
   kurz: "Übersetzt Fragen in normaler Sprache in SQL, führt sie nur lesend aus und zeigt Tabelle, Diagramm und Code."
   beschreibung: |
     Viele Fragen an Daten, etwa „Which product category had the highest revenue in 2024?“,
@@ -569,8 +569,8 @@
     - "Fünf vorbereitete Beispielfragen liefern dieselben Ergebnisse wie von Hand geschriebenes SQL"
     - "Bei einem SQL-Fehler gibt es höchstens einen automatischen Korrekturversuch, danach eine verständliche Meldung"
     - "Herkunft und Lizenz des Datensatzes sind im Repo dokumentiert"
-  arbeitsstand: "noch nicht begonnen"
-  naechster_schritt: "noch nicht begonnen"
+  arbeitsstand: "Seite läuft lokal: Datensatz (erfundener Shop, Seed 42) in DuckDB, nur lesend und ohne Dateizugriff, nur eine SELECT-Anweisung erlaubt (23 Tests ohne API). Text-to-SQL mit Schema im Prompt, Structured Outputs und einem Korrekturversuch; fünf Fragen mit Referenz-SQL, alle vier Modelle 5/5 am 21.10.2026. Seite mit Beispielfragen, Antwortsatz, automatisch gewähltem Diagramm (Linie bei Zeitachse, sonst Balken), Tabelle, SQL und Versuchen."
+  naechster_schritt: "Akzeptanzkriterien im Browser prüfen, dann online testen und das Modul auf fertig setzen."
   notizen: |
     - Entschieden am 21.10.2026: Datensatz selbst erzeugt (erfundener Online-Shop, Seed 42,
       generate_sales() in core/analyst.py), dadurch keine Lizenzfragen und bei jedem Lauf
@@ -599,8 +599,16 @@
     - Vergleich zuerst zu streng: Monate als „2025-01“ oder Datum statt 1 bis 12 und Jahre
       als Text galten als falsch, obwohl die Zahlen stimmten. Jetzt werden Zahlen auch in Text
       erkannt, und eine Frage kann nur bestimmte Spalten vergleichen (compare).
-    - Status bleibt „geplant“, bis die Seite existiert: Laut core/catalog.py bekommt jedes
-      Modul, das nicht geplant ist, eine verlinkte Karte auf der öffentlichen Startseite.
+    - Seite am 21.10.2026 im Browser geprüft (gemini-2.5-flash-lite und mistral-small):
+      „Revenue per category in 2024“ gibt Antwortsatz, Balkendiagramm, Tabelle und SQL;
+      „Orders per month in 2025“ eine Linie; „Delete all orders from 2023“ beantwortet
+      mistral mit einer Abfrage, die nur den Hinweis „Cannot delete data, this is a read-only
+      database.“ ausgibt. Kosten pro Frage samt Antwortsatz 0.00005 bis 0.00012 USD.
+    - Der Antwortsatz schrieb zuerst „$169,006.73“, obwohl die Daten Euro sind; zwei „$“ in
+      einem Satz liest Streamlit außerdem als Formel. Jetzt verlangt der Prompt EUR, und ein
+      übrig gebliebenes „$“ wird maskiert.
+    - gemini-2.5-flash-lite meldete am 21.10.2026 mehrmals „Too many requests“ (Ratenlimit beim
+      Anbieter); die Seite zeigt das als Meldung, ohne abzustürzen.
     - DuckDB-Doku: https://duckdb.org/docs/
 
 # ---------------------------------------------------------------- Phase 4: Fortgeschritten
