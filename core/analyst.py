@@ -365,16 +365,46 @@ Rules:
     To show only a recent window of a running total, compute it over all rows first and
     filter afterwards in an outer query.
 - If the question cannot be answered with this data, return a query that selects a single
-  column named message with a short explanation as text."""
+  column named message with a short explanation as text.
+- Only if the user asks for a particular chart (its type, axes or grouping), also fill chart,
+  using column aliases from your SELECT; otherwise set chart to null. For one line or bar per
+  group, return one row per x value and group, and use the group column as color."""
 
 
+# Ein Diagramm: Art und Spalten der Ergebnistabelle. Vom Modell nur ein Wunsch, siehe
+# requested_chart(), sonst von choose_chart() nach festen Regeln gewählt. Kommentar statt
+# Docstring: Ein Docstring landete als „description“ im Schema, das ans Modell geht.
+class ChartSpec(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    kind: Literal["bar", "stacked_bar", "line", "area", "scatter"]
+    x: str = Field(description="Column for the x-axis")
+    y: str = Field(description="Numeric column for the y-axis")
+    color: str | None = Field(
+        description="Column that splits the data into groups (one line or bar per group), "
+        "or null"
+    )
+
+
+# Was das Modell zurückgibt: SQL und optional einen Diagrammwunsch, sonst nichts.
 class SQLAnswer(BaseModel):
-    """Was das Modell zurückgibt. Nur das SQL, damit nichts anderes ausgeführt werden kann."""
-
     model_config = ConfigDict(extra="forbid")
     sql: str = Field(
         description="One DuckDB SELECT statement, without a trailing semicolon"
     )
+    # Default nur fürs Einlesen; im Schema für die API ist das Feld trotzdem Pflicht (strict)
+    chart: ChartSpec | None = Field(
+        default=None,
+        description="Only if the user asks for a particular chart, otherwise null",
+    )
+
+
+def without_defaults(node):
+    """Entfernt alle „default“-Angaben aus einem JSON-Schema (rekursiv)."""
+    if isinstance(node, dict):
+        return {k: without_defaults(v) for k, v in node.items() if k != "default"}
+    if isinstance(node, list):
+        return [without_defaults(v) for v in node]
+    return node
 
 
 RESPONSE_FORMAT = {
@@ -382,7 +412,8 @@ RESPONSE_FORMAT = {
     "json_schema": {
         "name": "SQLAnswer",
         "strict": True,
-        "schema": strict_json_schema(SQLAnswer),
+        # default ist nur fürs Einlesen da; Strict Mode erlaubt es im Schema nicht überall
+        "schema": without_defaults(strict_json_schema(SQLAnswer)),
     },
 }
 
@@ -404,6 +435,7 @@ class AnalystResult(BaseModel):
     model: str
     attempts: list[Attempt]
     table: pd.DataFrame | None = None
+    chart_request: ChartSpec | None = None  # Wunsch des Modells, noch ungeprüft
 
     @property
     def sql(self) -> str:
@@ -430,9 +462,11 @@ def build_messages(question: str) -> list[Message]:
     ]
 
 
-def parse_sql(raw: str) -> str:
-    """SQL aus der JSON-Antwort; ein Semikolon am Ende stört check_sql nicht, wird aber entfernt."""
-    return SQLAnswer.model_validate_json(raw).sql.strip().rstrip(";").strip()
+def parse_answer(raw: str) -> SQLAnswer:
+    """JSON-Antwort des Modells; ein Semikolon am Ende des SQL wird entfernt."""
+    answer = SQLAnswer.model_validate_json(raw)
+    answer.sql = answer.sql.strip().rstrip(";").strip()
+    return answer
 
 
 def correction_message(error: str) -> Message:
@@ -463,10 +497,11 @@ def ask(question: str, model: str, client: OpenAI | None = None) -> AnalystResul
             client=client,
         )
         try:
-            sql = parse_sql(response.text)
+            answer = parse_answer(response.text)
         except ValueError as err:  # kein gültiges JSON nach Schema
             sql, error = response.text, f"Invalid response format: {err}"
         else:
+            sql = answer.sql
             try:
                 table = run_query(sql)
             except (duckdb.Error, UnsafeSQLError) as err:
@@ -474,7 +509,11 @@ def ask(question: str, model: str, client: OpenAI | None = None) -> AnalystResul
             else:
                 attempts.append(Attempt(sql=sql, usage=response.usage))
                 return AnalystResult(
-                    question=question, model=model, attempts=attempts, table=table
+                    question=question,
+                    model=model,
+                    attempts=attempts,
+                    table=table,
+                    chart_request=answer.chart,
                 )
         attempts.append(Attempt(sql=sql, error=error, usage=response.usage))
         messages = [
@@ -490,12 +529,7 @@ def ask(question: str, model: str, client: OpenAI | None = None) -> AnalystResul
 # Spaltennamen, die eine Zeitachse anzeigen; dann Linie statt Balken
 TIME_WORDS = ("date", "day", "week", "month", "quarter", "year", "period")
 MAX_BARS = 30  # mehr Balken sind nicht mehr lesbar, dann nur die Tabelle
-
-
-class ChartSpec(BaseModel):
-    kind: Literal["bar", "line"]
-    x: str
-    y: str
+MAX_GROUPS = 12  # mehr Farben unterscheidet niemand mehr, die Legende wird zur Liste
 
 
 def choose_chart(table: pd.DataFrame) -> ChartSpec | None:
@@ -523,10 +557,33 @@ def choose_chart(table: pd.DataFrame) -> ChartSpec | None:
     if axis is None or not values:
         return None
     if is_time(axis) and len(table) > 3:
-        return ChartSpec(kind="line", x=axis, y=values[0])
+        return ChartSpec(kind="line", x=axis, y=values[0], color=None)
     if len(table) > MAX_BARS:
         return None
-    return ChartSpec(kind="bar", x=axis, y=values[0])
+    return ChartSpec(kind="bar", x=axis, y=values[0], color=None)
+
+
+def requested_chart(table: pd.DataFrame, spec: ChartSpec | None) -> ChartSpec | None:
+    """Der Diagrammwunsch des Modells, falls er zur Tabelle passt, sonst None.
+
+    Wie beim SQL gilt: Was das Modell liefert, wird geprüft, bevor es etwas bewirkt. Spalten
+    müssen existieren, y muss eine Zahl sein, die Farbe eine dritte Spalte.
+    """
+    if spec is None or table.empty:
+        return None
+    columns = set(table.columns)
+    if spec.x not in columns or spec.y not in columns or spec.x == spec.y:
+        return None
+    if not pd.api.types.is_numeric_dtype(table[spec.y]):
+        return None
+    if spec.color is not None and (
+        spec.color not in columns or spec.color in (spec.x, spec.y)
+    ):
+        return None
+    # Nach customer_id gefärbt wären es 400 Farben: dann lieber ohne Gruppen zeichnen
+    if spec.color is not None and table[spec.color].nunique() > MAX_GROUPS:
+        return spec.model_copy(update={"color": None})
+    return spec
 
 
 SUMMARY_PROMPT = """Answer the user's question in one or two short sentences, using only the

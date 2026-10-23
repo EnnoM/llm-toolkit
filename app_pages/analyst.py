@@ -12,6 +12,7 @@ from core.analyst import (
     ask,
     choose_chart,
     connect,
+    requested_chart,
     summarize,
 )
 from core.config import get_secret
@@ -79,17 +80,30 @@ def dataset_overview() -> dict[str, pd.DataFrame]:
     return {t: cursor.execute(f"SELECT * FROM {t} LIMIT 3").df() for t in tables}
 
 
-def show_chart(table: pd.DataFrame) -> None:
-    spec = choose_chart(table)
+def show_chart(result: AnalystResult) -> None:
+    """Gewünschtes Diagramm, wenn es zur Tabelle passt, sonst die feste Regel."""
+    table = result.table
+    spec = requested_chart(table, result.chart_request)
+    if result.chart_request and spec is None:
+        st.caption("The requested chart does not fit the result, showing the default.")
+    spec = spec or choose_chart(table)
     if spec is None:
         return
-    data = table[[spec.x, spec.y]].copy()
-    if spec.kind == "line":
-        st.line_chart(data, x=spec.x, y=spec.y)
-    else:
+    columns = [c for c in (spec.x, spec.y, spec.color) if c]
+    data = table[columns].copy()
+    args = {"x": spec.x, "y": spec.y, "color": spec.color}
+    if spec.kind in ("bar", "stacked_bar"):
         # Zahlen wie 2024 als Text, sonst steht „2,024“ an der Achse; Reihenfolge wie im SQL
         data[spec.x] = data[spec.x].astype(str)
-        st.bar_chart(data, x=spec.x, y=spec.y, sort=False)
+        # Mit Gruppen nebeneinander, außer gestapelt war gewünscht
+        stack = True if spec.kind == "stacked_bar" else (False if spec.color else None)
+        st.bar_chart(data, **args, sort=False, stack=stack)
+    elif spec.kind == "line":
+        st.line_chart(data, **args)
+    elif spec.kind == "area":
+        st.area_chart(data, **args)
+    else:
+        st.scatter_chart(data, **args)
 
 
 def show_result(result: AnalystResult, summary: str | None) -> None:
@@ -101,7 +115,7 @@ def show_result(result: AnalystResult, summary: str | None) -> None:
     else:
         if summary:
             st.markdown(summary)
-        show_chart(result.table)
+        show_chart(result)
         rows = len(result.table)
         st.dataframe(result.table, hide_index=True)
         st.caption(
@@ -144,8 +158,11 @@ with main:
         question = st.text_input(
             "Question",
             key="analyst_question",
-            placeholder="e.g. Which country has the most customers?",
-            help="Ask in plain English. The model writes one SQL query; you see it below the result.",
+            placeholder="e.g. Revenue per year and category as a stacked bar chart",
+            help=(
+                "Ask in plain English, and name a chart if you want one (bar, stacked bar, "
+                "line, area or scatter). The SQL is shown below the result."
+            ),
         )
         asked = st.form_submit_button(
             "Ask", type="primary", icon=":material/query_stats:"

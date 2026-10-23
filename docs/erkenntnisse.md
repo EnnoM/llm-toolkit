@@ -403,7 +403,7 @@ mistral-small-3.2 11/12, gemini-2.5-flash-lite 9/12, gpt-4.1-nano 7/12.
 
 ---
 
-## KI-Datenanalyst (in Arbeit)
+## KI-Datenanalyst
 
 **Schritt 1: Datensatz und Schutz.** `core/analyst.py` erzeugt einen erfundenen Online-Shop (Kunden, Produkte,
 Bestellungen, Positionen von 2023 bis 2025), schreibt ihn als DuckDB-Datei in den Temp-Ordner
@@ -489,6 +489,13 @@ Diagramm, Tabelle, dem SQL und bei Korrekturen allen Versuchen. Rechts Versuche,
   Kunden). Kein Fehler, plausible Kurve, falsche Zahlen. Richtig wäre: erst über alle Daten
   summieren, dann filtern. Hier hört Prompt-Nachbessern auf, sinnvoll zu sein; sichtbares SQL
   und ein Mensch, der es liest, bleiben nötig.
+- **Diagramme auf Wunsch, aber geprüft (23.10.2026).** Das Modell darf neben dem SQL einen
+  Diagrammwunsch zurückgeben (Art, x, y, Farbe), nur wenn die Frage danach fragt. Wie beim SQL
+  gilt: Der Code prüft, bevor etwas passiert. Fehlt eine Spalte oder ist y keine Zahl, zeichnet
+  die feste Regel; bei mehr als 12 Gruppen fällt die Farbe weg (mistral färbte einmal nach
+  customer_id, 400 Farben). Nebenbei gefunden: Pydantic schreibt den Docstring einer Klasse als
+  „description“ ins JSON-Schema. Deutsche Kommentare gingen so ans Modell; jetzt sind es
+  Code-Kommentare.
 - **Beispiele unter der Frage statt links.** In der schmalen linken Spalte wurden die Knöpfe
   abgeschnitten; als Pills unter dem Fragefeld haben sie Platz und brechen nicht in sechs Zeilen um.
 
@@ -559,6 +566,6 @@ mit „WIP“. Texte, Icons und Seiten stehen in `core/catalog.py`.
 
 ## Offene Punkte
 
-- KI-Datenanalyst: online testen und auf fertig setzen.
+- Nächstes Modul: Workflow mit Freigabe (Phase 4).
 - Optional im Tool Use: Embedding-Tokens getrennt von den Chat-Tokens anzeigen, damit „Tokens
   in“ nicht nach einem Fehler aussieht.

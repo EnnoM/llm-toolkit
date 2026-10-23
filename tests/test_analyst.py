@@ -219,3 +219,54 @@ def test_page_shows_answer_chart_table_and_sql(monkeypatch):
     assert any(sql in c.value for c in at.code)
     assert at.get("vega_lite_chart")  # Balkendiagramm
     assert len(calls) == 2  # SQL, dann der Antwortsatz
+
+
+# ------------------------------------------------------------------ Diagramm auf Wunsch
+
+
+def test_requested_chart_is_used_when_it_fits():
+    calls = []
+    answer = json.dumps(
+        {
+            "sql": "SELECT year(order_date) AS year, channel, count(*) AS orders "
+            "FROM orders GROUP BY ALL ORDER BY 1",
+            "chart": {"kind": "line", "x": "year", "y": "orders", "color": "channel"},
+        }
+    )
+    result = ask(
+        "Orders per year as lines per channel",
+        "test/model",
+        client=fake_client([answer], calls),
+    )
+    spec = analyst.requested_chart(result.table, result.chart_request)
+    assert spec is not None and spec.kind == "line" and spec.color == "channel"
+
+
+@pytest.mark.parametrize(
+    "chart",
+    [
+        {"kind": "bar", "x": "missing", "y": "orders", "color": None},  # Spalte fehlt
+        {"kind": "bar", "x": "orders", "y": "channel", "color": None},  # y ist Text
+        {"kind": "bar", "x": "channel", "y": "orders", "color": "orders"},  # Farbe = y
+    ],
+)
+def test_unfitting_chart_request_falls_back(chart):
+    table = run_query("SELECT channel, count(*) AS orders FROM orders GROUP BY 1")
+    spec = analyst.ChartSpec(**chart)
+    assert analyst.requested_chart(table, spec) is None
+    assert analyst.choose_chart(table).kind == "bar"  # die feste Regel springt ein
+
+
+def test_schema_for_the_api_has_no_defaults_or_german_docstrings():
+    text = json.dumps(analyst.RESPONSE_FORMAT)
+    assert "default" not in text
+    assert "Diagramm" not in text
+
+
+def test_too_many_groups_drop_the_color():
+    table = run_query(
+        "SELECT customer_id, count(*) AS orders, sum(order_id) AS x "
+        "FROM orders GROUP BY 1"
+    )
+    spec = analyst.ChartSpec(kind="scatter", x="orders", y="x", color="customer_id")
+    assert analyst.requested_chart(table, spec).color is None

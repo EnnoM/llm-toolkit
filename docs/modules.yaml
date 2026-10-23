@@ -542,7 +542,7 @@
 - id: ki_datenanalyst
   name: KI-Datenanalyst
   phase: 3
-  status: in_arbeit
+  status: fertig
   kurz: "Übersetzt Fragen in normaler Sprache in SQL, führt sie nur lesend aus und zeigt Tabelle, Diagramm und Code."
   beschreibung: |
     Viele Fragen an Daten, etwa „Which product category had the highest revenue in 2024?“,
@@ -562,7 +562,8 @@
     - **Datensatz:** aufklappbare Übersicht der Tabellen und Spalten
     - **Frage:** Textfeld plus Buttons mit Beispielfragen
     - **Ergebnis:** erzeugtes SQL (`st.code`), Ergebnistabelle (`st.dataframe`), automatisch
-      gewähltes Diagramm (Balken oder Linie) und ein Satz Zusammenfassung
+      gewähltes Diagramm (Balken oder Linie) und ein Satz Zusammenfassung; auf Wunsch in der
+      Frage ein bestimmtes Diagramm (gestapelte Balken, Linie, Fläche, Punkte, nach Gruppen)
     - **Fehlerfall:** Meldung zum SQL-Fehler und Anzeige des Korrekturversuchs
   lernziele:
     - "Text-to-SQL mit dem Schema im Prompt: Datenanalyse ohne SQL-Kenntnisse ermöglichen"
@@ -576,9 +577,25 @@
     - "Fünf vorbereitete Beispielfragen liefern dieselben Ergebnisse wie von Hand geschriebenes SQL"
     - "Bei einem SQL-Fehler gibt es höchstens einen automatischen Korrekturversuch, danach eine verständliche Meldung"
     - "Herkunft und Lizenz des Datensatzes sind im Repo dokumentiert"
-  arbeitsstand: "Seite läuft lokal: Datensatz (erfundener Shop, Seed 42) in DuckDB, nur lesend und ohne Dateizugriff, nur eine SELECT-Anweisung erlaubt (23 Tests ohne API). Text-to-SQL mit Schema im Prompt, Structured Outputs und einem Korrekturversuch; fünf Fragen mit Referenz-SQL, alle vier Modelle 5/5 am 21.10.2026. Seite mit Beispielfragen, Antwortsatz, automatisch gewähltem Diagramm (Linie bei Zeitachse, sonst Balken), Tabelle, SQL und Versuchen."
-  naechster_schritt: "Akzeptanzkriterien im Browser prüfen, dann online testen und das Modul auf fertig setzen."
+  arbeitsstand: "abgeschlossen"
+  naechster_schritt: "-"
   notizen: |
+    - Online seit 21.10.2026 unter https://enno-llm-toolkit.streamlit.app/ (mit Passwort), am 23.10.2026 dort von Enno geprüft.
+    - Stand bei Abschluss (23.10.2026): Seite läuft lokal: Datensatz (erfundener Shop, Seed
+      42) in DuckDB, nur lesend und ohne Dateizugriff, nur eine SELECT-Anweisung erlaubt (23
+      Tests ohne API). Text-to-SQL mit Schema im Prompt, Structured Outputs und einem
+      Korrekturversuch; fünf Fragen mit Referenz-SQL, alle vier Modelle 5/5 am 21.10.2026.
+      Seite mit Beispielfragen, Antwortsatz, automatisch gewähltem Diagramm (Linie bei
+      Zeitachse, sonst Balken), Tabelle, SQL und Versuchen. Dazu Diagramme auf Wunsch: Das
+      Modell gibt neben dem SQL optional Art, x, y und Farbe zurück; requested_chart() prüft
+      das gegen die Ergebnistabelle (Spalten vorhanden, y Zahl, höchstens 12 Gruppen), sonst
+      gilt die feste Regel.
+    - Diagramme auf Wunsch am 23.10.2026 mit gemini, nano und mistral: gestapelte Balken
+      (Umsatz pro Jahr und Kategorie), Fläche pro Kanal und Streudiagramm Bestellungen gegen
+      Umsatz pro Kunde kamen bei allen drei passend. mistral machte aus „stacked“ einmal
+      gruppierte Balken und färbte das Streudiagramm nach customer_id (400 Farben); seitdem
+      fällt die Farbe ab 13 Gruppen weg. Die Klassen-Docstrings gingen als „description“ ins
+      Schema für die API; jetzt Kommentare, und „default“ wird aus dem Schema entfernt.
     - Entschieden am 21.10.2026: Datensatz selbst erzeugt (erfundener Online-Shop, Seed 42,
       generate_sales() in core/analyst.py), dadurch keine Lizenzfragen und bei jedem Lauf
       dieselben Zahlen. Vier Tabellen: customers (400), products (40, fünf Kategorien),
