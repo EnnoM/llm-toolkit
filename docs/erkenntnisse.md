@@ -469,6 +469,14 @@ Diagramm, Tabelle, dem SQL und bei Korrekturen allen Versuchen. Rechts Versuche,
   gar kein DELETE, sondern nutzte die Regel aus dem Prompt (Spalte message mit Erklärung). Das
   ist die erste Verteidigungslinie; verlassen darf man sich darauf nicht, deshalb gibt es die
   beiden anderen.
+- **Der Antwortsatz kann falsch sein, obwohl das SQL stimmt (23.10.2026).** Bei „Customers
+  with more than 30 orders“ filterte das SQL richtig, gab die Anzahl aber nicht aus. Der
+  Antwortsatz sah nur Kunde und Land und schrieb „No data matched“ über eine Tabelle mit 57
+  Zeilen; ein anderes Modell zählte die Länder selbst und lag daneben. Zwei Lehren: Das
+  Ergebnis soll die Werte enthalten, auf denen die Bedingung beruht (dann ist es auch für
+  Menschen prüfbar), und ein Sprachmodell soll nicht zählen oder rechnen, sondern nur Zahlen
+  wiedergeben, die schon dastehen. Teurere Modelle machen den Fehler seltener, aber die
+  Ursache lag im Prompt, nicht im Modell.
 - **Beispiele unter der Frage statt links.** In der schmalen linken Spalte wurden die Knöpfe
   abgeschnitten; als Pills unter dem Fragefeld haben sie Platz und brechen nicht in sechs Zeilen um.
 

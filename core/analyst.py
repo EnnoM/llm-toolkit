@@ -342,6 +342,8 @@ Rules:
 - Use only the tables and columns above. Text values must match the listed values exactly.
 - Revenue means sum(order_items.quantity * order_items.unit_price), in EUR.
 - Give every computed column a short, readable alias such as revenue or orders.
+- Also return the values that conditions and rankings are based on, so the result can be
+  checked: for "customers with more than 30 orders" include the number of orders.
 - Round money to 2 decimals. Sort the result in the order a reader would expect.
 - If the question cannot be answered with this data, return a query that selects a single
   column named message with a short explanation as text."""
@@ -507,9 +509,11 @@ def choose_chart(table: pd.DataFrame) -> ChartSpec | None:
 
 
 SUMMARY_PROMPT = """Answer the user's question in one or two short sentences, using only the
-query result below. Start with the direct answer and include the key figures. If the result is
-empty, say that no data matched. Do not mention SQL, the query or the table. Money is in euros: write amounts like
-169,006.73 EUR, never with a dollar sign.
+query result below. The query has already applied every filter and condition of the question,
+so each row matches it. Start with the direct answer. Use only numbers that appear in the
+result or the row count given below; never count, add up or calculate anything yourself. If the
+result has 0 rows, say that no data matched. Do not mention SQL, the query or the table. Money
+is in euros: write amounts like 169,006.73 EUR, never with a dollar sign.
 
 Question: {question}
 

@@ -616,6 +616,14 @@
       übrig gebliebenes „$“ wird maskiert.
     - gemini-2.5-flash-lite meldete am 21.10.2026 mehrmals „Too many requests“ (Ratenlimit beim
       Anbieter); die Seite zeigt das als Meldung, ohne abzustürzen.
+    - Gefunden am 23.10.2026 beim Testen: „Which customers ordered more than 30 times?“ ergab
+      57 Zeilen, der Antwortsatz von gemini-2.5-flash-lite lautete aber „No data matched“.
+      Ursache: Das SQL filterte mit HAVING count(*) > 30, gab die Anzahl aber nicht aus; der
+      Antwortsatz sah nur Kunde und Land und fand „mehr als 30“ nirgends. Beim Nachstellen
+      zählte mistral-small die Länder selbst und lag falsch (22/10/8/7/6 statt 28/10/7/6/6).
+      Behoben: Der SQL-Prompt verlangt die Werte, auf denen Bedingungen beruhen; der
+      Antwort-Prompt sagt, dass alle Filter schon angewendet sind, und verbietet eigenes
+      Zählen und Rechnen. Danach antworteten gemini, mistral und nano richtig, Katalog 5/5.
     - DuckDB-Doku: https://duckdb.org/docs/
 
 # ---------------------------------------------------------------- Phase 4: Fortgeschritten
