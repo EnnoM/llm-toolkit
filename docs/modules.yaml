@@ -265,7 +265,7 @@
     Dafür wird das hochgeladene PDF beim Chunking in kurze, leicht überlappende Abschnitte
     zerlegt. Jeder Abschnitt wird in ein Embedding umgerechnet, eine Zahlenreihe, die die
     Bedeutung des Textes abbildet, sodass inhaltlich ähnliche Texte ähnliche Zahlen haben. Die
-    Embeddings liegen in Chroma, einer Vektordatenbank, die zu einer Frage schnell die
+    Embeddings liegen in einem eigenen Suchindex im Arbeitsspeicher, der zu einer Frage die
     ähnlichsten Abschnitte findet (semantische Suche statt Stichwortsuche).
 
     Das Modell antwortet nur aus diesen Abschnitten und nennt Datei und Seitenzahl als Quelle.
@@ -284,14 +284,14 @@
   lernziele:
     - "RAG-Ablauf in zwei Phasen (Indexieren und Abfragen): eigene Daten nutzen, ohne ein Modell neu zu trainieren"
     - "Chunking-Parameter bewusst wählen: Abschnittsgröße und Überlappung entscheiden über die Trefferqualität"
-    - "Embeddings und Vektorsuche mit Chroma: Inhalte nach Bedeutung finden statt nach exakten Wörtern"
+    - "Embeddings und Vektorsuche (Kosinus-Ähnlichkeit, selbst gebaut mit numpy): Inhalte nach Bedeutung finden statt nach exakten Wörtern"
     - "Metadaten wie Dateiname und Seite an jeden Abschnitt hängen: Antworten werden nachprüfbar"
     - "Das Modell auf die Quellen begrenzen und „steht nicht im Dokument“ zulassen: weniger Halluzinationen"
   akzeptanz:
     - "Die Antwort nennt Dateiname und Seitenzahl jeder genutzten Quelle"
     - "Eine Frage, deren Antwort nicht im PDF steht, wird mit einem Hinweis wie „The document does not cover this“ beantwortet"
     - "Die für eine Antwort genutzten Textstellen sind in der Oberfläche aufklappbar sichtbar"
-    - "Dieselbe Datei zweimal hochzuladen, erzeugt keine doppelten Abschnitte in Chroma"
+    - "Dieselbe Datei zweimal hochzuladen, erzeugt keine doppelten Abschnitte im Suchindex"
     - "Ein Test ohne API-Aufruf prüft die Chunking-Funktion (Abschnittsgröße und Überlappung stimmen)"
   arbeitsstand: "abgeschlossen"
   naechster_schritt: "-"
@@ -304,7 +304,14 @@
       Fragenkatalog mit 10 Fragen in eval/rag_questions.yaml, Auswertung mit python -m
       core.rag_eval: am 06.10.2026 10 von 10 richtig (gemini-2.5-flash-lite). Alle fünf
       Akzeptanzkriterien lokal erfüllt, 46 Tests ohne API.
-    - Chroma-Doku: https://docs.trychroma.com
+    - Am 23.10.2026 Chroma durch einen eigenen Suchindex ersetzt (SearchIndex in core/rag.py,
+      Kosinus-Ähnlichkeit mit numpy, ein Vergleich mit allen Abschnitten). Grund: Chroma
+      brachte rund 270 MB an Abhängigkeiten (kubernetes 81 MB, onnxruntime 80 MB, eigener
+      Rust-Teil 49 MB, grpc 40 MB), die jeden Start auf Streamlit Cloud um Minuten
+      verlängerten; genutzt wurde davon nur die Suche nach den ähnlichsten Vektoren.
+      Fragenkatalog danach unverändert (gemini-2.5-flash-lite, 800-150-s, top 6): found 8/8,
+      correct 10/10, cited 8/8. Die älteren Notizen unten beschreiben noch den Stand mit Chroma.
+    - Chroma-Doku (bis 23.10.2026 genutzt): https://docs.trychroma.com
     - Entscheidungen am 23.09.2026 (mit Enno besprochen):
       - Embeddings über OpenRouter (https://openrouter.ai/docs/api-reference/embeddings), nicht
         lokal: derselbe Key, Kosten sichtbar wie überall. Test: text-embedding-3-small liefert

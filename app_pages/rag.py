@@ -46,8 +46,8 @@ def cached_read(data: bytes, filename: str) -> Document:
 # Nur im Session State, also für andere Besucher unsichtbar und nach dem Schließen weg.
 documents: dict[str, Document] = st.session_state.setdefault("rag_documents", {})
 st.session_state.setdefault("rag_upload_key", 0)
-# Embeddings dieser Sitzung in einer eigenen Chroma-Sammlung. Nicht mit setdefault: Das würde
-# bei jedem Neuaufbau eine neue Sammlung anlegen, die dann ungenutzt im Speicher bleibt.
+# Embeddings dieser Sitzung in einem eigenen Suchindex. Nicht mit setdefault: Das würde bei
+# jedem Neuaufbau einen neuen Index anlegen und gleich wieder wegwerfen.
 if "rag_index" not in st.session_state:
     st.session_state.rag_index = SearchIndex()
 index: SearchIndex = st.session_state.rag_index

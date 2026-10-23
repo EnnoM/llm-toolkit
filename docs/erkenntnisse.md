@@ -211,6 +211,13 @@ Dialog.
 - **Eine eigene Chroma-Sammlung pro Sitzung mit zufälligem Namen:** Test zeigte, dass zwei
   `EphemeralClient`s im selben Prozess dieselben Sammlungen sehen. Ohne eigenen Namen hätte
   jeder Besucher die Uploads aller anderen durchsucht.
+- **Später: Chroma raus, eigener Suchindex mit numpy (23.10.2026).** Bei einigen hundert
+  Abschnitten ist „mit allen vergleichen“ eine Matrixmultiplikation in Millisekunden; eine
+  Vektordatenbank mit Näherungsindex (HNSW) lohnt erst bei sehr vielen Vektoren. Chroma kostete
+  dafür rund 270 MB Installation und damit Minuten beim Start auf Streamlit Cloud. Die Vektoren
+  werden beim Ablegen auf Länge 1 normiert, dann ist das Skalarprodukt direkt die
+  Kosinus-Ähnlichkeit. Jede Sitzung hat ihr eigenes Index-Objekt, das Trennungsproblem von
+  oben gibt es damit gar nicht mehr. Fragenkatalog danach unverändert: 10/10.
 - **Fester englischer Satz für „steht nicht drin“** („The documents do not cover this.“),
   statt das Modell frei formulieren zu lassen: Man erkennt ihn sofort, auch in Tests.
 - **Nur die Abschnitte der aktuellen Frage gehen mit,** dazu die letzten sechs Nachrichten
@@ -516,8 +523,12 @@ mit „WIP“. Texte, Icons und Seiten stehen in `core/catalog.py`.
 
 - **Die Websuche über ddgs funktioniert auch auf Streamlit Cloud.** Das war die größte
   Unsicherheit, weil DuckDuckGo Anfragen aus Rechenzentren manchmal blockiert.
-- **Chroma im Speicher läuft auch dort.** Die Festplatte von Streamlit Cloud ist nicht
+- **Suchindex nur im Speicher passt dazu.** Die Festplatte von Streamlit Cloud ist nicht
   dauerhaft, deshalb war „nur im Speicher, pro Sitzung neu“ von Anfang an die richtige Wahl.
+- **Der Start dauerte Minuten, wegen Chroma.** Die App selbst lädt in 0,5 Sekunden; langsam war
+  die Installation. Von 825 MB Abhängigkeiten brachte chromadb rund 270 MB mit (kubernetes,
+  onnxruntime, grpc, ein Rust-Teil), gebraucht wurde nur die Ähnlichkeitssuche. Am 23.10.2026
+  durch numpy ersetzt (siehe RAG-Chatbot), pytest steht jetzt in `requirements-dev.txt`.
 - **Hohe Tokenzahl beim ersten Mal ist kein Fehler.** Im Tool Use zeigte „Tokens in“ nach einer
   Frage 100251: Die erste Dokumentsuche pro Serverprozess bettet alle Beispiel-PDFs ein, und
   diese Embedding-Tokens zählen mit. Die Kosten stimmen (0.0024 USD), nur die Zahl wirkt

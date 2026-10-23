@@ -3,7 +3,7 @@
 Keine Oberfläche. Ablauf:
 1. Indexieren: Text pro Seite aus dem PDF holen, Störendes entfernen (Kopfzeilen,
    Silbentrennung, Seitenzahlen), in kurze, überlappende Abschnitte (Chunks) zerlegen und jeden
-   Abschnitt als Embedding in Chroma ablegen. Jeder Abschnitt merkt sich Datei und Seiten,
+   Abschnitt als Embedding im Arbeitsspeicher ablegen (SearchIndex, numpy statt Datenbank). Jeder Abschnitt merkt sich Datei und Seiten,
    damit Antworten später eine Quelle nennen können.
 2. Abfragen: Die Frage ebenfalls in ein Embedding umrechnen, die ähnlichsten Abschnitte
    holen und das Modell nur aus diesen Abschnitten antworten lassen, mit Datei und Seite als
@@ -16,10 +16,9 @@ import re
 import uuid
 from bisect import bisect_left, bisect_right
 from collections import Counter
-from functools import cache
 from pathlib import Path
 
-import chromadb
+import numpy as np
 from pydantic import BaseModel, Field
 from pypdf import PdfReader
 from pypdf.errors import PdfReadError
@@ -478,45 +477,36 @@ class Hit(BaseModel):
     similarity: float
 
 
-@cache
-def chroma_client() -> chromadb.ClientAPI:
-    """Chroma nur im Arbeitsspeicher, ohne Telemetrie.
-
-    Achtung: Alle EphemeralClients eines Prozesses teilen sich denselben Speicher, also auch
-    alle Besucher der App. Getrennt wird über den Namen der Sammlung (siehe SearchIndex).
-    """
-    return chromadb.EphemeralClient(
-        settings=chromadb.Settings(anonymized_telemetry=False)
-    )
-
-
 def settings_key(chunk: Chunk) -> str:
     """Einstellungen aus der id, z. B. '800-150-s' (siehe settings_label)."""
     return "-".join(chunk.id.split("-")[1:4])
 
 
 class SearchIndex:
-    """Die Embeddings einer Sitzung in einer eigenen Chroma-Sammlung.
+    """Die Embeddings einer Sitzung im Arbeitsspeicher, Suche per Kosinus-Ähnlichkeit.
 
-    Abschnitte verschiedener Einstellungen liegen nebeneinander (ein Wechsel zurück kostet
-    nichts) und werden bei der Suche über settings_key getrennt.
+    Bewusst ohne Vektordatenbank: Bei einigen hundert Abschnitten ist ein Vergleich mit allen
+    (eine Matrixmultiplikation) in Millisekunden fertig. Chroma brachte dafür rund 270 MB an
+    Abhängigkeiten mit, die jeden Start auf Streamlit Cloud verlängerten (Messung 23.10.2026).
+    Erst bei sehr vielen Abschnitten lohnt ein Index, der nicht mehr alle vergleicht (HNSW).
+
+    Jede Sitzung hat ihr eigenes Objekt, Uploads sind also für andere unsichtbar. Abschnitte
+    verschiedener Einstellungen liegen nebeneinander (ein Wechsel zurück kostet nichts) und
+    werden bei der Suche über settings_key getrennt.
     """
 
     def __init__(self, name: str | None = None) -> None:
-        # Zufälliger Name: andere Sitzungen kennen ihn nicht und sehen die Uploads nicht
         self.name = name or f"rag-{uuid.uuid4().hex}"
-        self.collection = chroma_client().get_or_create_collection(
-            self.name,
-            configuration={"hnsw": {"space": "cosine"}},
-            embedding_function=None,  # Embeddings rechnen wir selbst über OpenRouter
-        )
+        self.chunks: dict[str, Chunk] = {}
+        # Auf Länge 1 normiert: Dann ist das Skalarprodukt direkt die Kosinus-Ähnlichkeit
+        self.vectors: dict[str, np.ndarray] = {}
+
+    def __len__(self) -> int:
+        return len(self.chunks)
 
     def missing(self, chunks: list[Chunk]) -> list[Chunk]:
         """Abschnitte, die noch kein Embedding haben."""
-        if not chunks:
-            return []
-        stored = set(self.collection.get(ids=[c.id for c in chunks], include=[])["ids"])
-        return [c for c in chunks if c.id not in stored]
+        return [c for c in chunks if c.id not in self.chunks]
 
     def add(self, chunks: list[Chunk]) -> Usage:
         """Legt fehlende Abschnitte ab. Schon vorhandene kosten nichts und doppeln nicht."""
@@ -524,21 +514,9 @@ class SearchIndex:
         if not chunks:
             return Usage()
         response = llm.embed([c.embedding_text for c in chunks], EMBEDDING_MODEL)
-        self.collection.add(
-            ids=[c.id for c in chunks],
-            embeddings=response.vectors,
-            documents=[c.text for c in chunks],
-            metadatas=[
-                {
-                    "filename": c.filename,
-                    "page_start": c.page_start,
-                    "page_end": c.page_end,
-                    "section": c.section,
-                    "settings": settings_key(c),
-                }
-                for c in chunks
-            ],
-        )
+        for chunk, vector in zip(chunks, response.vectors, strict=True):
+            self.chunks[chunk.id] = chunk
+            self.vectors[chunk.id] = normalize(np.asarray(vector, dtype=np.float32))
         return response.usage
 
     def search(
@@ -551,36 +529,27 @@ class SearchIndex:
     ) -> tuple[list[Hit], Usage]:
         """Die top_k Abschnitte, die der Frage am ähnlichsten sind, bester zuerst."""
         response = llm.embed([question], EMBEDDING_MODEL)
-        result = self.collection.query(
-            query_embeddings=response.vectors,
-            n_results=top_k,
-            where={"settings": settings_label(size, overlap, sentences)},
-        )
+        wanted = settings_label(size, overlap, sentences)
+        ids = [i for i, c in self.chunks.items() if settings_key(c) == wanted]
+        if not ids:
+            return [], response.usage
+        query = normalize(np.asarray(response.vectors[0], dtype=np.float32))
+        similarities = np.stack([self.vectors[i] for i in ids]) @ query
+        best = np.argsort(-similarities)[:top_k]
         hits = [
-            Hit(
-                chunk=Chunk(
-                    id=chunk_id,
-                    text=text,
-                    **{
-                        key: meta[key]
-                        for key in ("filename", "page_start", "page_end", "section")
-                    },
-                ),
-                # Chroma liefert die Kosinus-Distanz, Ähnlichkeit ist 1 minus Distanz
-                similarity=1 - distance,
-            )
-            for chunk_id, text, meta, distance in zip(
-                result["ids"][0],
-                result["documents"][0],
-                result["metadatas"][0],
-                result["distances"][0],
-                strict=True,
-            )
+            Hit(chunk=self.chunks[ids[i]], similarity=float(similarities[i]))
+            for i in best
         ]
         return hits, response.usage
 
     def delete(self) -> None:
-        chroma_client().delete_collection(self.name)
+        self.chunks.clear()
+        self.vectors.clear()
+
+
+def normalize(vector: np.ndarray) -> np.ndarray:
+    norm = np.linalg.norm(vector)
+    return vector / norm if norm else vector
 
 
 # ------------------------------------------------------------------ Antworten

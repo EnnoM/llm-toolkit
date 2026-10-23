@@ -358,7 +358,7 @@ def test_same_chunks_are_embedded_only_once(calls):
     assert first.cost_usd > 0
     assert second.cost_usd == 0
     assert len(calls) == 1
-    assert index.collection.count() == len(chunks)
+    assert len(index) == len(chunks)
     index.delete()
 
 
@@ -379,7 +379,7 @@ def test_search_only_uses_chunks_of_current_settings(calls):
 def test_sessions_do_not_see_each_others_chunks(calls):
     mine, theirs = SearchIndex(), SearchIndex()
     mine.add(fruit_and_pets())
-    assert theirs.collection.count() == 0
+    assert len(theirs) == 0
     mine.delete()
     theirs.delete()
 

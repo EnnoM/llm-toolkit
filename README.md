@@ -9,7 +9,7 @@ Alle Modelle laufen über [OpenRouter](https://openrouter.ai), jede Antwort zeig
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements-dev.txt   # online reicht requirements.txt
 cp .env.example .env          # Key, Modell und Passwort eintragen
 streamlit run app.py
 ```

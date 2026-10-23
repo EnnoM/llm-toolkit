@@ -1,0 +1,3 @@
+# Nur lokal: Tests. Online (Streamlit Cloud) reicht requirements.txt.
+-r requirements.txt
+pytest>=9.1
