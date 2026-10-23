@@ -347,8 +347,9 @@ Rules:
 - Write exactly one SELECT statement (WITH ... SELECT is fine). Never modify data.
 - Use only the tables and columns above. Text values must match the listed values exactly.
 - Revenue means sum(order_items.quantity * order_items.unit_price), in EUR.
-- The data ends on {last_day}. Read relative periods ("last 15 months", "this year", "recently")
-  relative to {last_day}, never relative to CURRENT_DATE or today.
+- Read relative periods ("last 12 months", "this year", "recently") relative to today,
+  CURRENT_DATE. The data ends on {last_day}, so a recent period may contain only a few months
+  of data or none at all. That is the correct answer; do not shift the period to fit the data.
 - "Number of customers" over time means all customers registered up to each point in time (a
   running total), unless the question asks for new customers.
 - Give every computed column a short, readable alias such as revenue or orders.
@@ -356,7 +357,7 @@ Rules:
   checked: for "customers with more than 30 orders" include the number of orders.
 - Round money to 2 decimals. Sort the result in the order a reader would expect.
 - Use DuckDB syntax, not SQLite, MySQL or PostgreSQL-only functions:
-  - date arithmetic: DATE '{last_day}' - INTERVAL 15 MONTH
+  - date arithmetic: CURRENT_DATE - INTERVAL 12 MONTH
   - months: date_trunc('month', order_date) (a DATE), or strftime(order_date, '%Y-%m')
   - running total per month:
     SELECT month, sum(count(*)) OVER (ORDER BY month) AS customers
@@ -532,7 +533,8 @@ SUMMARY_PROMPT = """Answer the user's question in one or two short sentences, us
 query result below. The query has already applied every filter and condition of the question,
 so each row matches it. Start with the direct answer. Use only numbers that appear in the
 result or the row count given below; never count, add up or calculate anything yourself. If the
-result has 0 rows, say that no data matched. Do not mention SQL, the query or the table. Money
+result has 0 rows, say that no data matched; if the question is about a recent period, add that
+the data only covers January 2023 to December 2025. Do not mention SQL, the query or the table. Money
 is in euros: write amounts like 169,006.73 EUR, never with a dollar sign.
 
 Question: {question}

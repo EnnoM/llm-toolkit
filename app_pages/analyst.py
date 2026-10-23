@@ -134,6 +134,12 @@ with main:
             st.markdown(f"**{name}**")
             st.dataframe(sample, hide_index=True)
 
+    # Fragen wie „last 12 months“ zählen ab heute; der Datensatz endet aber 2025
+    st.info(
+        'The data covers January 2023 to December 2025. Periods like "last 12 months" '
+        "count back from today, so they only include what is left of 2025, or nothing.",
+        icon=":material/calendar_month:",
+    )
     with st.form("analyst_form", border=False):
         question = st.text_input(
             "Question",

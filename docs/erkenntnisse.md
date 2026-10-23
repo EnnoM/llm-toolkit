@@ -478,9 +478,12 @@ Diagramm, Tabelle, dem SQL und bei Korrekturen allen Versuchen. Rechts Versuche,
   wiedergeben, die schon dastehen. Teurere Modelle machen den Fehler seltener, aber die
   Ursache lag im Prompt, nicht im Modell.
 - **„Heute“ ist nicht das Ende der Daten (23.10.2026).** „Die letzten 15 Monate“ rechnete das
-  Modell ab CURRENT_DATE, die Daten enden aber 2025. Ergebnis: 0 Zeilen und der Satz „keine
-  Daten“. Seitdem nennt das Schema für jede Datumsspalte die tatsächliche Spanne, und relative
-  Zeiträume gelten ab dem letzten Datum im Datensatz.
+  Modell ab CURRENT_DATE, die Daten enden aber 2025: 0 Zeilen und der Satz „keine Daten“, ohne
+  Erklärung. Erst habe ich Zeiträume ab dem Datenende rechnen lassen; das verschiebt aber die
+  Bedeutung der Frage. Entschieden: Zeiträume zählen ab heute (logisch konsistent, „letzte 12
+  Monate“ = Ende 2025), dafür nennt die Seite die Datenspanne, das Schema die Spanne jeder
+  Datumsspalte, und ein leeres Ergebnis zu einem jüngsten Zeitraum wird im Antwortsatz erklärt.
+  Lehre: Nicht das Ergebnis passend machen, sondern die Grenze sichtbar.
 - **Mehrstufige Logik ist die Grenze.** Nach dem Fix liefen alle Modelle, aber drei von vier
   bildeten die laufende Summe nur innerhalb des Zeitfensters (Start bei 1 statt bei rund 280
   Kunden). Kein Fehler, plausible Kurve, falsche Zahlen. Richtig wäre: erst über alle Daten

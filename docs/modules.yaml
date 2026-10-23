@@ -627,10 +627,17 @@
     - Gefunden am 23.10.2026: „Stelle die Entwicklung der Anzahl der Kunden in den letzten 15
       Monaten dar“ ergab 0 Zeilen (claude-haiku-4.5). Das SQL rechnete ab CURRENT_DATE
       (23.10.2026), die Daten enden aber am 31.12.2025, Anmeldungen schon am 18.06.2025.
-      Behoben: Das Schema nennt für jede Datumsspalte die Spanne, der Prompt sagt, dass
-      relative Zeiträume ab 2025-12-31 gelten, und gibt kurze DuckDB-Hinweise (Datumsrechnung,
-      laufende Summe), weil die Modelle sonst SQLite- oder PostgreSQL-Funktionen schrieben
+      Erster Fix: relative Zeiträume ab 2025-12-31 rechnen. Noch am selben Tag umgedreht
+      (Entscheidung Enno): Zeiträume zählen ab heute, weil das logisch konsistent ist; „last
+      12 months“ ergibt dann nur Ende Oktober bis Dezember 2025, eine Frage nach Anmeldungen
+      der letzten 15 Monate richtig 0 Zeilen. Ein Hinweis auf der Seite nennt die Datenspanne,
+      und der Antwortsatz erklärt leere Ergebnisse bei jüngsten Zeiträumen damit. Geblieben
+      sind die Datumsspannen im Schema und kurze DuckDB-Hinweise (Datumsrechnung, laufende
+      Summe), weil die Modelle sonst SQLite- oder PostgreSQL-Funktionen schrieben
       (date('now'), date_add('month', ...)) und auch die Korrektur scheiterte.
+    - „Revenue per month in the last 12 months“ am 23.10.2026: gemini zählt den ganzen Oktober
+      2025 (49578.99 EUR), mistral und nano erst ab 23.10. (14592.65 EUR). Beides vertretbar,
+      die Frage ist dort mehrdeutig; das SQL zeigt, welche Lesart gewählt wurde.
     - Danach liefen alle vier Modelle durch, aber nur mistral-small rechnete richtig: Die
       anderen bildeten die laufende Summe nur innerhalb der 15 Monate und begannen bei 1
       statt beim Bestand (rund 280 Kunden im Oktober 2024). Die Tabelle sah plausibel aus.
