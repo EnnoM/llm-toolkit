@@ -315,6 +315,12 @@ def schema_description() -> str:
             note = COLUMN_NOTES.get(f"{table}.{column}")
             if note:
                 line += f", {note}"
+            if dtype == "DATE":
+                # Ohne die Spanne rechnet das Modell „letzte 15 Monate“ ab heute und findet nichts
+                first, last = con.execute(
+                    f"SELECT min({column}), max({column}) FROM {table}"
+                ).fetchone()
+                line += f", from {first} to {last}"
             if dtype == "VARCHAR" and column not in ("name", "city"):
                 values = [
                     v
@@ -341,10 +347,22 @@ Rules:
 - Write exactly one SELECT statement (WITH ... SELECT is fine). Never modify data.
 - Use only the tables and columns above. Text values must match the listed values exactly.
 - Revenue means sum(order_items.quantity * order_items.unit_price), in EUR.
+- The data ends on {last_day}. Read relative periods ("last 15 months", "this year", "recently")
+  relative to {last_day}, never relative to CURRENT_DATE or today.
+- "Number of customers" over time means all customers registered up to each point in time (a
+  running total), unless the question asks for new customers.
 - Give every computed column a short, readable alias such as revenue or orders.
 - Also return the values that conditions and rankings are based on, so the result can be
   checked: for "customers with more than 30 orders" include the number of orders.
 - Round money to 2 decimals. Sort the result in the order a reader would expect.
+- Use DuckDB syntax, not SQLite, MySQL or PostgreSQL-only functions:
+  - date arithmetic: DATE '{last_day}' - INTERVAL 15 MONTH
+  - months: date_trunc('month', order_date) (a DATE), or strftime(order_date, '%Y-%m')
+  - running total per month:
+    SELECT month, sum(count(*)) OVER (ORDER BY month) AS customers
+    FROM (SELECT date_trunc('month', signup_date) AS month FROM customers) GROUP BY month
+    To show only a recent window of a running total, compute it over all rows first and
+    filter afterwards in an outer query.
 - If the question cannot be answered with this data, return a query that selects a single
   column named message with a short explanation as text."""
 
@@ -403,7 +421,9 @@ def build_messages(question: str) -> list[Message]:
     return [
         {
             "role": "system",
-            "content": SYSTEM_PROMPT.format(schema=schema_description()),
+            "content": SYSTEM_PROMPT.format(
+                schema=schema_description(), last_day=LAST_DAY.isoformat()
+            ),
         },
         {"role": "user", "content": question},
     ]

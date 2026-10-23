@@ -3,25 +3,25 @@
   "model": "mistralai/mistral-small-3.2-24b-instruct",
   "run": 1,
   "passed": "5/5",
-  "cost_usd": 0.0002643,
+  "cost_usd": 0.0003897625,
   "results": [
     {
       "id": "a01",
       "question": "What was the total revenue per year?",
-      "sql": "SELECT\n  EXTRACT(YEAR FROM order_date) AS year,\n  ROUND(SUM(order_items.quantity * order_items.unit_price), 2) AS revenue\nFROM\n  orders\n  JOIN order_items ON orders.order_id = order_items.order_id\nGROUP BY\n  year\nORDER BY\n  year",
+      "sql": "SELECT strftime(order_date, '%Y') AS year, ROUND(SUM(order_items.quantity * order_items.unit_price), 2) AS revenue FROM orders JOIN order_items ON orders.order_id = order_items.order_id GROUP BY year ORDER BY year",
       "passed": true,
       "corrections": 0,
       "error": null,
-      "cost_usd": 5.696875e-05
+      "cost_usd": 8.03125e-05
     },
     {
       "id": "a02",
       "question": "Which product category had the highest revenue in 2024? Show all categories, highest first.",
-      "sql": "SELECT \n    products.category, \n    ROUND(SUM(order_items.quantity * order_items.unit_price), 2) AS revenue, \n    COUNT(DISTINCT order_items.product_id) AS products \nFROM \n    order_items \n    JOIN orders ON order_items.order_id = orders.order_id \n    JOIN products ON order_items.product_id = products.product_id \nWHERE \n    orders.order_date >= '2024-01-01' \n    AND orders.order_date < '2025-01-01' \nGROUP BY \n    products.category \nORDER BY \n    revenue DESC, \n    products.category ASC",
+      "sql": "SELECT\n  p.category,\n  SUM(oi.quantity * oi.unit_price) AS revenue\nFROM\n  order_items oi\n  JOIN orders o ON oi.order_id = o.order_id\n  JOIN products p ON oi.product_id = p.product_id\nWHERE\n  o.order_date >= DATE '2024-01-01'\n  AND o.order_date < DATE '2025-01-01'\nGROUP BY\n  p.category\nORDER BY\n  revenue DESC",
       "passed": true,
       "corrections": 0,
       "error": null,
-      "cost_usd": 7.81875e-05
+      "cost_usd": 9.678125e-05
     },
     {
       "id": "a03",
@@ -30,16 +30,16 @@
       "passed": true,
       "corrections": 0,
       "error": null,
-      "cost_usd": 3.4925e-05
+      "cost_usd": 7.075e-05
     },
     {
       "id": "a04",
       "question": "How many orders were placed in each month of 2025?",
-      "sql": "SELECT  \n  EXTRACT(MONTH FROM order_date) AS month,  \n  COUNT(*) AS orders  \nFROM  \n  orders  \nWHERE  \n  EXTRACT(YEAR FROM order_date) = 2025  \nGROUP BY  \n  month  \nORDER BY  \n  month",
+      "sql": "SELECT strftime(order_date, '%Y-%m') AS month, COUNT(*) AS orders FROM orders WHERE order_date >= DATE '2025-01-01' AND order_date <= DATE '2025-12-31' GROUP BY month ORDER BY month",
       "passed": true,
       "corrections": 0,
       "error": null,
-      "cost_usd": 4.85e-05
+      "cost_usd": 8.346875e-05
     },
     {
       "id": "a05",
@@ -48,7 +48,7 @@
       "passed": true,
       "corrections": 0,
       "error": null,
-      "cost_usd": 4.571875e-05
+      "cost_usd": 5.845e-05
     }
   ]
 }

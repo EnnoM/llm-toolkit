@@ -3,43 +3,43 @@
   "model": "google/gemini-2.5-flash-lite",
   "run": 1,
   "passed": "5/5",
-  "cost_usd": 0.0003306,
+  "cost_usd": 0.0004778,
   "results": [
     {
       "id": "a01",
       "question": "What was the total revenue per year?",
-      "sql": "SELECT STRFTIME('%Y', order_date) AS order_year, ROUND(SUM(quantity * unit_price), 2) AS total_revenue FROM orders JOIN order_items ON orders.order_id = order_items.order_id GROUP BY order_year ORDER BY order_year",
+      "sql": "SELECT strftime(order_date, '%Y') AS order_year, ROUND(SUM(quantity * unit_price), 2) AS total_revenue FROM orders JOIN order_items ON orders.order_id = order_items.order_id GROUP BY order_year ORDER BY order_year",
       "passed": true,
       "corrections": 0,
       "error": null,
-      "cost_usd": 7.12e-05
+      "cost_usd": 0.0001008
     },
     {
       "id": "a02",
       "question": "Which product category had the highest revenue in 2024? Show all categories, highest first.",
-      "sql": "SELECT p.category, SUM(oi.quantity * oi.unit_price) AS revenue FROM products p JOIN order_items oi ON p.product_id = oi.product_id JOIN orders o ON oi.order_id = o.order_id WHERE STRFTIME('%Y', o.order_date) = '2024' GROUP BY p.category ORDER BY revenue DESC",
+      "sql": "SELECT p.category, SUM(oi.quantity * oi.unit_price) AS revenue FROM order_items oi JOIN products p ON oi.product_id = p.product_id JOIN orders o ON oi.order_id = o.order_id WHERE strftime(o.order_date, '%Y') = '2024' GROUP BY p.category ORDER BY revenue DESC",
       "passed": true,
       "corrections": 0,
       "error": null,
-      "cost_usd": 8.05e-05
+      "cost_usd": 0.0001101
     },
     {
       "id": "a03",
       "question": "How many orders came in through each sales channel?",
-      "sql": "SELECT channel, COUNT(order_id) AS orders FROM orders GROUP BY channel ORDER BY orders DESC",
+      "sql": "SELECT channel, count(order_id) AS orders FROM orders GROUP BY channel",
       "passed": true,
       "corrections": 0,
       "error": null,
-      "cost_usd": 5.42e-05
+      "cost_usd": 8.22e-05
     },
     {
       "id": "a04",
       "question": "How many orders were placed in each month of 2025?",
-      "sql": "SELECT strftime('%Y-%m', order_date) AS order_month, COUNT(order_id) AS orders FROM orders WHERE strftime('%Y', order_date) = '2025' GROUP BY order_month ORDER BY order_month",
+      "sql": "SELECT strftime(order_date, '%Y-%m') AS order_month, COUNT(order_id) AS orders FROM orders WHERE strftime(order_date, '%Y') = '2025' GROUP BY order_month ORDER BY order_month",
       "passed": true,
       "corrections": 0,
       "error": null,
-      "cost_usd": 6.83e-05
+      "cost_usd": 9.87e-05
     },
     {
       "id": "a05",
@@ -48,7 +48,7 @@
       "passed": true,
       "corrections": 0,
       "error": null,
-      "cost_usd": 5.64e-05
+      "cost_usd": 8.6e-05
     }
   ]
 }

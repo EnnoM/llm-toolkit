@@ -477,6 +477,15 @@ Diagramm, Tabelle, dem SQL und bei Korrekturen allen Versuchen. Rechts Versuche,
   Menschen prüfbar), und ein Sprachmodell soll nicht zählen oder rechnen, sondern nur Zahlen
   wiedergeben, die schon dastehen. Teurere Modelle machen den Fehler seltener, aber die
   Ursache lag im Prompt, nicht im Modell.
+- **„Heute“ ist nicht das Ende der Daten (23.10.2026).** „Die letzten 15 Monate“ rechnete das
+  Modell ab CURRENT_DATE, die Daten enden aber 2025. Ergebnis: 0 Zeilen und der Satz „keine
+  Daten“. Seitdem nennt das Schema für jede Datumsspalte die tatsächliche Spanne, und relative
+  Zeiträume gelten ab dem letzten Datum im Datensatz.
+- **Mehrstufige Logik ist die Grenze.** Nach dem Fix liefen alle Modelle, aber drei von vier
+  bildeten die laufende Summe nur innerhalb des Zeitfensters (Start bei 1 statt bei rund 280
+  Kunden). Kein Fehler, plausible Kurve, falsche Zahlen. Richtig wäre: erst über alle Daten
+  summieren, dann filtern. Hier hört Prompt-Nachbessern auf, sinnvoll zu sein; sichtbares SQL
+  und ein Mensch, der es liest, bleiben nötig.
 - **Beispiele unter der Frage statt links.** In der schmalen linken Spalte wurden die Knöpfe
   abgeschnitten; als Pills unter dem Fragefeld haben sie Platz und brechen nicht in sechs Zeilen um.
 

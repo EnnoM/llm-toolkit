@@ -624,6 +624,19 @@
       Behoben: Der SQL-Prompt verlangt die Werte, auf denen Bedingungen beruhen; der
       Antwort-Prompt sagt, dass alle Filter schon angewendet sind, und verbietet eigenes
       Zählen und Rechnen. Danach antworteten gemini, mistral und nano richtig, Katalog 5/5.
+    - Gefunden am 23.10.2026: „Stelle die Entwicklung der Anzahl der Kunden in den letzten 15
+      Monaten dar“ ergab 0 Zeilen (claude-haiku-4.5). Das SQL rechnete ab CURRENT_DATE
+      (23.10.2026), die Daten enden aber am 31.12.2025, Anmeldungen schon am 18.06.2025.
+      Behoben: Das Schema nennt für jede Datumsspalte die Spanne, der Prompt sagt, dass
+      relative Zeiträume ab 2025-12-31 gelten, und gibt kurze DuckDB-Hinweise (Datumsrechnung,
+      laufende Summe), weil die Modelle sonst SQLite- oder PostgreSQL-Funktionen schrieben
+      (date('now'), date_add('month', ...)) und auch die Korrektur scheiterte.
+    - Danach liefen alle vier Modelle durch, aber nur mistral-small rechnete richtig: Die
+      anderen bildeten die laufende Summe nur innerhalb der 15 Monate und begannen bei 1
+      statt beim Bestand (rund 280 Kunden im Oktober 2024). Die Tabelle sah plausibel aus.
+      Nicht weiter im Prompt nachgebessert: Das wäre Anpassen an eine einzelne Frage. Das
+      Beispiel zeigt die Grenze von Text-to-SQL bei mehrstufiger Logik und warum das SQL
+      sichtbar sein muss. Katalog danach weiter 5/5 bei allen vier Modellen.
     - DuckDB-Doku: https://duckdb.org/docs/
 
 # ---------------------------------------------------------------- Phase 4: Fortgeschritten
