@@ -5,6 +5,7 @@ pydantic>=2.13
 pyyaml>=6.0
 pypdf>=6.0
 numpy>=2.0
+pandas>=2.2  # Tabellen in mehreren Modulen; kommt sonst nur über streamlit mit
 ddgs>=9.16.0
 httpx>=0.28  # Wetterdienst in core/tools.py; kommt nicht mehr über openai mit
 duckdb>=2.0

@@ -1,12 +1,13 @@
 """Home (öffentlich): Ziel des Projekts und alle Module als gleich große Kacheln.
 
 Die Seite ist im Lebenslauf verlinkt, deshalb steht oben in zwei Sätzen, was das Projekt
-zeigen soll. Darunter alle Module im Raster, die geplanten ausgegraut.
+zeigen soll. Darunter die Module nach Stufen wie in der Seitenleiste, die neueste Stufe zuerst,
+die geplanten Module ausgegraut.
 """
 
 import streamlit as st
 
-from core.catalog import CATALOG
+from core.catalog import LEVELS, level_title, levels_newest_first
 
 st.set_page_config(layout="wide")  # Raster über die ganze Breite
 
@@ -21,20 +22,23 @@ st.markdown(
     "and cost of each request."
 )
 
-for start in range(0, len(CATALOG), COLUMNS):
-    row = st.columns(COLUMNS)
-    for column, entry in zip(row, CATALOG[start : start + COLUMNS]):
-        with column.container(border=True, height=TILE_HEIGHT):
-            if entry.page:
-                # Der Titel ist der Link: kein extra Button, der bei langem Text verrutscht
-                st.page_link(
-                    entry.page,
-                    label=f"**{entry.title}**",
-                    icon=entry.icon,
-                )
-                # Gleiche Schriftgröße wie bei den geplanten, nur nicht grau
-                st.markdown(f":small[{entry.summary}]")
-            else:
-                # Ausgegraut über st.caption: geplante Module haben noch keine Seite
-                st.caption(f"**{entry.icon} {entry.title}** :gray-badge[WIP]")
-                st.caption(entry.summary)
+for level, entries in levels_newest_first():
+    st.markdown(f"#### {level_title(level)}")
+    st.caption(LEVELS[level][1])
+    for start in range(0, len(entries), COLUMNS):
+        row = st.columns(COLUMNS)
+        for column, entry in zip(row, entries[start : start + COLUMNS]):
+            with column.container(border=True, height=TILE_HEIGHT):
+                if entry.page:
+                    # Der Titel ist der Link: kein extra Button, der bei langem Text verrutscht
+                    st.page_link(
+                        entry.page,
+                        label=f"**{entry.title}**",
+                        icon=entry.icon,
+                    )
+                    # Gleiche Schriftgröße wie bei den geplanten, nur nicht grau
+                    st.markdown(f":small[{entry.summary}]")
+                else:
+                    # Ausgegraut über st.caption: geplante Module haben noch keine Seite
+                    st.caption(f"**{entry.icon} {entry.title}** :gray-badge[WIP]")
+                    st.caption(entry.summary)

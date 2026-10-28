@@ -564,6 +564,14 @@ mit „WIP“. Texte, Icons und Seiten stehen in `core/catalog.py`.
 
 ---
 
+
+**Ausfall Tool Use (28.10.2026):** Online `ModuleNotFoundError: httpx`. `core/tools.py`
+importiert httpx direkt, es stand aber nie in `requirements.txt`, sondern kam über chromadb mit.
+Nach dem Entfernen von Chroma (und weil openai 3.x `httpx2` statt `httpx` nutzt) fehlte es bei
+einem frischen Build, lokal war es noch installiert. Behoben, dann in einer leeren Umgebung nur
+mit `requirements.txt` jede Seite gerendert. Seitdem prüft `tests/test_requirements.py`, dass
+jedes direkt importierte Fremdpaket in `requirements.txt` steht; er fand dabei auch pandas
+(kam nur über streamlit). Lehre: Lokal grüne Tests sagen nichts über eine frische Umgebung.
 ## Workflow mit Freigabe
 
 **Schritt 1 (28.10.2026, nur lokal):** Posteingang mit 13 selbst geschriebenen Mails an den
@@ -639,6 +647,16 @@ Testset, sondern der Normalfall: Eine Klassifikationsrichtlinie ist eine Geschä
 und Menschen wie Modell brauchen dieselbe. Danach 13/13 bei Mistral und Haiku, 12/13 bei Gemini,
 9/13 bei nano, in je zwei gleichen Läufen. Offen bleibt, dass nano die Injection-Mail mit Text
 statt JSON verweigert; in der App bleibt sie dann mit Fehlermeldung auf „new“.
+
+## Navigation nach Stufen (28.10.2026)
+
+Auf Ennos Wunsch: Seitenleiste und Home gruppiert in Level 1 (Chat, Prompt Lab, Data
+Extraction), Level 2 (RAG, Tool Use, AI Data Analyst), Level 3 (Approval Workflow, MCP, Agent)
+und Level 4 (Evaluation, Security, noch geplant). Neueste Stufe und neuestes Modul zuerst, damit
+Besucher aus dem Lebenslauf zuerst die umfangreichsten Module sehen. Die Stufe ist die Phase
+minus 1, ein Test hält beides gleich. `st.navigation` mit einem Dict ergibt die Abschnitte; Home
+steht im Abschnitt mit leerem Namen und hat so keine Überschrift. In der Seitenleiste nur
+„Level 3“, weil Streamlit längere Abschnittsnamen abschneidet.
 
 ## Offene Punkte
 

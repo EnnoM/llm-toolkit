@@ -27,6 +27,10 @@ nur über Container mit `key` (Klasse `st-key-...`). Bisher einzige Ausnahme: `a
 
 - **Sidebar nur für die Navigation** zwischen den Modulen. Keine Einstellungen, Filter oder
   Buttons eines Moduls in der Sidebar.
+- **Navigation nach Stufen:** Home allein oben ohne Überschrift, darunter die Module in
+  Abschnitten „Level 3“, „Level 2“, „Level 1“, die neueste Stufe und das neueste Modul zuerst.
+  Die Stufe steht als `level` in `core/catalog.py`. Home gruppiert die Kacheln genauso, dort mit
+  Namen der Stufe („Level 2 · Knowledge and tools“); in der Sidebar wären die Namen abgeschnitten.
 - **Modulseiten mit Einstellungen** nutzen die volle Breite (`layout="wide"`) und drei Spalten
   `st.columns([1, 2, 1], gap="large")` ohne sichtbare Trennlinien:
   links Einstellungen, in der Mitte der eigentliche Inhalt, rechts Kennzahlen

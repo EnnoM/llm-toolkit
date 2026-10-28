@@ -4,7 +4,7 @@ import hmac
 
 import streamlit as st
 
-from core.catalog import built_modules
+from core.catalog import LEVELS, built_modules
 from core.config import get_secret
 
 st.set_page_config(page_title="LLM Toolkit", page_icon=":material/handyman:")
@@ -38,19 +38,25 @@ skip_login = (get_secret("SKIP_LOGIN") or "").lower() == "true"
 show_internal = (get_secret("SHOW_INTERNAL_PAGES") or "").lower() == "true"
 
 if skip_login or st.session_state.get("authenticated"):
-    pages = [
+    # Home steht allein oben, ohne Überschrift; darunter die Module nach Stufen, die neueste
+    # Stufe und das neueste Modul zuerst
+    start = [
         st.Page(
             "app_pages/home.py", title="Home", icon=":material/home:", default=True
         ),
     ]
     if show_internal:
-        pages.append(
+        start.append(
             st.Page("app_pages/start.py", title="Start", icon=":material/checklist:")
         )
-    pages += [
-        st.Page(entry.page, title=entry.title, icon=entry.icon)
-        for entry in built_modules()
-    ]
+    pages = {"": start}
+    for level in sorted(LEVELS, reverse=True):
+        entries = [e for e in built_modules() if e.level == level][::-1]
+        if entries:
+            # Nur „Level 3“: Längere Überschriften schneidet die Seitenleiste ab
+            pages[f"Level {level}"] = [
+                st.Page(e.page, title=e.title, icon=e.icon) for e in entries
+            ]
 else:
     # Ohne Anmeldung kennt die Navigation nur den Login; andere URLs sind nicht erreichbar.
     pages = [st.Page(login, title="Sign in", icon=":material/lock:")]
