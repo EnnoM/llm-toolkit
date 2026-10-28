@@ -1,0 +1,144 @@
+{
+  "date": "2026-10-28",
+  "model": "openai/gpt-4.1-nano",
+  "run": 1,
+  "summary": {
+    "category": "11/13",
+    "priority": "10/13",
+    "both": "9/13",
+    "severe": 0
+  },
+  "cost_usd": 0.0006628000000000001,
+  "results": [
+    {
+      "id": "m01",
+      "expected": "complaint/high",
+      "got": "return_refund/high",
+      "category_ok": false,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer received a damaged item and needs a replacement quickly.",
+      "cost_usd": 5.7e-05
+    },
+    {
+      "id": "m02",
+      "expected": "order_status/normal",
+      "got": "order_status/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is inquiring about the shipping status of their order.",
+      "cost_usd": 5.49e-05
+    },
+    {
+      "id": "m03",
+      "expected": "return_refund/normal",
+      "got": "return_refund/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer wants to return unused headphones and inquire about the refund process.",
+      "cost_usd": 5.64e-05
+    },
+    {
+      "id": "m04",
+      "expected": "product_question/normal",
+      "got": "product_question/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is asking about product compatibility and safety.",
+      "cost_usd": 5.19e-05
+    },
+    {
+      "id": "m05",
+      "expected": "spam/low",
+      "got": "spam/high",
+      "category_ok": true,
+      "priority_ok": false,
+      "severe": false,
+      "reason": "This appears to be a phishing attempt or spam email.",
+      "cost_usd": 5.47e-05
+    },
+    {
+      "id": "m06",
+      "expected": "return_refund/high",
+      "got": "return_refund/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Customer was charged twice for a single order and requests a refund.",
+      "cost_usd": 5.52e-05
+    },
+    {
+      "id": "m07",
+      "expected": "order_status/high",
+      "got": "order_status/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is concerned about a delayed delivery for a gift.",
+      "cost_usd": 5.58e-05
+    },
+    {
+      "id": "m08",
+      "expected": "product_question/normal",
+      "got": "product_question/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is inquiring about product compatibility, discounts, and invoicing for a bulk order.",
+      "cost_usd": 5.92e-05
+    },
+    {
+      "id": "m09",
+      "expected": "spam/low",
+      "got": "spam/high",
+      "category_ok": true,
+      "priority_ok": false,
+      "severe": false,
+      "reason": "The email is a phishing attempt asking for login credentials.",
+      "cost_usd": 5.46e-05
+    },
+    {
+      "id": "m10",
+      "expected": "return_refund/high",
+      "got": "return_refund/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Customer has not received a refund after returning an item.",
+      "cost_usd": 5.75e-05
+    },
+    {
+      "id": "m11",
+      "expected": "complaint/low",
+      "got": "complaint/low",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is providing feedback about packaging waste.",
+      "cost_usd": 5.27e-05
+    },
+    {
+      "id": "m12",
+      "expected": "spam/low",
+      "got": "error",
+      "category_ok": false,
+      "priority_ok": false,
+      "severe": false,
+      "reason": "The model returned an invalid classification: 1 validation error for Classification\n  Invalid JSON: control character (\\u0000-\\u001F) found while parsing a string at line 2 column 0 [type=json_invalid, input_value='{\"reason\":\"Customer requ...sist with that request.', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/json_invalid",
+      "cost_usd": 0.0
+    },
+    {
+      "id": "m13",
+      "expected": "product_question/normal",
+      "got": "product_question/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is asking about product features before purchasing.",
+      "cost_usd": 5.29e-05
+    }
+  ]
+}

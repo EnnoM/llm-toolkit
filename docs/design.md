@@ -31,6 +31,12 @@ nur über Container mit `key` (Klasse `st-key-...`). Bisher einzige Ausnahme: `a
   `st.columns([1, 2, 1], gap="large")` ohne sichtbare Trennlinien:
   links Einstellungen, in der Mitte der eigentliche Inhalt, rechts Kennzahlen
   (Kosten, Tokens in/out/gesamt, Anzahl Antworten).
+- **Ausnahme Approval Workflow:** Die Seite ist ein kleines Mailprogramm und folgt dessen
+  gewohntem Aufbau statt 1:2:1: Kopfzeile mit Titel und Kennzahlen als Textzeile, darunter
+  einklappbare Einstellungen in zwei umrahmten Gruppen (Modell als ein Button pro Modell mit
+  Preis im Button, Aktionen), dann das Mailprogramm in einem eigenen Rahmen: links die Mailliste
+  mit Schnellfiltern, rechts die geöffnete Mail. Unten das Protokoll. Grund: Liste und geöffnete
+  Mail sind dort der eigentliche Inhalt, Einstellungen sind Nebensache.
 - **Chat-Nachrichten** schlicht wie in Claude Code: Fragen als gefüllte, rechts eingerückte
   Box, Antworten als reiner Text ohne Avatar, darunter eine graue Zeile mit Modell, Tokens und
   Kosten. Eingabefeld fest am unteren Bildschirmrand (`st.bottom`) in der Breite der mittleren

@@ -1,0 +1,144 @@
+{
+  "date": "2026-10-28",
+  "model": "google/gemini-2.5-flash-lite",
+  "run": 1,
+  "summary": {
+    "category": "12/13",
+    "priority": "12/13",
+    "both": "12/13",
+    "severe": 0
+  },
+  "cost_usd": 0.00073,
+  "results": [
+    {
+      "id": "m01",
+      "expected": "complaint/high",
+      "got": "complaint/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer received a damaged product and needs a replacement urgently before a specific event.",
+      "cost_usd": 5.75e-05
+    },
+    {
+      "id": "m02",
+      "expected": "order_status/normal",
+      "got": "order_status/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is asking for an update on their order status.",
+      "cost_usd": 5.44e-05
+    },
+    {
+      "id": "m03",
+      "expected": "return_refund/normal",
+      "got": "return_refund/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer wants to return headphones and get a refund.",
+      "cost_usd": 5.48e-05
+    },
+    {
+      "id": "m04",
+      "expected": "product_question/normal",
+      "got": "product_question/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is asking product-related questions before making a purchase.",
+      "cost_usd": 5.27e-05
+    },
+    {
+      "id": "m05",
+      "expected": "spam/low",
+      "got": "spam/low",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "This email is an advertisement for a fake prize and attempts to phish for bank details.",
+      "cost_usd": 5.69e-05
+    },
+    {
+      "id": "m06",
+      "expected": "return_refund/high",
+      "got": "return_refund/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer was charged twice for an order and requests a refund for the duplicate charge.",
+      "cost_usd": 5.64e-05
+    },
+    {
+      "id": "m07",
+      "expected": "order_status/high",
+      "got": "order_status/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is worried about a delayed order that is a gift for a specific date.",
+      "cost_usd": 5.76e-05
+    },
+    {
+      "id": "m08",
+      "expected": "product_question/normal",
+      "got": "product_question/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is asking about product features and bulk order discounts, which falls under product inquiries.",
+      "cost_usd": 5.81e-05
+    },
+    {
+      "id": "m09",
+      "expected": "spam/low",
+      "got": "spam/low",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "This email is a phishing attempt trying to steal login credentials.",
+      "cost_usd": 5.4e-05
+    },
+    {
+      "id": "m10",
+      "expected": "return_refund/high",
+      "got": "return_refund/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is requesting a refund for a returned item and is threatening to escalate the issue if not resolved by Friday.",
+      "cost_usd": 6.17e-05
+    },
+    {
+      "id": "m11",
+      "expected": "complaint/low",
+      "got": "complaint/low",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is complaining about excessive packaging but has no request for action or refund.",
+      "cost_usd": 5.45e-05
+    },
+    {
+      "id": "m12",
+      "expected": "spam/low",
+      "got": "return_refund/normal",
+      "category_ok": false,
+      "priority_ok": false,
+      "severe": false,
+      "reason": "The customer wants to return an order and get a refund.",
+      "cost_usd": 5.65e-05
+    },
+    {
+      "id": "m13",
+      "expected": "product_question/normal",
+      "got": "product_question/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is asking questions about a product's features and capacity before purchasing.",
+      "cost_usd": 5.49e-05
+    }
+  ]
+}

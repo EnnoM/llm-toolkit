@@ -668,7 +668,7 @@
 - id: workflow_freigabe
   name: Workflow mit Freigabe
   phase: 4
-  status: geplant
+  status: fertig
   kurz: "Eingehende Mails werden klassifiziert und beantwortet, ein Mensch gibt jeden Entwurf frei, alles wird protokolliert."
   beschreibung: |
     Das Modul bildet einen typischen Arbeitsablauf aus Unternehmen nach: Eingehende Kundenmails
@@ -686,12 +686,13 @@
     Entwürfe unverändert übernommen werden, als einfaches Maß für die Qualität. Die Beispielmails
     sind selbst geschrieben.
   oberflaeche: |
-    - **Posteingang:** Liste der Beispielmails mit Kategorie, Priorität und Zustand
-    - **Detail:** ausgewählte Mail im Original, Klassifikation mit kurzer Begründung, Entwurf in
-      einem bearbeitbaren Textfeld
-    - **Entscheidung:** Buttons „Approve“, „Approve edited“ und „Discard“
-    - **Protokoll:** Tabelle aller Entscheidungen mit Zeitstempel, darüber die Freigabequote als
-      Kennzahl
+    - **Kopfzeile:** Titel, daneben Freigabequote, Anzahl gesendet und verworfen, Kosten
+    - **Werkzeugleiste:** Modell, „Process all“, „Reset inbox“
+    - **Liste:** Mails mit Zeit, Absender, Betreff, Kategorie und Priorität, Zustand; Schnellfilter
+      New, To review, Done, Spam und nach Priorität; Klick in eine Zeile öffnet die Mail
+    - **Geöffnete Mail:** Original, Klassifikation mit Begründung, Entwurf in einem bearbeitbaren
+      Textfeld, Buttons „Approve“, „Approve edited“ und „Discard“, Verlauf der Mail
+    - **Protokoll:** Tabelle aller Ereignisse mit Zeitstempel unter der Liste
   lernziele:
     - "Mehrstufige LLM-Abläufe (erst klassifizieren, dann entwerfen) mit strukturierter Ausgabe bauen"
     - "Human-in-the-Loop: Die KI schlägt vor, der Mensch entscheidet, wichtig für Haftung und Vertrauen"
@@ -703,11 +704,35 @@
     - "Jede Entscheidung steht im Protokoll mit Zeitstempel, Entscheidung und gegebenenfalls geändertem Text"
     - "Das Protokoll bleibt beim Neuladen der Seite und nach einem Neustart der lokal laufenden App erhalten (Datei oder SQLite)"
     - "Die angezeigte Freigabequote wird aus dem Protokoll berechnet"
-  arbeitsstand: "noch nicht begonnen"
-  naechster_schritt: "noch nicht begonnen"
+  arbeitsstand: "abgeschlossen"
+  naechster_schritt: "-"
   notizen: |
     - Stolperstein: Auf Streamlit Community Cloud gehen lokal gespeicherte Dateien bei einem
       Neustart verloren. Für die Demo reicht das vermutlich, sonst eine externe Datenbank prüfen.
+    - 28.10.2026, erster Eval-Lauf der Klassifikation (python -m core.workflow_eval, 13 Mails,
+      Musterlösung noch unbestätigt), Kategorie / Priorität / beides / schwere Fehler:
+      gemini-2.5-flash-lite 13/13, 10/13, 10/13, 0 (zweiter Versuch, der erste scheiterte an
+      Rate-Limits), mistral-small-3.2 13/13, 10/13, 10/13, 0, claude-haiku-4.5 12/13, 10/13,
+      9/13, 0, gpt-4.1-nano 11/13, 8/13, 7/13, 0. Kosten je Lauf 0.0005 bis 0.0010 USD, Haiku
+      0.010 USD.
+    - 28.10.2026: Alle vier Modelle stufen m04 und m13 (Produktfragen vor dem Kauf) als normal
+      statt low ein, drei von vier m11 (Verpackung) als normal. Widerspruch zwischen
+      Musterlösung und eigener Prioritätsregel im Prompt, Entscheidung durch Enno offen.
+    - 28.10.2026: gpt-4.1-nano verweigerte bei m12 (Prompt Injection) die Antwort mit Text statt
+      JSON; Gemini stufte m12 in der App einmal als spam ein, im Eval als return_refund.
+    - Stand bei Abschluss (28.10.2026): 13 Beispielmails als Posteingang und Testset
+      (eval/workflow_mails.yaml), Klassifikation per Structured Outputs, Entwurf als Text,
+      Zustände mit erlaubten Übergängen, Audit-Log in SQLite als einzige Quelle der Wahrheit,
+      Seite als Mailprogramm mit Filtern und Verlauf pro Mail. Alle fünf Akzeptanzkriterien
+      erfüllt und getestet (tests/test_workflow.py).
+    - 28.10.2026, Musterlösung von Enno entschieden: Kauffragen normal (m04, m13), Verpackung
+      low (m11), Prompt Injection spam (m12). Prioritätsregel und Spam-Definition im Prompt
+      entsprechend ergänzt.
+    - 28.10.2026, Eval mit dieser Musterlösung, je zwei Läufe, beide gleich (Kategorie /
+      Priorität / beides / schwere Fehler): mistral-small-3.2 13/13, 13/13, 13/13, 0;
+      claude-haiku-4.5 13/13, 13/13, 13/13, 0 (0.011 USD je Lauf); gemini-2.5-flash-lite
+      12/13, 12/13, 12/13, 0 (m12 als return_refund); gpt-4.1-nano 11/13, 10/13, 9/13, 0 (m01
+      als return_refund, Spam als high, m12 verweigert). Kosten sonst 0.0005 bis 0.0007 USD.
 
 - id: mcp_server
   name: MCP-Server

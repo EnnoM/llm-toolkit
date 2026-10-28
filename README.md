@@ -32,7 +32,7 @@ Auf Streamlit Cloud kommen dieselben Werte aus `.env.example` in die App-Secrets
 | RAG-Chatbot | 3 | fertig | Beantwortet Fragen zu eigenen PDF-Dokumenten und nennt dabei Datei und Seite als Quelle. |
 | Tool Use | 3 | fertig | Das Modell ruft selbst Werkzeuge wie Rechner, Wetterdienst oder Websuche auf, jeder Aufruf ist sichtbar. |
 | KI-Datenanalyst | 3 | fertig | Übersetzt Fragen in normaler Sprache in SQL, führt sie nur lesend aus und zeigt Tabelle, Diagramm und Code. |
-| Workflow mit Freigabe | 4 | geplant | Eingehende Mails werden klassifiziert und beantwortet, ein Mensch gibt jeden Entwurf frei, alles wird protokolliert. |
+| Workflow mit Freigabe | 4 | fertig | Eingehende Mails werden klassifiziert und beantwortet, ein Mensch gibt jeden Entwurf frei, alles wird protokolliert. |
 | MCP-Server | 4 | geplant | Stellt Werkzeuge dieses Projekts über das Model Context Protocol für Claude Desktop und andere KI-Apps bereit. |
 | Agent | 4 | geplant | Verfolgt ein vorgegebenes Ziel selbstständig in mehreren Schritten mit Planung, Werkzeugen und Abbruchregeln. |
 | Evaluation | 5 | geplant | Misst die Antwortqualität mit einem Testset, einem Modell als Prüfer und aufgezeichneten Aufrufen. |

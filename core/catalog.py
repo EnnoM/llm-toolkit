@@ -93,6 +93,7 @@ CATALOG = (
             "draft, and every step is logged."
         ),
         techniques=("Classification", "Human in the loop", "Audit log"),
+        page="app_pages/workflow.py",
     ),
     CatalogEntry(
         id="mcp_server",

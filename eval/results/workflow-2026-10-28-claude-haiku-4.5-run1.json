@@ -1,0 +1,144 @@
+{
+  "date": "2026-10-28",
+  "model": "anthropic/claude-haiku-4.5",
+  "run": 1,
+  "summary": {
+    "category": "13/13",
+    "priority": "13/13",
+    "both": "13/13",
+    "severe": 0
+  },
+  "cost_usd": 0.011266,
+  "results": [
+    {
+      "id": "m01",
+      "expected": "complaint/high",
+      "got": "complaint/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Customer received a damaged blender with a tight deadline and needs urgent replacement before an event.",
+      "cost_usd": 0.000877
+    },
+    {
+      "id": "m02",
+      "expected": "order_status/normal",
+      "got": "order_status/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Customer is inquiring about the shipping status of their order placed last Monday.",
+      "cost_usd": 0.000847
+    },
+    {
+      "id": "m03",
+      "expected": "return_refund/normal",
+      "got": "return_refund/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Customer wants to return unused headphones and receive a refund.",
+      "cost_usd": 0.00085
+    },
+    {
+      "id": "m04",
+      "expected": "product_question/normal",
+      "got": "product_question/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Customer asking product compatibility questions before making a purchase decision.",
+      "cost_usd": 0.000812
+    },
+    {
+      "id": "m05",
+      "expected": "spam/low",
+      "got": "spam/low",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "This is a phishing email attempting to collect personal information through a fake prize notice.",
+      "cost_usd": 0.000857
+    },
+    {
+      "id": "m06",
+      "expected": "return_refund/high",
+      "got": "return_refund/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Customer was charged twice for a single order and is requesting a refund for the duplicate charge.",
+      "cost_usd": 0.000853
+    },
+    {
+      "id": "m07",
+      "expected": "order_status/high",
+      "got": "order_status/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Customer needs urgent delivery confirmation for a gift with a deadline in a few days and tracking has stalled.",
+      "cost_usd": 0.000889
+    },
+    {
+      "id": "m08",
+      "expected": "product_question/normal",
+      "got": "product_question/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Potential bulk customer inquiring about product compatibility, pricing, and business purchasing options.",
+      "cost_usd": 0.000884
+    },
+    {
+      "id": "m09",
+      "expected": "spam/low",
+      "got": "spam/low",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "This is a phishing email attempting to steal credentials by impersonating Larkfield's security department.",
+      "cost_usd": 0.00088
+    },
+    {
+      "id": "m10",
+      "expected": "return_refund/high",
+      "got": "return_refund/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Customer has not received a refund for a returned item after three weeks and is threatening chargeback and public reviews.",
+      "cost_usd": 0.000928
+    },
+    {
+      "id": "m11",
+      "expected": "complaint/low",
+      "got": "complaint/low",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Customer is providing feedback about excessive packaging without reporting damage or requesting a refund.",
+      "cost_usd": 0.000833
+    },
+    {
+      "id": "m12",
+      "expected": "spam/low",
+      "got": "spam/low",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "This is a spam email attempting prompt injection by embedding fake system instructions to manipulate the AI assistant's response.",
+      "cost_usd": 0.000887
+    },
+    {
+      "id": "m13",
+      "expected": "product_question/normal",
+      "got": "product_question/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Customer asking about product features and capacity of an electric kettle before purchase.",
+      "cost_usd": 0.000869
+    }
+  ]
+}

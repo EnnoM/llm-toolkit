@@ -564,8 +564,84 @@ mit „WIP“. Texte, Icons und Seiten stehen in `core/catalog.py`.
 
 ---
 
+## Workflow mit Freigabe
+
+**Schritt 1 (28.10.2026, nur lokal):** Posteingang mit 13 selbst geschriebenen Mails an den
+erfundenen Shop „Larkfield“, Klassifikation, Entwurf, Freigabe, Audit-Log, Eval.
+
+- **Zwei Modellaufrufe statt einem:** Erst Klassifikation per Structured Outputs (Kategorie und
+  Priorität als `Literal`, eine Begründung vorweg), dann der Entwurf als freier Text. Getrennt,
+  weil die Klassifikation streng geprüft werden muss und der Entwurf nicht, und weil Spam gar
+  keinen Entwurf braucht. Die Entscheidung „kein Entwurf für Spam“ trifft der Code, nicht das
+  Modell.
+- **Zustände mit erlaubten Übergängen** (`TRANSITIONS`): new, classified, drafted, dann
+  approved, approved_edited oder discarded. `record()` prüft den aktuellen Zustand und schreibt
+  in einer Transaktion (`BEGIN IMMEDIATE`), damit zwei Klicks gleichzeitig nicht beide
+  durchkommen. Freigeben kann nur `approve()`, das nur die Seite auf Klick aufruft.
+- **Das Audit-Log ist die Quelle der Wahrheit:** Eine SQLite-Tabelle, in die nur angehängt wird.
+  Den Zustand einer Mail rechnet `replay()` aus ihren Ereignissen aus, statt ihn getrennt zu
+  speichern; so können Zustand und Protokoll nicht auseinanderlaufen. Auch „Reset inbox“ ist
+  nur ein Ereignis, nichts wird gelöscht. Datei `data/workflow.sqlite`, nicht im Repo.
+- **Platzhalter statt erfundener Fakten:** Das Modell sieht keine Bestellungen, also soll es
+  Lücken wie `[delivery date]` lassen. Mit offenen Lücken sind beide Freigabe-Buttons gesperrt,
+  und `approve()` lehnt sie auch selbst ab. Folge: „Approve“ unverändert ist selten möglich,
+  die Freigabequote misst hier eher „wie oft reicht der Entwurf ohne Ergänzung“.
+- **Was schiefging:**
+  - Ein Rate-Limit mitten in „Process all“ ließ eine Produktfrage in classified ohne Entwurf
+    stehen, und die Seite meldete fälschlich „Classified as spam“. Mehrstufige Abläufe brauchen
+    für jeden Zwischenzustand eine sinnvolle Anzeige; jetzt gibt es „Write draft“.
+  - Kosten der schon verarbeiteten Mails gingen bei so einem Abbruch verloren, jetzt `finally`.
+  - Trotz Verbot behauptete ein Entwurf „works with both iPhone and Android“. Prompt-Regeln
+    sind keine Garantie; genau dafür ist die Freigabe da.
+  - Breite Schreibmaschinenschrift: Posteingang und Protokoll passten nicht in die mittlere
+    Spalte (~450 px auf einem Laptop). Kategorie und Priorität in einer Spalte mit kurzen
+    Namen, Protokoll über die volle Breite unter den drei Spalten.
+- **Eval der Klassifikation** (`core/workflow_eval.py`): vergleicht mit der Musterlösung in
+  `eval/workflow_mails.yaml`, zählt schwere Fehler extra (Kundenmail als Spam, dringend als
+  low). Die Entwürfe prüft es nicht, dafür gibt es keine Musterlösung. Wiederholt bei 429 nach
+  einer Pause, weil Rate-Limits sonst als Modellfehler zählen.
+- **Erkenntnis aus dem ersten Lauf:** Die Kategorien treffen alle Modelle fast immer, die
+  Priorität nicht. Alle vier widersprechen bei denselben drei Mails meiner Musterlösung, und
+  zwar in Übereinstimmung mit der Prioritätsregel im Prompt. Dann ist eher die Musterlösung
+  oder die Regel unklar als das Modell schlecht. Die Musterlösung ist eine menschliche
+  Entscheidung und muss bestätigt werden.
+
+**Umbau zum Mailprogramm (28.10.2026, auf Ennos Wunsch):** Die Seite soll sich wie ein
+nutzbares Programm anfühlen, nicht wie eine Demo in drei Spalten.
+
+- Aufbau: Kopfzeile mit Kennzahlen, Werkzeugleiste, links Liste, rechts geöffnete Mail mit
+  Verlauf, unten das Gesamtprotokoll im Expander. Als Ausnahme in `docs/design.md` begründet.
+- **Kein Kästchen mehr vor jeder Zeile:** `selection_mode="single-row"` zeigt in Streamlit eine
+  Auswahlspalte mit Kästchen. `single-cell` wählt per Klick in eine beliebige Zelle aus, die Zeile
+  ergibt die Mail. Gemerkt wird die Mail-Id in einem `on_select`-Callback, nicht die
+  Zeilennummer: Nach „Classify and draft“ fällt eine Mail aus dem Filter „New“, und eine
+  gespeicherte Zeilennummer zeigte dann auf die nächste Mail.
+- **Schnellfilter:** New, To review, Done, Spam als `segmented_control` mit Anzahl, dazu
+  Priorität als Mehrfachauswahl. Jede Mail gehört zu genau einem Filter (`bucket()` in
+  `core/workflow.py`, getestet), Spam geht vor, auch verworfen.
+- Absendername und Empfangszeit in den Beispielmails, Liste neueste zuerst. Die geöffnete Mail
+  steht in der Adresse (`?mail=m04`), ein Link öffnet genau diese Mail.
+- **Verlauf pro Mail** statt nur des Gesamtprotokolls: lesbare Ereignisse („Draft written“,
+  „Sent with edits“), wer (Modell oder Human), Zeit, Kosten.
+- Platz bleibt das Hauptproblem der breiten Schreibmaschinenschrift: Die Liste ist bei
+  1440 px Fensterbreite nur gut 550 px breit. Spaltenbreiten fest vergeben (eine Spalte mit
+  `width="large"` schob Kategorie und Zustand aus dem Bild), Kategorie und Priorität in einer
+  Spalte, Kennzahlen als eine Textzeile statt `st.metric`.
+- Danach auf Ennos Wunsch: Einstellungen in einem einklappbaren `st.expander` mit zwei
+  umrahmten Gruppen (Modell als `segmented_control`, ein Button pro Modell; Inbox-Aktionen), das
+  Mailprogramm in einem eigenen Rahmen (`st.container(border=True)`). Eingeklappt bleibt das
+  gewählte Modell aktiv, weil der Expander seinen Inhalt nur versteckt.
+
+**Abschluss (28.10.2026):** Enno hat die strittigen Fälle entschieden (Kauffragen normal,
+Verpackung low, Prompt Injection spam). Musterlösung und Prompt wurden gemeinsam angepasst: Die
+Regeln für Priorität und Spam stehen jetzt ausdrücklich im Prompt. Das ist kein Schummeln am
+Testset, sondern der Normalfall: Eine Klassifikationsrichtlinie ist eine Geschäftsentscheidung,
+und Menschen wie Modell brauchen dieselbe. Danach 13/13 bei Mistral und Haiku, 12/13 bei Gemini,
+9/13 bei nano, in je zwei gleichen Läufen. Offen bleibt, dass nano die Injection-Mail mit Text
+statt JSON verweigert; in der App bleibt sie dann mit Fehlermeldung auf „new“.
+
 ## Offene Punkte
 
-- Nächstes Modul: Workflow mit Freigabe (Phase 4).
+- Nächstes Modul: MCP-Server (Phase 4).
 - Optional im Tool Use: Embedding-Tokens getrennt von den Chat-Tokens anzeigen, damit „Tokens
   in“ nicht nach einem Fehler aussieht.

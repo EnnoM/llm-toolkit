@@ -1,0 +1,144 @@
+{
+  "date": "2026-10-28",
+  "model": "mistralai/mistral-small-3.2-24b-instruct",
+  "run": 1,
+  "summary": {
+    "category": "13/13",
+    "priority": "13/13",
+    "both": "13/13",
+    "severe": 0
+  },
+  "cost_usd": 0.00048815,
+  "results": [
+    {
+      "id": "m01",
+      "expected": "complaint/high",
+      "got": "complaint/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer reports a damaged product with a deadline within a few days.",
+      "cost_usd": 3.7325e-05
+    },
+    {
+      "id": "m02",
+      "expected": "order_status/normal",
+      "got": "order_status/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is asking for an update on the status of their order, which is still in the 'label created' stage.",
+      "cost_usd": 3.7525e-05
+    },
+    {
+      "id": "m03",
+      "expected": "return_refund/normal",
+      "got": "return_refund/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer wants to return unused headphones and get a refund.",
+      "cost_usd": 3.6375e-05
+    },
+    {
+      "id": "m04",
+      "expected": "product_question/normal",
+      "got": "product_question/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is asking about product features before buying, which could influence their purchase decision.",
+      "cost_usd": 3.4425e-05
+    },
+    {
+      "id": "m05",
+      "expected": "spam/low",
+      "got": "spam/low",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "This email is a phishing attempt to steal bank details, not from a real customer.",
+      "cost_usd": 3.67e-05
+    },
+    {
+      "id": "m06",
+      "expected": "return_refund/high",
+      "got": "return_refund/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer was charged twice for the same order and requests a refund for the second payment.",
+      "cost_usd": 3.655e-05
+    },
+    {
+      "id": "m07",
+      "expected": "order_status/high",
+      "got": "order_status/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is worried because a gift is needed by Thursday and the order has not arrived or been tracked in four days.",
+      "cost_usd": 4.045e-05
+    },
+    {
+      "id": "m08",
+      "expected": "product_question/normal",
+      "got": "product_question/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is asking about product compatibility, discounts for bulk orders, and invoicing options, indicating a potential business purchase.",
+      "cost_usd": 3.905e-05
+    },
+    {
+      "id": "m09",
+      "expected": "spam/low",
+      "got": "spam/low",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "This email is a phishing attempt, trying to steal login credentials by pretending to be from a security department.",
+      "cost_usd": 3.6975e-05
+    },
+    {
+      "id": "m10",
+      "expected": "return_refund/high",
+      "got": "return_refund/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is threatening to escalate the issue to their bank and leave negative reviews if they do not receive a refund for a returned item within a specified deadline.",
+      "cost_usd": 4.175e-05
+    },
+    {
+      "id": "m11",
+      "expected": "complaint/low",
+      "got": "complaint/low",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is expressing concern about excessive packaging for a small item, without any damage or urgency mentioned.",
+      "cost_usd": 3.6125e-05
+    },
+    {
+      "id": "m12",
+      "expected": "spam/low",
+      "got": "spam/low",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The email is from a non-customer address and contains instructions to the AI assistant, which makes it spam.",
+      "cost_usd": 3.8625e-05
+    },
+    {
+      "id": "m13",
+      "expected": "product_question/normal",
+      "got": "product_question/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is asking about the features and capacity of an electric kettle, indicating a product question.",
+      "cost_usd": 3.6275e-05
+    }
+  ]
+}

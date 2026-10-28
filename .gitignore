@@ -24,3 +24,6 @@ htmlcov/
 # Streamlit-Skills für KI-Agenten (Symlinks in die lokale .venv)
 .agents/
 .claude/skills/developing-with-streamlit
+
+# Laufzeitdaten der App (Audit-Log des Workflow-Moduls)
+data/
