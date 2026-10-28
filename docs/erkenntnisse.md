@@ -729,6 +729,24 @@ minus 1, ein Test hält beides gleich. `st.navigation` mit einem Dict ergibt die
 steht im Abschnitt mit leerem Namen und hat so keine Überschrift. In der Seitenleiste nur
 „Level 3“, weil Streamlit längere Abschnittsnamen abschneidet.
 
+## RAG-Chatbot: Einstellungen in der Mitte (28.10.2026)
+
+Links standen Dokumente, Chunk-Regler und Antwort-Einstellungen untereinander, zu viel für eine
+schmale Spalte. Abgewogen: alles als Leiste über dem Chat (zu hoch), Reiter (Chat beim
+Einstellen unsichtbar), Fenster per Button (Regler versteckt). Gewählt: ein aufklappbarer
+Bereich „Documents and chunks“ über dem Chat mit zwei umrahmten Gruppen, entsprechend der
+ersten Phase von RAG (Index bauen); links bleibt nur, was die Antwort betrifft (Modell, Anzahl
+Treffer). Der Bereich ist offen, solange keine Dokumente geladen sind, danach zu, damit der Chat
+Platz hat.
+
+- Damit er beim Laden sofort zuklappt, laufen „Load example documents“ und der Upload als
+  Callback: Der Titel mit der Anzahl Dokumente entsteht vor dem Klick-Ergebnis, sonst wäre er
+  einen Durchlauf zu spät.
+- Die Höhenregel aus `tool_use.css` (Verlauf füllt den Platz unter einem Bereich wechselnder
+  Höhe) liegt jetzt in `chat.css` und gilt für Tool Use und RAG; `tool_use.css` ist entfernt.
+- Bei 1440 px Fensterbreite sind die beiden Gruppen schmal (Text im Upload-Feld gekürzt), bei
+  2000 px passt alles.
+
 ## MCP-Server
 
 **Schritt 1 (28.10.2026, lokal):** Server mit dem offiziellen Python-SDK, Client, Seite, Tests.
@@ -767,8 +785,8 @@ steht im Abschnitt mit leerem Namen und hat so keine Überschrift. In der Seiten
 
 Durchsicht der App: Auf den Modulseiten fehlte eine Erklärung, was sie zeigen; die Techniken
 standen nur im Katalog. Jetzt hat jede Modulseite denselben Kopf (Satz, Techniken als Badges,
-Popover „How it works“), Home zeigt die Techniken auf den Kacheln, dazu „Built by Enno“ und den
-Link zum Code. Der Kopf machte die Chat-Seiten zu hoch (Titel rutschte aus dem Bild);
+Popover „How it works“), Home zeigt „Built by Enno“ und den Link zum Code. Die Techniken auch
+auf den Kacheln von Home waren Enno zu überladen und sind dort wieder entfernt. Der Kopf machte die Chat-Seiten zu hoch (Titel rutschte aus dem Bild);
 `--chat-offset` in `chat.css` rechnet ihn jetzt ein.
 
 ## Offene Punkte

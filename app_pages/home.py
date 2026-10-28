@@ -42,8 +42,6 @@ for level, entries in levels_newest_first():
                     )
                     # Gleiche Schriftgröße wie bei den geplanten, nur nicht grau
                     st.markdown(f":small[{entry.summary}]")
-                    # Die Techniken als Stichworte: zeigen auf einen Blick, was gebaut wurde
-                    st.markdown(" ".join(f":gray-badge[{t}]" for t in entry.techniques))
                 else:
                     # Ausgegraut über st.caption: geplante Module haben noch keine Seite
                     st.caption(f"**{entry.icon} {entry.title}** :gray-badge[WIP]")

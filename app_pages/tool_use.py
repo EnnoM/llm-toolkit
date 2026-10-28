@@ -3,12 +3,12 @@
 Layout nach docs/design.md: Modell | Chat | Kennzahlen im Verhältnis 1:2:1, der Chat sieht aus
 wie auf der Chat-Seite (gemeinsame Bausteine in core/chat_ui.py, CSS in chat.css). Werkzeuge
 und Beispiele stehen in einer umrahmten Leiste über dem Chat, weil sie zur Frage gehören; damit
-der Verlauf darunter trotzdem genau bis zum Eingabefeld reicht, gibt es tool_use.css.
+der Verlauf darunter trotzdem genau bis zum Eingabefeld reicht, regelt chat.css die Höhe
+(Container chat_main).
 Die Schleife selbst steht in core/tool_use.py, die Werkzeuge in core/tools.py.
 """
 
 import json
-from pathlib import Path
 
 import streamlit as st
 
@@ -41,7 +41,6 @@ TOOL_LABELS = {tool.name: tool.label for tool in TOOLS}
 
 st.set_page_config(layout="wide")  # drei Spalten brauchen die volle Breite
 load_chat_css()
-st.html(Path(__file__).with_name("tool_use.css"))
 history: list[ToolTurn] = st.session_state.setdefault("tool_history", [])
 
 
@@ -139,7 +138,7 @@ def show_summary() -> None:
 
 
 # Mitte: Leiste mit Werkzeugen und Beispielen, darunter der Verlauf. Der Container chat_main
-# ist so hoch wie das Fenster erlaubt, der Verlauf füllt den Rest (tool_use.css)
+# ist so hoch wie das Fenster erlaubt, der Verlauf füllt den Rest (chat.css)
 main = chat.container(key="chat_main")
 with main.container(border=True, key="tool_bar"):
     # Untereinander statt in einer Zeile: In einer Zeile brechen die Buttons nicht um und

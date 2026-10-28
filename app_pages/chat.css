@@ -30,6 +30,19 @@
     height: calc(100dvh - var(--chat-offset)) !important;
   }
 
+  /* Tool Use und RAG: Über dem Verlauf steht ein Bereich mit wechselnder Höhe (Werkzeugleiste,
+     aufklappbare Dokumente). Dann ist der Container chat_main so hoch wie das Fenster erlaubt,
+     und der Verlauf füllt den Rest statt der festen Höhe oben. Die Höhe gehört an das
+     Hüll-Element um chat_main, der Container selbst füllt es aus. */
+  [data-testid="stLayoutWrapper"]:has(> .st-key-chat_main) {
+    height: calc(100dvh - var(--chat-offset));
+  }
+  .st-key-chat_main [data-testid="stLayoutWrapper"]:has(> .st-key-chat_scroll) {
+    flex: 1 1 0 !important;
+    height: auto !important;
+    min-height: 0;
+  }
+
   /* Einstellungen und Kennzahlen: stehen fest, scrollen nur bei sehr niedrigem Fenster */
   .st-key-chat_settings,
   .st-key-chat_stats {

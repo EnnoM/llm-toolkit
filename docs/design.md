@@ -4,8 +4,7 @@ Gilt für jede Seite der App. Umgesetzt in `.streamlit/config.toml`. Eigenes CSS
 Streamlit etwas nicht kann: dann klein, kommentiert, in einer eigenen Datei neben der Seite und
 nur über Container mit `key` (Klasse `st-key-...`). Ausnahmen: `app_pages/chat.css`, das Chat und RAG Chatbot gemeinsam nutzen
 (gleiche keys, Bausteine in `core/chat_ui.py`), und `app_pages/analyst.css`, das den Ask-Button
-im AI Data Analyst so hoch macht wie das mitwachsende Eingabefeld, `app_pages/tool_use.css`,
-das den Chatverlauf unter der Werkzeugleiste bis zum Eingabefeld reichen lässt, und `login.css`
+im AI Data Analyst so hoch macht wie das mitwachsende Eingabefeld, und `login.css`
 neben `app.py`, das im Passwortfeld das zweite Auge des Browsers und den Enter-Hinweis ausblendet.
 
 ## Sprache

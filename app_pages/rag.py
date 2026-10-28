@@ -1,9 +1,11 @@
 """RAG Chatbot: Fragen zu eigenen PDFs, beantwortet nur aus gefundenen Abschnitten mit Quelle.
 
-Layout nach docs/design.md: Einstellungen | Chat | Kennzahlen im Verhältnis 1:2:1, der Chat
-sieht aus wie auf der Chat-Seite (gemeinsame Bausteine in core/chat_ui.py, CSS in chat.css).
-Links stehen beide Phasen von RAG untereinander: erst Indexieren (Dokumente, Abschnitte,
-Embeddings), dann Abfragen (Modell, Anzahl Treffer).
+Layout nach docs/design.md: Antwort-Einstellungen | Chat | Kennzahlen im Verhältnis 1:2:1, der
+Chat sieht aus wie auf der Chat-Seite (gemeinsame Bausteine in core/chat_ui.py, CSS in chat.css).
+Die beiden Phasen von RAG sind getrennt: Den Index (Dokumente, Chunks, Embeddings) baut ein
+aufklappbarer Bereich über dem Chat mit zwei umrahmten Gruppen; links steht nur, was die
+Antwort betrifft (Modell, Anzahl Treffer). Der Bereich ist offen, solange keine Dokumente
+geladen sind, danach zu, damit der Chat Platz hat.
 """
 
 import streamlit as st
@@ -64,6 +66,19 @@ def add_document(data: bytes, filename: str) -> None:
         st.error(str(err), icon=":material/error:")
         return
     documents.setdefault(document.file_hash, document)
+
+
+def load_examples() -> None:
+    for path in sample_files():
+        add_document(path.read_bytes(), path.name)
+
+
+def add_uploads() -> None:
+    """Callbacks laufen vor dem Zeichnen: So zeigt der Titel des Bereichs gleich die neue Zahl."""
+    for upload in (
+        st.session_state[f"rag_uploads_{st.session_state.rag_upload_key}"] or []
+    ):
+        add_document(upload.getvalue(), upload.name)
 
 
 def clear_documents() -> None:
@@ -140,70 +155,6 @@ settings, chat, stats = st.columns([1, 2, 1], gap="large")
 
 # Die Container mit key bekommen die CSS-Klasse st-key-<key>, darüber greift chat.css
 with settings.container(key="chat_settings"):
-    st.markdown("##### Documents")
-    if st.button("Load example documents", icon=":material/folder_open:"):
-        for path in sample_files():
-            add_document(path.read_bytes(), path.name)
-    uploads = st.file_uploader(
-        "Your PDFs",
-        type="pdf",
-        accept_multiple_files=True,
-        key=f"rag_uploads_{st.session_state.rag_upload_key}",
-        help=(
-            "Uploaded files stay in this browser session only; other visitors cannot see "
-            "them. Scanned PDFs without a text layer cannot be read."
-        ),
-    )
-    for upload in uploads or []:
-        add_document(upload.getvalue(), upload.name)
-    # Eine Zeile pro Datei statt Tabelle: lange Dateinamen schoben die Zahlen aus dem Bild
-    for d in documents.values():
-        st.caption(f"**{d.filename}**  \n{len(d.pages)} pages")
-    if documents:
-        st.button("Clear documents", icon=":material/delete:", on_click=clear_documents)
-
-    st.markdown("##### Chunks")
-    chunk_size = st.slider(
-        "Chunk size (characters)",
-        200,
-        2000,
-        DEFAULT_CHUNK_SIZE,
-        step=50,
-        help=(
-            "How long each passage is. Small chunks lose context, large ones mix several "
-            "topics and make the search less precise."
-        ),
-    )
-    overlap = st.slider(
-        "Overlap (characters)",
-        0,
-        chunk_size // 2,
-        min(DEFAULT_OVERLAP, chunk_size // 2),
-        step=25,
-        help=(
-            "Roughly how much text neighbouring chunks share; each chunk starts at the "
-            "nearest sentence start, so the exact amount varies. More overlap means more "
-            "chunks and higher cost."
-        ),
-    )
-    sentences = st.toggle(
-        "Cut at sentences and headings",
-        value=True,
-        help=(
-            "On: chunks start at a sentence and end before a heading or after a sentence. "
-            "Off: chunks are cut at the nearest word, which shows how much the boundaries "
-            "matter."
-        ),
-    )
-    chunks_by_file = {
-        document.filename: chunk_document(document, chunk_size, overlap, sentences)
-        for document in documents.values()
-    }
-    all_chunks = [chunk for chunks in chunks_by_file.values() for chunk in chunks]
-    # Stand der Embeddings erst am Ende zeichnen (show_index_status): Die erste Frage legt
-    # fehlende Embeddings an, und die Zeile soll danach schon den neuen Stand zeigen
-    index_status = st.empty()
-
     st.markdown("##### Answers")
     default_model = get_secret("OPENROUTER_MODEL")
     options = model_options(default_model)  # nach Preis sortiert, günstigstes zuerst
@@ -229,6 +180,93 @@ with settings.container(key="chat_settings"):
             "context, but also more noise and higher cost."
         ),
     )
+
+# Mitte: Index bauen (aufklappbar), darunter der Verlauf. chat_main ist so hoch wie das Fenster
+# erlaubt, der Verlauf füllt den Rest unter dem Aufklappbereich (chat.css)
+main = chat.container(key="chat_main")
+index_summary = (
+    f"{len(documents)} document{'s' if len(documents) != 1 else ''}"
+    if documents
+    else "no documents yet"
+)
+with main.expander(
+    f"Documents and chunks · {index_summary}",
+    icon=":material/library_books:",
+    expanded=not documents,  # neuer Titel nach dem Laden: der Bereich klappt dann zu
+):
+    st.caption(
+        "Step 1 of RAG: the documents are split into chunks and each chunk becomes an "
+        "embedding. Changing the chunks rebuilds the index."
+    )
+    documents_box, chunks_box = st.columns(2, gap="medium")
+    with documents_box.container(border=True, height="stretch"):
+        st.markdown("**Documents**")
+        st.button(
+            "Load example documents",
+            icon=":material/folder_open:",
+            on_click=load_examples,
+        )
+        st.file_uploader(
+            "Your PDFs",
+            type="pdf",
+            accept_multiple_files=True,
+            key=f"rag_uploads_{st.session_state.rag_upload_key}",
+            on_change=add_uploads,
+            help=(
+                "Uploaded files stay in this browser session only; other visitors cannot see "
+                "them. Scanned PDFs without a text layer cannot be read."
+            ),
+        )
+        # Eine Zeile pro Datei statt Tabelle: lange Dateinamen schoben die Zahlen aus dem Bild
+        for d in documents.values():
+            st.caption(f"**{d.filename}**  \n{len(d.pages)} pages")
+        if documents:
+            st.button(
+                "Clear documents", icon=":material/delete:", on_click=clear_documents
+            )
+
+    with chunks_box.container(border=True, height="stretch"):
+        st.markdown("**Chunks**")
+        chunk_size = st.slider(
+            "Chunk size (characters)",
+            200,
+            2000,
+            DEFAULT_CHUNK_SIZE,
+            step=50,
+            help=(
+                "How long each passage is. Small chunks lose context, large ones mix several "
+                "topics and make the search less precise."
+            ),
+        )
+        overlap = st.slider(
+            "Overlap (characters)",
+            0,
+            chunk_size // 2,
+            min(DEFAULT_OVERLAP, chunk_size // 2),
+            step=25,
+            help=(
+                "Roughly how much text neighbouring chunks share; each chunk starts at the "
+                "nearest sentence start, so the exact amount varies. More overlap means more "
+                "chunks and higher cost."
+            ),
+        )
+        sentences = st.toggle(
+            "Cut at sentences and headings",
+            value=True,
+            help=(
+                "On: chunks start at a sentence and end before a heading or after a sentence. "
+                "Off: chunks are cut at the nearest word, which shows how much the boundaries "
+                "matter."
+            ),
+        )
+        chunks_by_file = {
+            document.filename: chunk_document(document, chunk_size, overlap, sentences)
+            for document in documents.values()
+        }
+        all_chunks = [chunk for chunks in chunks_by_file.values() for chunk in chunks]
+        # Stand der Embeddings erst am Ende zeichnen (show_index_status): Die erste Frage legt
+        # fehlende Embeddings an, und die Zeile soll danach schon den neuen Stand zeigen
+        index_status = st.empty()
 
 with stats.container(key="chat_stats"):
     st.markdown("##### Session")
@@ -296,7 +334,7 @@ def show_summary() -> None:
         st.metric("Answers", sum(turn.role == "assistant" for turn in history))
 
 
-with chat:
+with main:
     if not get_secret("OPENROUTER_API_KEY"):
         st.warning(
             "OPENROUTER_API_KEY is not set, the chatbot cannot answer.",
@@ -321,7 +359,7 @@ show_summary()
 with messages:
     if not history and not prompt:
         st.caption(
-            "Load the example documents or upload a PDF on the left, then ask a question "
+            "Load the example documents or upload a PDF above, then ask a question "
             "below, for example: Which towns are regional centres (Oberzentren)?"
         )
     for turn in history:
