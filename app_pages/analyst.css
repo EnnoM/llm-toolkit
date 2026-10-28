@@ -1,0 +1,26 @@
+/*
+ * AI Data Analyst: Der Ask-Button steht rechts neben dem Eingabefeld und ist immer so hoch
+ * wie das Feld, auch wenn es bei langen Fragen mitwächst. Streamlit richtet Elemente in einer
+ * Zeile nur oben, mittig oder unten aus, streckt sie aber nicht, deshalb dieses CSS (Ausnahme,
+ * siehe docs/design.md). Es greift nur auf den Container mit key analyst_ask_row zu.
+ *
+ * Achtung wie in chat.css: nie eine spitze Klammer vor einem Buchstaben, auch nicht in
+ * Kommentaren, sonst verwirft Streamlit den ganzen Style.
+ */
+
+/* Alle Elemente der Zeile gleich hoch */
+.st-key-analyst_ask_row {
+  align-items: stretch;
+}
+
+/* Der Button und jede Hülle um ihn füllen diese Höhe. Zwischen Zeile und Button liegen ein
+   Element-Container, ein Wrapper und der Form-Button (mit Hilfetext kämen zwei Tooltip-Hüllen
+   dazu, deshalb sind die hier auch aufgeführt). */
+.st-key-analyst_ask_row .stElementContainer:has(.stFormSubmitButton) > div,
+.st-key-analyst_ask_row .stFormSubmitButton,
+.st-key-analyst_ask_row .stFormSubmitButton > div,
+.st-key-analyst_ask_row .stFormSubmitButton .stTooltipIcon,
+.st-key-analyst_ask_row .stFormSubmitButton .stTooltipHoverTarget,
+.st-key-analyst_ask_row .stFormSubmitButton button {
+  height: 100%;
+}

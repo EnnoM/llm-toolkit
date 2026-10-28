@@ -733,6 +733,15 @@
       claude-haiku-4.5 13/13, 13/13, 13/13, 0 (0.011 USD je Lauf); gemini-2.5-flash-lite
       12/13, 12/13, 12/13, 0 (m12 als return_refund); gpt-4.1-nano 11/13, 10/13, 9/13, 0 (m01
       als return_refund, Spam als high, m12 verweigert). Kosten sonst 0.0005 bis 0.0007 USD.
+    - 28.10.2026, Shop-Datenbank hinter den Mails (eval/workflow_shop.yaml), neue Mail m14
+      (laut DHL zugestellt, laut Kunde nicht da). Eval je zwei Läufe, Klassifikation
+      (beides) / Einschätzung clear-unclear / Entwürfe mit unbelegten Fakten:
+      gemini-2.5-flash-lite 13/14, 11/11, 0 (m12 als return_refund);
+      claude-haiku-4.5 14/14, 11/11, 0 (0.041 USD je Lauf);
+      mistral-small-3.2 14/14, 9/11 und 10/11, 0 (m10 und m14 je einmal als clear, ein
+      Entwurf trotz zweitem Versuch ungültiges JSON);
+      gpt-4.1-nano 10/14, 8/11 und 9/11, 0 (m07 Lieferdatum falsch bewertet, m08 unclear).
+      Kosten je Lauf mit Entwürfen 0.0025 bis 0.0031 USD, Haiku 0.041 USD.
 
 - id: mcp_server
   name: MCP-Server

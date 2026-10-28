@@ -3,12 +3,14 @@
   "model": "anthropic/claude-haiku-4.5",
   "run": 1,
   "summary": {
-    "category": "13/13",
-    "priority": "13/13",
-    "both": "13/13",
-    "severe": 0
+    "category": "14/14",
+    "priority": "14/14",
+    "both": "14/14",
+    "severe": 0,
+    "assessment": "11/11",
+    "drafts_with_unverified_facts": 0
   },
-  "cost_usd": 0.011266,
+  "cost_usd": 0.041448,
   "results": [
     {
       "id": "m01",
@@ -17,8 +19,8 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "Customer received a damaged blender with a tight deadline and needs urgent replacement before an event.",
-      "cost_usd": 0.000877
+      "reason": "Customer received a damaged blender with a tight deadline for a birthday event and needs urgent replacement.",
+      "cost_usd": 0.000883
     },
     {
       "id": "m02",
@@ -77,8 +79,8 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "Customer needs urgent delivery confirmation for a gift with a deadline in a few days and tracking has stalled.",
-      "cost_usd": 0.000889
+      "reason": "Customer needs urgent delivery confirmation for a gift with a deadline in a few days and tracking is stalled.",
+      "cost_usd": 0.00089
     },
     {
       "id": "m08",
@@ -139,6 +141,117 @@
       "severe": false,
       "reason": "Customer asking about product features and capacity of an electric kettle before purchase.",
       "cost_usd": 0.000869
+    },
+    {
+      "id": "m14",
+      "expected": "order_status/high",
+      "got": "order_status/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Customer reports order marked as delivered but not received, needs investigation into delivery status.",
+      "cost_usd": 0.000858
+    }
+  ],
+  "drafts": [
+    {
+      "id": "m01",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The policy for damaged goods on arrival clearly allows us to send a free express replacement within 1 business day, and we have stock available.",
+      "cost_usd": 0.002705
+    },
+    {
+      "id": "m02",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The shop data clearly shows the order is waiting for stock and will ship when the product is back in stock on 28 October.",
+      "cost_usd": 0.002436
+    },
+    {
+      "id": "m03",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The item was delivered on 2026-10-12, is within the 30-day return window, and the customer confirms it is unused and in original packaging, so the return policy applies.",
+      "cost_usd": 0.002796
+    },
+    {
+      "id": "m04",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The shop data directly answers both questions about the product's compatibility and oven-safety.",
+      "cost_usd": 0.002062
+    },
+    {
+      "id": "m06",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The second charge is a standard authorization hold that the bank will automatically release within 5 business days.",
+      "cost_usd": 0.002963
+    },
+    {
+      "id": "m07",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The tracking shows the delay has been resolved with a new delivery date of 2026-10-28, which is after the customer's Thursday deadline.",
+      "cost_usd": 0.002783
+    },
+    {
+      "id": "m08",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The shop data clearly answers all three questions and directs bulk orders to the sales team.",
+      "cost_usd": 0.0024
+    },
+    {
+      "id": "m10",
+      "expected": "unclear",
+      "got": "unclear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The return was used (limescale found), which violates the returns policy, so the refund decision requires a team lead to decide whether to refund or deny based on the condition.",
+      "cost_usd": 0.003167
+    },
+    {
+      "id": "m11",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The shop data shows that packaging will change to recycled paper from November 1st, and customer feedback about packaging is welcome.",
+      "cost_usd": 0.002483
+    },
+    {
+      "id": "m13",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The shop data contains all product specifications needed to answer the customer's questions about temperature settings and capacity.",
+      "cost_usd": 0.002522
+    },
+    {
+      "id": "m14",
+      "expected": "unclear",
+      "got": "unclear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The tracking shows delivery with drop-off permission, but the customer confirms it's not at the door or with neighbours, so a carrier claim is needed and a team lead must decide on replacement timing.",
+      "cost_usd": 0.003
     }
   ]
 }

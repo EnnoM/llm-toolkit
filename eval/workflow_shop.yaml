@@ -1,0 +1,168 @@
+# Shop-Datenbank des erfundenen Shops „Larkfield“ für das Modul „Workflow mit Freigabe“.
+#
+# Bevor das Modell eine Antwort entwirft, sucht core/workflow.py hier alles zur Mail heraus:
+# Kunde und Bestellungen zum Absender, Bestellnummern aus dem Text, erwähnte Produkte und die
+# Shop-Regeln. Das Modell darf nur diese Fakten verwenden.
+#
+# Die Daten passen zu eval/workflow_mails.yaml (Posteingang vom Montag, 26.10.2026). Manche
+# Fälle lösen die Daten eindeutig, andere nicht; welche, steht in den Mails unter
+# expected.assessment. Alle Personen, Bestellungen und Firmen sind erfunden.
+
+today: 2026-10-26
+
+policies:
+  returns: >-
+    Returns are accepted within 30 days of delivery if the item is unused and in its original
+    packaging. The customer gets a free return label by email. The refund goes to the original
+    payment method within 5 business days after the return has arrived and passed inspection.
+  damaged_goods: >-
+    Goods damaged on arrival: we send a free replacement by express within 1 business day, or
+    give a full refund if the customer prefers. The damaged item does not need to be returned.
+  delivery: >-
+    Standard delivery with DHL takes 2 to 4 business days. If tracking shows no update for 5
+    business days, customer service opens a carrier investigation.
+  missing_parcels: >-
+    If tracking says delivered but the customer has not received the parcel, we ask the customer
+    to check with neighbours and at the drop-off place, and open a claim with the carrier. A
+    replacement or refund before the claim is decided (up to 10 business days) needs a team
+    lead's approval.
+  payments: >-
+    A second charge of the same amount right after an order is usually a card authorization
+    hold. The bank releases it automatically within 5 business days; customer service cannot
+    release it earlier.
+  business_orders: >-
+    Orders of 20 units or more get an individual quote from the sales team
+    (sales@larkfield.example) within 2 business days. Invoices to companies are possible.
+  packaging: >-
+    From 1 November 2026 on, all parcels will be packed with recycled paper instead of plastic
+    air cushions. Customer feedback about packaging is welcome and needs no further action.
+
+products:
+  - name: Blender
+    aliases: [blender]
+    price: 89.00
+    in_stock: 14
+    facts: [1.5 litre glass jug, 6 speeds]
+  - name: USB-C Hub
+    aliases: [usb-c hub, usb hub]
+    price: 34.90
+    in_stock: 0
+    facts: [7 ports, "back in stock on 28 October 2026, open orders ship the same day"]
+  - name: Wireless Headphones
+    aliases: [wireless headphones, headphones]
+    price: 129.00
+    in_stock: 22
+    facts: [over-ear, 30 hours battery]
+  - name: Cast Iron Pan
+    aliases: [cast iron pan, cast-iron pan]
+    price: 39.90
+    in_stock: 31
+    facts: [28 cm, works on all hobs including induction, oven-safe up to 260 °C]
+  - name: Smartwatch
+    aliases: [smartwatch, smartwatches]
+    price: 89.63
+    in_stock: 48
+    facts: [works with iPhone (iOS 16 or newer) and Android (10 or newer), 7 days battery]
+  - name: Electric Kettle
+    aliases: [electric kettle, kettle, wasserkocher]
+    price: 45.00
+    in_stock: 19
+    facts: [1.7 litres, temperature settings 40 / 70 / 80 / 90 / 100 °C, keep-warm function]
+  - name: Tea Set
+    aliases: [tea set]
+    price: 24.50
+    in_stock: 9
+    facts: [teapot and 4 cups, porcelain]
+  - name: Bluetooth Speaker
+    aliases: [bluetooth speaker, speaker]
+    price: 59.90
+    in_stock: 12
+    facts: [waterproof IPX7, 12 hours battery]
+
+customers:
+  - email: julia.hartmann@example.com
+    name: Julia Hartmann
+    customer_since: 2024-03-02
+    orders:
+      - id: 40213
+        date: 2026-10-21
+        items: [{product: Blender, quantity: 1, price: 89.00}]
+        payment: paid 89.00 EUR by credit card
+        shipment: DHL, delivered on 2026-10-24
+  - email: tom.becker@example.com
+    name: Tom Becker
+    customer_since: 2025-11-15
+    orders:
+      - id: 40388
+        date: 2026-10-19
+        items: [{product: USB-C Hub, quantity: 1, price: 34.90}]
+        payment: paid 34.90 EUR by PayPal
+        shipment: not shipped yet, label created on 2026-10-19, waiting for stock
+  - email: sofia.marino@example.com
+    name: Sofia Marino
+    customer_since: 2026-02-10
+    orders:
+      - id: 40102
+        date: 2026-10-08
+        items: [{product: Wireless Headphones, quantity: 1, price: 129.00}]
+        payment: paid 129.00 EUR by credit card
+        shipment: DHL, delivered on 2026-10-12
+  - email: markus.weber@example.com
+    name: Markus Weber
+    customer_since: 2023-07-30
+    orders:
+      - id: 40455
+        date: 2026-10-23
+        items:
+          - {product: Cast Iron Pan, quantity: 2, price: 39.90}
+          - {product: Electric Kettle, quantity: 1, price: 45.00}
+        payment: >-
+          order total 132.50 EUR including 7.70 EUR shipping; 132.50 EUR charged by credit card on 2026-10-23 at 18:02 (captured); a second
+          132.50 EUR on 2026-10-23 at 18:03 is an authorization hold, status pending, not
+          captured
+        shipment: DHL, in transit, expected on 2026-10-27
+  - email: lea.schubert@example.com
+    name: Lea Schubert
+    customer_since: 2025-12-01
+    orders:
+      - id: 40290
+        date: 2026-10-19
+        items: [{product: Smartwatch, quantity: 1, price: 89.63}]
+        payment: paid 89.63 EUR by credit card
+        shipment: >-
+          DHL, shipped on 2026-10-20, last scan 2026-10-22 at the Leipzig hub; carrier note of
+          2026-10-26 06:10: delay at the hub resolved, new delivery date 2026-10-28
+  - email: daniel.roth@example.com
+    name: Daniel Roth
+    customer_since: 2024-09-14
+    orders:
+      - id: 39977
+        date: 2026-09-12
+        items: [{product: Electric Kettle, quantity: 1, price: 45.00}]
+        payment: paid 45.00 EUR by credit card
+        shipment: DHL, delivered on 2026-09-15
+        return: >-
+          return label sent on 2026-09-28; return arrived at the warehouse on 2026-10-02;
+          inspection on 2026-10-05: limescale inside, kettle was used; refund on hold, waiting
+          for a decision by customer service; customer emailed on 2026-10-12 and 2026-10-19
+          without an answer
+  - email: anna.klein@example.com
+    name: Anna Klein
+    customer_since: 2026-05-20
+    orders:
+      - id: 40350
+        date: 2026-10-17
+        items: [{product: Tea Set, quantity: 1, price: 24.50}]
+        payment: paid 24.50 EUR by PayPal
+        shipment: DHL, delivered on 2026-10-21
+  - email: paul.fischer@example.com
+    name: Paul Fischer
+    customer_since: 2025-04-03
+    orders:
+      - id: 40477
+        date: 2026-10-21
+        items: [{product: Bluetooth Speaker, quantity: 1, price: 59.90}]
+        payment: paid 59.90 EUR by credit card
+        shipment: >-
+          DHL, delivered on 2026-10-24 at 14:12, left at the front door (drop-off permission
+          given by the customer at checkout); no photo of the delivery

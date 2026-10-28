@@ -3,12 +3,14 @@
   "model": "google/gemini-2.5-flash-lite",
   "run": 1,
   "summary": {
-    "category": "12/13",
-    "priority": "12/13",
-    "both": "12/13",
-    "severe": 0
+    "category": "13/14",
+    "priority": "13/14",
+    "both": "13/14",
+    "severe": 0,
+    "assessment": "11/11",
+    "drafts_with_unverified_facts": 0
   },
-  "cost_usd": 0.00073,
+  "cost_usd": 0.0030835000000000003,
   "results": [
     {
       "id": "m01",
@@ -17,8 +19,8 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "The customer received a damaged product and needs a replacement urgently before a specific event.",
-      "cost_usd": 5.75e-05
+      "reason": "The customer received a damaged product and needs a replacement urgently before a specific date.",
+      "cost_usd": 5.76e-05
     },
     {
       "id": "m02",
@@ -77,8 +79,8 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "The customer is worried about a delayed order that is a gift for a specific date.",
-      "cost_usd": 5.76e-05
+      "reason": "The customer is worried about a delayed order that is needed by a specific deadline.",
+      "cost_usd": 5.73e-05
     },
     {
       "id": "m08",
@@ -139,6 +141,117 @@
       "severe": false,
       "reason": "The customer is asking questions about a product's features and capacity before purchasing.",
       "cost_usd": 5.49e-05
+    },
+    {
+      "id": "m14",
+      "expected": "order_status/high",
+      "got": "order_status/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is reporting a missing order that tracking shows as delivered.",
+      "cost_usd": 5.6e-05
+    }
+  ],
+  "drafts": [
+    {
+      "id": "m01",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The customer received a damaged item, and the policy for damaged goods clearly states that a replacement can be sent by express within 1 business day.",
+      "cost_usd": 0.0002076
+    },
+    {
+      "id": "m02",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The customer's order is waiting for stock and the restock date is known.",
+      "cost_usd": 0.0001929
+    },
+    {
+      "id": "m03",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The customer wants to return an item within the allowed return period and the policy clearly outlines the process and refund timeline.",
+      "cost_usd": 0.0002198
+    },
+    {
+      "id": "m04",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The product description clearly states the pan's compatibility with induction hobs and its oven-safe temperature.",
+      "cost_usd": 0.0001461
+    },
+    {
+      "id": "m06",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The customer was charged twice, but the second charge is an authorization hold that will be released automatically.",
+      "cost_usd": 0.0002482
+    },
+    {
+      "id": "m07",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The tracking information provides a clear update on the delay and a new estimated delivery date.",
+      "cost_usd": 0.0002265
+    },
+    {
+      "id": "m08",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The product details and business order policy directly answer all parts of the customer's question.",
+      "cost_usd": 0.0001822
+    },
+    {
+      "id": "m10",
+      "expected": "unclear",
+      "got": "unclear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The return has arrived but has not passed inspection due to signs of use, and a customer service decision is pending.",
+      "cost_usd": 0.0002692
+    },
+    {
+      "id": "m11",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The customer's feedback about packaging is noted and aligns with a policy update.",
+      "cost_usd": 0.0002141
+    },
+    {
+      "id": "m13",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "All requested product details are available in the shop data.",
+      "cost_usd": 0.0001594
+    },
+    {
+      "id": "m14",
+      "expected": "unclear",
+      "got": "unclear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The customer states the parcel was not received despite tracking showing delivered, requiring a carrier claim and potential team lead approval for immediate resolution.",
+      "cost_usd": 0.0002317
     }
   ]
 }

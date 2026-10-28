@@ -19,11 +19,25 @@ from core.workflow import (
     placeholders,
     process,
     reset_inbox,
+    shop_facts,
+    unverified,
     write_draft,
 )
 from tests.test_extraction import fake_client
 
 DRAFT = "Hello Julia,\n\nsorry about the jug. We will [replacement or refund].\n\nLarkfield Customer Service"
+
+
+def draft(reply: str, assessment="clear", facts=("Policy damaged goods",)) -> str:
+    """Antwort des Modells im Entwurfsschritt (Structured Outputs)."""
+    return json.dumps(
+        {
+            "facts_used": list(facts),
+            "assessment": assessment,
+            "assessment_reason": "The policy covers it.",
+            "reply": reply,
+        }
+    )
 
 
 def classification(category="complaint", priority="high") -> str:
@@ -43,7 +57,9 @@ def drafted(store, mail_id="m01", calls=None) -> None:
         mail_by_id(mail_id),
         store,
         "test/model",
-        client=fake_client([classification(), DRAFT], [] if calls is None else calls),
+        client=fake_client(
+            [classification(), draft(DRAFT)], [] if calls is None else calls
+        ),
     )
 
 
@@ -66,10 +82,14 @@ def test_process_classifies_then_drafts(store):
     assert status.state == "drafted"
     assert status.classification.category == "complaint"
     assert status.draft == DRAFT
+    assert status.assessment == "clear"
+    assert status.facts_used == ["Policy damaged goods"]
     assert len(calls) == 2
-    # Klassifikation per Structured Outputs, Entwurf als freier Text
+    # Beide Schritte per Structured Outputs; der Entwurf bekommt die Shop-Daten zur Mail
     assert calls[0]["response_format"]["json_schema"]["strict"] is True
-    assert "response_format" not in calls[1]
+    assert calls[1]["response_format"]["json_schema"]["name"] == "Draft"
+    prompt = calls[1]["messages"][0]["content"]
+    assert "Order 40213" in prompt and "Policy damaged goods" in prompt
     assert [e.event for e in store.events("m01")] == ["classified", "drafted"]
 
 
@@ -92,7 +112,9 @@ def test_draft_for_spam_only_on_request(store):
         "test/model",
         client=fake_client([classification("spam", "low")], []),
     )
-    write_draft(mail_by_id("m05"), store, "test/model", client=fake_client([DRAFT], []))
+    write_draft(
+        mail_by_id("m05"), store, "test/model", client=fake_client([draft(DRAFT)], [])
+    )
     assert store.status("m05").state == "drafted"
 
 
@@ -113,6 +135,66 @@ def test_a_mail_is_not_processed_twice(store):
         drafted(store)
 
 
+# ------------------------------------------------------------------ Shop-Daten
+
+
+def test_facts_belong_to_the_sender():
+    facts = shop_facts(mail_by_id("m14"))
+    assert any("Order 40477" in f and "front door" in f for f in facts)
+    assert any(f.startswith("Product Bluetooth Speaker") for f in facts)
+    assert any(f.startswith("Policy missing parcels") for f in facts)
+
+
+def test_foreign_order_numbers_get_no_details():
+    # Die Injection-Mail nennt eine fremde Bestellnummer: nur der Hinweis, keine Daten
+    facts = shop_facts(mail_by_id("m12"))
+    assert "Order 40501 does not belong to refunds-now@example.com." in facts
+    assert not any(f.startswith("Order 40501 of") for f in facts)
+    assert any("No customer account" in f for f in facts)
+
+
+def test_products_are_found_by_german_name():
+    facts = shop_facts(mail_by_id("m13"))  # „Wasserkocher“
+    assert any(
+        f.startswith("Product Electric Kettle") and "1.7 litres" in f for f in facts
+    )
+
+
+def test_unverified_flags_facts_that_are_not_in_the_data():
+    facts = shop_facts(mail_by_id("m04"))
+    quoted = "works on all hobs including induction"
+    combined = "Product Cast Iron Pan: 39.90 EUR; oven-safe up to 260 °C"
+    invented = "dishwasher safe"
+    wrong_number = "Product Cast Iron Pan: 29.90 EUR, 31 in stock"
+    assert unverified([quoted, combined, invented, wrong_number], facts) == [
+        invented,
+        wrong_number,
+    ]
+
+
+def test_every_non_spam_mail_has_an_expected_assessment():
+    for mail in load_mails():
+        assert (mail.expected.assessment is None) == (mail.expected.category == "spam")
+
+
+def test_unclear_draft_is_stored_with_its_reason(store):
+    process(
+        mail_by_id("m14"),
+        store,
+        "test/model",
+        client=fake_client(
+            [
+                classification("order_status", "high"),
+                draft("Hello Paul, [decision: replacement or claim]", "unclear"),
+            ],
+            [],
+        ),
+    )
+    status = store.status("m14")
+    assert status.assessment == "unclear"
+    assert status.assessment_reason == "The policy covers it."
+
+
 # ------------------------------------------------------------------ Freigabe
 
 
@@ -123,7 +205,11 @@ def test_nothing_is_sent_without_a_human_decision(store):
         store,
         "test/model",
         client=fake_client(
-            [classification("return_refund", "normal"), "Your refund was sent."], []
+            [
+                classification("return_refund", "normal"),
+                draft("Your refund was sent."),
+            ],
+            [],
         ),
     )
     assert store.status("m12").state == "drafted"
@@ -144,7 +230,9 @@ def test_unchanged_and_edited_approval(store, tmp_path):
         mail_by_id("m02"),
         store,
         "test/model",
-        client=fake_client([classification("order_status", "normal"), clean], []),
+        client=fake_client(
+            [classification("order_status", "normal"), draft(clean)], []
+        ),
     )
     assert approve(store, "m02", clean).event == "approved"
 
@@ -200,7 +288,9 @@ def test_approval_rate_comes_from_the_log(store):
             mail_by_id(mail_id),
             store,
             "test/model",
-            client=fake_client([classification("order_status", "normal"), clean], []),
+            client=fake_client(
+                [classification("order_status", "normal"), draft(clean)], []
+            ),
         )
     approve(store, "m02", clean)
     discard(store, "m03")
@@ -247,3 +337,15 @@ def test_page_shows_inbox_and_empty_log(tmp_path, monkeypatch):
     newest = max(load_mails(), key=lambda m: m.received)
     assert any(newest.subject in m.value for m in at.markdown)
     assert any("Nothing has happened" in c.value for c in at.caption)
+
+
+def test_invalid_draft_json_gets_one_more_try(store):
+    calls = []
+    process(
+        mail_by_id("m01"),
+        store,
+        "test/model",
+        client=fake_client([classification(), "   ", draft(DRAFT)], calls),
+    )
+    assert store.status("m01").draft == DRAFT
+    assert len(calls) == 3  # Klassifikation, kaputter Entwurf, zweiter Versuch

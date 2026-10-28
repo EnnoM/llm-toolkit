@@ -104,10 +104,10 @@ CATALOG = (
         title="Approval Workflow",
         icon=":material/approval:",
         summary=(
-            "Classifies incoming emails and drafts replies. A human approves every "
-            "draft, and every step is logged."
+            "Sorts incoming emails and drafts replies from the shop's order data. Unclear "
+            "cases are flagged, a human approves every reply, every step is logged."
         ),
-        techniques=("Classification", "Human in the loop", "Audit log"),
+        techniques=("Classification", "Grounding", "Human in the loop", "Audit log"),
         level=3,
         page="app_pages/workflow.py",
     ),

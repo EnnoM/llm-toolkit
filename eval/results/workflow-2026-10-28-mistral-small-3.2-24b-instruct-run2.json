@@ -3,12 +3,14 @@
   "model": "mistralai/mistral-small-3.2-24b-instruct",
   "run": 2,
   "summary": {
-    "category": "13/13",
-    "priority": "13/13",
-    "both": "13/13",
-    "severe": 0
+    "category": "14/14",
+    "priority": "14/14",
+    "both": "14/14",
+    "severe": 0,
+    "assessment": "10/11",
+    "drafts_with_unverified_facts": 0
   },
-  "cost_usd": 0.00048475,
+  "cost_usd": 0.00243449125,
   "results": [
     {
       "id": "m01",
@@ -17,8 +19,8 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "The customer reports a damaged product with a deadline within a few days.",
-      "cost_usd": 3.7325e-05
+      "reason": "The customer's blender arrived damaged and they need a replacement urgently for a specific event.",
+      "cost_usd": 3.82e-05
     },
     {
       "id": "m02",
@@ -27,8 +29,8 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "The customer is asking about the status of their order, specifically when it will ship, without any urgency or pressure.",
-      "cost_usd": 3.7125e-05
+      "reason": "The customer is asking for an update on the status of their order, which is still in the 'label created' stage.",
+      "cost_usd": 3.7525e-05
     },
     {
       "id": "m03",
@@ -47,8 +49,8 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "The customer is asking about product features before buying, which could influence their decision.",
-      "cost_usd": 3.4425e-05
+      "reason": "The customer is asking about product features before making a purchase.",
+      "cost_usd": 3.4625e-05
     },
     {
       "id": "m05",
@@ -57,7 +59,7 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "This email is a phishing attempt to steal bank details, not from a real customer.",
+      "reason": "The email is a phishing attempt to steal bank details, not from a real customer.",
       "cost_usd": 3.67e-05
     },
     {
@@ -67,8 +69,8 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "Customer reports being charged twice for the same order and requests a refund.",
-      "cost_usd": 3.575e-05
+      "reason": "The customer was charged twice for the same order and requests a refund of the second payment.",
+      "cost_usd": 3.655e-05
     },
     {
       "id": "m07",
@@ -77,8 +79,8 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "The customer is worried because a gift is needed by Thursday and the order has not arrived or been tracked in four days.",
-      "cost_usd": 4.045e-05
+      "reason": "The customer is worried because a gift is needed by Thursday and the order has not arrived or been updated in four days.",
+      "cost_usd": 3.8525e-05
     },
     {
       "id": "m08",
@@ -87,8 +89,8 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "The customer is asking about product compatibility, discounts for bulk orders, and invoicing options before making a purchase decision.",
-      "cost_usd": 3.845e-05
+      "reason": "This is a business inquiry about product compatibility, discounts, and invoicing for a bulk order of 25 smartwatches.",
+      "cost_usd": 3.965e-05
     },
     {
       "id": "m09",
@@ -98,7 +100,7 @@
       "priority_ok": true,
       "severe": false,
       "reason": "This email is a phishing attempt, trying to steal login credentials by pretending to be from a security department.",
-      "cost_usd": 3.6975e-05
+      "cost_usd": 4.621875e-05
     },
     {
       "id": "m10",
@@ -107,8 +109,8 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "The customer is threatening a chargeback and public reviews if they do not receive a refund for a returned item within a few days.",
-      "cost_usd": 4.055e-05
+      "reason": "The customer is threatening to escalate the issue to their bank and leave negative reviews if they do not receive a refund for a returned item within a specified deadline.",
+      "cost_usd": 5.21875e-05
     },
     {
       "id": "m11",
@@ -138,7 +140,118 @@
       "priority_ok": true,
       "severe": false,
       "reason": "The customer is asking about the features and capacity of an electric kettle, indicating a product question.",
-      "cost_usd": 3.6075e-05
+      "cost_usd": 3.6275e-05
+    },
+    {
+      "id": "m14",
+      "expected": "order_status/high",
+      "got": "order_status/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is asking about the status of their order, which the tracking system says was delivered but they did not receive it.",
+      "cost_usd": 4.7625e-05
+    }
+  ],
+  "drafts": [
+    {
+      "id": "m01",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The policy for damaged goods allows for a free replacement by express within 1 business day.",
+      "cost_usd": 0.00013125
+    },
+    {
+      "id": "m02",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The shop data shows that the product is out of stock and will be back in stock on 28 October 2026, at which point the order will ship.",
+      "cost_usd": 0.000119125
+    },
+    {
+      "id": "m03",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The shop data and the policies give one obvious answer.",
+      "cost_usd": 0.000125475
+    },
+    {
+      "id": "m04",
+      "expected": "clear",
+      "got": "error",
+      "assessment_ok": false,
+      "unverified_facts": [],
+      "reason": "The model returned an invalid draft: 1 validation error for Draft\n  Invalid JSON: EOF while parsing an object at line 1 column 2172 [type=json_invalid, input_value='    \\t\\t\\t\\t{\"facts_used...t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t\\t', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/json_invalid",
+      "cost_usd": 0.0
+    },
+    {
+      "id": "m06",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The shop data shows a second charge that is an authorization hold, and the policy says that the bank releases it automatically within 5 business days. The agent cannot do anything about it. ",
+      "cost_usd": 0.0006319
+    },
+    {
+      "id": "m07",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The data shows the parcel is delayed and the policy allows no earlier action than the carrier's new delivery date.",
+      "cost_usd": 0.000154125
+    },
+    {
+      "id": "m08",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The policy for business orders gives a clear answer.",
+      "cost_usd": 9.94e-05
+    },
+    {
+      "id": "m10",
+      "expected": "unclear",
+      "got": "unclear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The data shows that the kettle was used and the refund is on hold. The policy says that the refund goes to the original payment method within 5 business days after the return has arrived and passed inspection, but the refund is on hold, waiting for a decision by customer service. The agent needs to decide whether to refund or not.",
+      "cost_usd": 0.000160975
+    },
+    {
+      "id": "m11",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The policy explicitly states that feedback about packaging is welcome and needs no further action.",
+      "cost_usd": 0.00019826
+    },
+    {
+      "id": "m13",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The shop data gives all information about the product.",
+      "cost_usd": 9.685e-05
+    },
+    {
+      "id": "m14",
+      "expected": "unclear",
+      "got": "unclear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The data shows that the parcel was marked as delivered, but the customer did not receive it. The policy says to open a claim with the carrier, but a replacement or refund before the claim is decided needs a team lead's approval.",
+      "cost_usd": 0.000162125
     }
   ]
 }

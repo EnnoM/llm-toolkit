@@ -501,6 +501,25 @@ Diagramm, Tabelle, dem SQL und bei Korrekturen allen Versuchen. Rechts Versuche,
 
 ---
 
+**Überarbeitung der Seite (28.10.2026, auf Ennos Wunsch):**
+
+- **Datenansicht:** Statt drei Beispielzeilen pro Tabelle ein Tab pro Tabelle mit allen Zeilen
+  (zusammen rund 20 000), dazu Zeilenzahl und ein Satz, wie die Tabelle mit den anderen
+  verknüpft ist. Datumsspalten als Datum ohne „00:00:00“. Die Zeilenzahl stand zuerst im
+  Tab-Namen; dann lief der vierte Tab in schmalen Spalten rechts hinaus, deshalb steht sie jetzt
+  in der Beschreibung.
+- **Abgeschnittene Beispiele:** `st.pills` bleibt direkt in einer Spalte standardmäßig auf einer
+  Zeile und scrollt seitlich, das sah wie abgeschnitten aus. `wrap=True` bricht um.
+- **Eingabe:** Reihenfolge jetzt Erklärsatz, Daten-Hinweis, Beispiele, Eingabe. Eingabe als
+  `st.text_area(height="content")`, das mit langen Fragen wächst, „Ask“ rechts daneben. Dass
+  der Button mitwächst, kann Streamlit nicht; `app_pages/analyst.css` streckt ihn. Dafür
+  musste jede Hülle zwischen Zeile und Button die volle Höhe bekommen (Element-Container,
+  Wrapper, Button, mit Hilfetext zusätzlich zwei Tooltip-Ebenen).
+- **Daten-Hinweis** von `st.info` auf eine graue Zeile mit Kalender-Icon zurückgenommen.
+
+- **Beispiele platzsparend:** Statt der Pills ein Button „Examples“ (`st.popover`) mit der
+  Liste; braucht eine Zeile, egal wie viele Beispiele es gibt.
+
 ## Startseiten: öffentliches Home, internes Start
 
 **Gebaut:** Die bisherige Startseite (Arbeits-Checkliste) heißt jetzt „Start“
@@ -647,6 +666,36 @@ Testset, sondern der Normalfall: Eine Klassifikationsrichtlinie ist eine Geschä
 und Menschen wie Modell brauchen dieselbe. Danach 13/13 bei Mistral und Haiku, 12/13 bei Gemini,
 9/13 bei nano, in je zwei gleichen Läufen. Offen bleibt, dass nano die Injection-Mail mit Text
 statt JSON verweigert; in der App bleibt sie dann mit Fehlermeldung auf „new“.
+
+**Shop-Datenbank hinter den Mails (28.10.2026, auf Ennos Wunsch):** Bisher durfte das Modell
+nichts über Bestellungen wissen und ließ Lücken; jetzt antwortet es auf Basis echter (erfundener)
+Shop-Daten und markiert Fälle, die die Daten nicht entscheiden.
+
+- **Daten:** `eval/workflow_shop.yaml` mit Kunden, Bestellungen, Sendung, Zahlung, Rücksendung,
+  Produkten und Shop-Regeln, passend zu jeder Mail. Mischung aus eindeutigen Fällen (beschädigt
+  geliefert: Regel sagt Ersatz) und unklaren (Rücksendung benutzt zurückgekommen; laut DHL
+  zugestellt, laut Kunde nicht da: neue Mail m14).
+- **Suche statt Tool Use** (Ennos Wahl): `shop_facts()` sucht vor dem Entwurf alles zur Mail
+  heraus, über die Absenderadresse, Bestellnummern im Text, Produktnamen (auch deutsch) und alle
+  Regeln. Zuverlässiger und billiger, als das Modell selbst nachschlagen zu lassen. Fremde
+  Bestellnummern werden nur als „gehört nicht zum Absender“ weitergegeben, sonst könnte jeder
+  per Mail fremde Bestelldaten abfragen.
+- **Entwurf als Structured Output:** zuerst `facts_used` (wörtliche Zitate), dann `assessment`
+  (clear/unclear) mit Begründung, dann der Text. Unklare Fälle entscheidet das Modell nicht, die
+  Entscheidung bleibt als Platzhalter offen und sperrt die Freigabe.
+- **Prüfung gegen Erfinden:** `unverified()` sucht jedes Zitat in den Daten. Die erste Fassung
+  verlangte das ganze Zitat wörtlich und meldete richtige, aber zusammengesetzte Zitate als
+  erfunden. Jetzt gilt ein Zitat als belegt, wenn es wörtlich vorkommt oder wenn jede Zahl darin
+  in den Daten steht und mindestens ein längeres Stück wörtlich.
+- **Was das Eval zeigte:**
+  - Ein Fehler in meinen Daten: Die Verpackungsregel stand in der Vergangenheit („Since 1
+    November“), obwohl der Posteingang vom 26. Oktober ist. Gemini stufte die Mail deshalb zu
+    Recht als unklar ein.
+  - Mistral schrieb im Entwurf mit dem großen Schema teils nur Leerzeichen bis zum Token-Limit
+    (ungültiges JSON). Mehr Tokens halfen nicht, ein zweiter Versuch schon (`DRAFT_RETRIES`).
+  - nano rechnete falsch: Lieferung am Mittwoch hielt es für zu spät für Donnerstag.
+- **Dev-Server:** Nach der Änderung lieferte `st.cache_resource` noch den alten Store (alte
+  Datei, 13 Mails) und die Seite brach ab. Der Store ist jetzt nach Dateipfad gecacht.
 
 ## Navigation nach Stufen (28.10.2026)
 

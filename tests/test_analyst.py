@@ -203,7 +203,8 @@ def test_page_renders_with_dataset_overview():
     at = AppTest.from_file(PAGE, default_timeout=30).run()
     assert not at.exception
     assert at.title[0].value == "AI Data Analyst"
-    assert len(at.dataframe) == 4  # Beispielzeilen der vier Tabellen
+    assert len(at.dataframe) == 4  # ein Tab pro Tabelle, jeweils alle Zeilen
+    assert len(at.dataframe[3].value) > 10_000  # order_items vollständig
 
 
 def test_page_shows_answer_chart_table_and_sql(monkeypatch):
@@ -212,7 +213,7 @@ def test_page_shows_answer_chart_table_and_sql(monkeypatch):
     client = fake_client([sql_answer(sql), "Web has the most orders."], calls)
     monkeypatch.setattr("core.analyst.get_client", lambda: client)
     at = AppTest.from_file(PAGE, default_timeout=30).run()
-    at.text_input(key="analyst_question").set_value("Orders per channel?")
+    at.text_area(key="analyst_question").set_value("Orders per channel?")
     next(b for b in at.button if b.label == "Ask").click().run()
     assert not at.exception
     assert any("Web has the most orders." in m.value for m in at.markdown)
@@ -270,3 +271,9 @@ def test_too_many_groups_drop_the_color():
     )
     spec = analyst.ChartSpec(kind="scatter", x="orders", y="x", color="customer_id")
     assert analyst.requested_chart(table, spec).color is None
+
+
+def test_example_button_fills_the_question():
+    at = AppTest.from_file(PAGE, default_timeout=30).run()
+    at.button(key="analyst_example_1").click().run()
+    assert at.text_area(key="analyst_question").value == "Revenue per category in 2024"

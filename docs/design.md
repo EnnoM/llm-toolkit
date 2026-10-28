@@ -2,8 +2,9 @@
 
 Gilt für jede Seite der App. Umgesetzt in `.streamlit/config.toml`. Eigenes CSS nur dort, wo
 Streamlit etwas nicht kann: dann klein, kommentiert, in einer eigenen Datei neben der Seite und
-nur über Container mit `key` (Klasse `st-key-...`). Bisher einzige Ausnahme: `app_pages/chat.css`, das Chat und RAG Chatbot gemeinsam nutzen
-(gleiche keys, Bausteine in `core/chat_ui.py`).
+nur über Container mit `key` (Klasse `st-key-...`). Ausnahmen: `app_pages/chat.css`, das Chat und RAG Chatbot gemeinsam nutzen
+(gleiche keys, Bausteine in `core/chat_ui.py`), und `app_pages/analyst.css`, das den Ask-Button
+im AI Data Analyst so hoch macht wie das mitwachsende Eingabefeld.
 
 ## Sprache
 
@@ -67,6 +68,8 @@ nur über Container mit `key` (Klasse `st-key-...`). Bisher einzige Ausnahme: `a
 - Nur heller Modus, kein Dark Mode.
 - Rot, Gelb und Grün nur für Fehler, Warnungen und Erfolg (`st.error`, `st.warning`,
   `st.success`), nicht zur Dekoration.
+  Im Approval Workflow markiert Rot zusätzlich Fälle, die ein Mensch entscheiden muss
+  („Unclear“ in der Liste, `st.error` über dem Entwurf): Das ist eine Warnung, keine Dekoration.
 
 ## Schrift
 

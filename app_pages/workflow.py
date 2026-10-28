@@ -8,6 +8,8 @@ Protokoll aller Mails.
 Die Logik steht in core/workflow.py; diese Seite ruft nur deren Schritte auf.
 """
 
+from pathlib import Path
+
 import pandas as pd
 import streamlit as st
 
@@ -22,6 +24,7 @@ from core.models import (
 )
 from core.workflow import (
     BUCKETS,
+    DB_PATH,
     PRIORITIES,
     Event,
     Mail,
@@ -36,6 +39,8 @@ from core.workflow import (
     placeholders,
     process,
     reset_inbox,
+    shop_facts,
+    unverified,
     write_draft,
 )
 
@@ -66,6 +71,9 @@ BUCKET_LABELS = {
     "done": "Done",
     "spam": "Spam",
 }
+UNCLEAR_RED = (
+    "#B42318"  # wie die Schrift in st.error; Rot nur für „muss entschieden werden“
+)
 EVENT_LABELS = {
     "classified": "Classified",
     "drafted": "Draft written",
@@ -77,8 +85,10 @@ EVENT_LABELS = {
 
 
 @st.cache_resource
-def get_store() -> WorkflowStore:
-    return WorkflowStore()
+def get_store(path: Path) -> WorkflowStore:
+    """Ein Store pro Datei. Der Pfad als Argument sorgt dafür, dass eine neue Datei (neue
+    Version des Protokolls) auch einen neuen Store bekommt statt des gecachten alten."""
+    return WorkflowStore(path)
 
 
 def remember(usage: Usage) -> None:
@@ -114,10 +124,12 @@ def actor(event: Event) -> str:
 def event_details(event: Event) -> str:
     if event.event == "classified":
         return f"{event.category}, {event.priority} priority"
+    if event.event == "drafted":
+        return f"{event.assessment}: {event.reason} | {event.text}"
     return event.text or ""
 
 
-store = get_store()
+store = get_store(DB_PATH)
 mails = sorted(load_mails(), key=lambda m: m.received, reverse=True)  # neueste zuerst
 statuses = store.statuses()
 events = store.events()
@@ -144,7 +156,11 @@ head.markdown(
 )
 st.caption(
     "Fictional emails to a fictional shop. The model sorts them and drafts replies, a human "
-    "approves every reply. Nothing is really sent."
+    "approves every reply. Nothing is really sent. Before drafting, the app looks up the "
+    "sender's orders, deliveries, payments and returns, the products mentioned and the shop "
+    "policies in the shop's database (fictional as well). The model may only use these facts "
+    "and lists the ones it used. Cases the data cannot settle, for example a parcel marked as "
+    "delivered that the customer never got, are marked red and left for a human to decide."
 )
 
 # ------------------------------------------------------------------ Einstellungen
@@ -221,8 +237,15 @@ def mail_row(mail: Mail, status: MailStatus) -> dict:
         "Subject": mail.subject,
         # Eine Spalte statt zwei, damit der Betreff Platz behält
         "Category": f"{CATEGORY_LABELS[c.category]} · {c.priority}" if c else "",
-        "State": STATE_LABELS[status.state],
+        "State": "Unclear"
+        if status.state == "drafted" and status.assessment == "unclear"
+        else STATE_LABELS[status.state],
     }
+
+
+def mark_unclear(value: str) -> str:
+    """Unklare Fälle rot in der Liste, damit sie sofort auffallen."""
+    return f"color: {UNCLEAR_RED}; font-weight: bold" if value == "Unclear" else ""
 
 
 def open_selected(key: str) -> None:
@@ -270,7 +293,9 @@ with inbox:
         # Ein Key pro Filter: Wechselt der Filter, beginnt die Auswahl in der Tabelle neu
         key = f"inbox_{shown_bucket}_{'-'.join(shown_priorities)}"
         st.dataframe(
-            pd.DataFrame([mail_row(m, statuses[m.id]) for m in visible]),
+            pd.DataFrame([mail_row(m, statuses[m.id]) for m in visible]).style.map(
+                mark_unclear, subset=["State"]
+            ),
             hide_index=True,
             # Zelle statt Zeile: ein Klick irgendwo in die Zeile genügt, ohne Kästchen davor
             on_select=lambda: open_selected(key),
@@ -292,9 +317,41 @@ with inbox:
         st.caption("No emails match this filter.")
 
 
-def show_decision(mail_id: str, status: MailStatus) -> None:
+def show_assessment(status: MailStatus) -> None:
+    """Rot, wenn die Shop-Daten den Fall nicht entscheiden; sonst eine unauffällige Zeile."""
+    if status.assessment == "unclear":
+        st.error(
+            f"**Unclear, a human has to decide.** {status.assessment_reason}",
+            icon=":material/help:",
+        )
+    elif status.assessment == "clear":
+        st.caption(
+            f":material/check_circle: Clear from the shop data. {status.assessment_reason}"
+        )
+
+
+def show_facts(mail: Mail, facts_used: list[str]) -> None:
+    """Welche Fakten aus der Shop-Datenbank der Entwurf verwendet, und ob sie dort stehen."""
+    if not facts_used:
+        st.caption("The draft uses no facts from the shop database.")
+        return
+    missing = set(unverified(facts_used, shop_facts(mail)))
+    with st.container(border=True):
+        st.caption(":material/database: Facts used from the shop database")
+        for fact in facts_used:
+            if fact in missing:
+                st.markdown(
+                    f":small[{as_text(fact)}] :red-badge[not found in the data]"
+                )
+            else:
+                st.markdown(f":small[{as_text(fact)}]")
+
+
+def show_decision(mail: Mail, status: MailStatus) -> None:
     """Entwurf bearbeiten und entscheiden. Nur hier entsteht „Sent“, und nur per Klick."""
+    mail_id = mail.id
     st.markdown("##### Draft")
+    show_assessment(status)
     # Key mit Entwurfs-Id: Ein neuer Entwurf ersetzt den alten Text im Feld
     text = st.text_area(
         "Reply",
@@ -308,7 +365,7 @@ def show_decision(mail_id: str, status: MailStatus) -> None:
     if gaps:
         st.caption(
             f"Fill in before sending: {', '.join(gaps)}. "
-            "The model cannot see orders or payments, so it leaves these gaps."
+            "The model leaves these gaps where a person has to decide or add something."
         )
     buttons = st.container(horizontal=True)
     if buttons.button(
@@ -328,6 +385,7 @@ def show_decision(mail_id: str, status: MailStatus) -> None:
         run_step(lambda: approve(store, mail_id, text))
     if buttons.button("Discard", icon=":material/delete:", key="discard"):
         run_step(lambda: discard(store, mail_id))
+    show_facts(mail, status.facts_used)
 
 
 def show_history(mail_events: list[Event]) -> None:
@@ -345,6 +403,8 @@ def show_history(mail_events: list[Event]) -> None:
         st.markdown(line)
         if e.event == "classified":
             st.caption(f"{e.category}, {e.priority} priority: {e.reason}")
+        elif e.event == "drafted":
+            st.caption(f"{e.assessment}: {e.reason}")
 
 
 with reader:
@@ -408,7 +468,7 @@ with reader:
 
             run_step(draft_anyway)
     elif status.state == "drafted":
-        show_decision(mail.id, status)
+        show_decision(mail, status)
     elif status.state == "discarded":
         st.caption("Discarded, no reply was sent.")
     else:

@@ -5,7 +5,9 @@
 #
 # Felder pro Mail:
 #   id, sender (Name <Adresse>), received (Empfangszeit), subject, body (englisch wie die Seite, eine Mail bewusst auf Deutsch)
-#   expected: die richtige Kategorie und Priorität, von Hand festgelegt (die Musterlösung)
+#   expected: die richtige Kategorie und Priorität, von Hand festgelegt (die Musterlösung),
+#             und ob sich die Antwort aus den Shop-Daten eindeutig ergibt (assessment: clear
+#             oder unclear; fehlt bei Spam, der keinen Entwurf bekommt)
 #   why: was die Mail prüft und warum die Musterlösung so lautet
 #
 # Die Musterlösung ist eine menschliche Entscheidung, kein Messwert. Grenzfälle sind unter why
@@ -19,10 +21,10 @@
   body: |
     Hello,
 
-    my blender (order 40213) arrived today and the glass jug is cracked. The box was already dented when the courier handed it over. I paid 89 euros for this and I need it for my daughter's birthday party on Saturday. Please send a replacement as soon as possible.
+    my blender (order 40213) arrived on Saturday and the glass jug is cracked. The box was already dented when the courier handed it over. I paid 89 euros for this and I need it for my daughter's birthday party on Saturday. Please send a replacement as soon as possible.
 
     Julia Hartmann
-  expected: {category: complaint, priority: high}
+  expected: {category: complaint, priority: high, assessment: clear}
   why: Beschädigte Ware plus Frist, eindeutig
 
 - id: m02
@@ -33,7 +35,7 @@
     Hi, I ordered a USB-C hub last Monday (order 40388) and the tracking page still says "label created". Could you tell me when it will ship? No rush, just curious.
 
     Thanks, Tom
-  expected: {category: order_status, priority: normal}
+  expected: {category: order_status, priority: normal, assessment: clear}
   why: Klassische Statusfrage ohne Druck
 
 - id: m03
@@ -47,7 +49,7 @@
 
     Best regards,
     Sofia Marino
-  expected: {category: return_refund, priority: normal}
+  expected: {category: return_refund, priority: normal, assessment: clear}
   why: Rückgabe innerhalb der Frist, keine Beschwerde
 
 - id: m04
@@ -58,7 +60,7 @@
     Hello! Quick question before I buy: does the cast iron pan work on an induction hob? And is it oven-safe?
 
     Kevin
-  expected: {category: product_question, priority: normal}
+  expected: {category: product_question, priority: normal, assessment: clear}
   why: Frage vor dem Kauf. normal statt low (Entscheidung Enno, 28.10.2026). Wir wollen
     verkaufen, eine schnelle Antwort zählt
 
@@ -85,7 +87,7 @@
     I placed order 40455 on Friday and my credit card statement shows the amount of 132.50 EUR twice. I only ordered once. Please refund the second payment.
 
     Markus Weber
-  expected: {category: return_refund, priority: high}
+  expected: {category: return_refund, priority: high, assessment: clear}
   why: Grenzfall zwischen complaint und return_refund. Entschieden für return_refund, weil der
     Kunde eine Rückzahlung will; high, weil Geld zu Unrecht abgebucht wurde
 
@@ -96,10 +98,10 @@
   body: |
     Hi,
 
-    the smartwatch I ordered (order 40290) was supposed to arrive yesterday. It is a present for my husband on Thursday. Tracking hasn't changed in four days. Can you check what is going on? I am getting a bit worried.
+    the smartwatch I ordered (order 40290) was supposed to arrive on Friday. It is a present for my husband on Thursday. Tracking hasn't changed in four days. Can you check what is going on? I am getting a bit worried.
 
     Lea
-  expected: {category: order_status, priority: high}
+  expected: {category: order_status, priority: high, assessment: clear}
   why: Statusfrage, aber mit Frist und Lieferproblem, deshalb high
 
 - id: m08
@@ -113,7 +115,7 @@
 
     Kind regards,
     Nadia Osei, Procurement, Brightdesk
-  expected: {category: product_question, priority: normal}
+  expected: {category: product_question, priority: normal, assessment: clear}
   why: Produktfrage, aber ein großer Auftrag steht in Aussicht, deshalb normal statt low
 
 - id: m09
@@ -138,7 +140,7 @@
     This is my third email. I returned the electric kettle (order 39977) three weeks ago, your own tracking shows it was delivered to you on the 2nd. I still have not received my 45 euros. If I don't hear back by Friday I will file a chargeback with my bank and leave a review everywhere.
 
     Daniel Roth
-  expected: {category: return_refund, priority: high}
+  expected: {category: return_refund, priority: high, assessment: unclear}
   why: Grenzfall zwischen complaint und return_refund. Entschieden für return_refund (es geht
     um die Erstattung); high wegen Frist und angekündigter Rückbuchung
 
@@ -152,7 +154,7 @@
     I ordered a small tea set and it came in a huge box full of plastic air cushions. I find that really wasteful. Could you please use less packaging in the future?
 
     Anna
-  expected: {category: complaint, priority: low}
+  expected: {category: complaint, priority: low, assessment: clear}
   why: Beschwerde ohne Schaden und ohne Frist, deshalb low (Entscheidung Enno, 28.10.2026)
 
 - id: m12
@@ -182,6 +184,20 @@
 
     Viele Grüße
     Helga Vogel
-  expected: {category: product_question, priority: normal}
+  expected: {category: product_question, priority: normal, assessment: clear}
   why: Mail auf Deutsch; die Antwort soll in der Sprache der Mail kommen. Kauffrage, deshalb
     normal wie m04
+
+- id: m14
+  sender: "Paul Fischer <paul.fischer@example.com>"
+  received: 2026-10-26 09:38
+  subject: Tracking says delivered, but nothing is here
+  body: |
+    Hello,
+
+    the tracking for my order 40477 (Bluetooth speaker) says it was delivered on Saturday afternoon. I was at home all day and there was nothing at my door. My neighbours don't have it either. Can you please check this?
+
+    Paul Fischer
+  expected: {category: order_status, priority: high, assessment: unclear}
+  why: Laut Daten zugestellt, laut Kunde nicht angekommen. Die Daten entscheiden den Fall
+    nicht; Ersatz vor Abschluss der Reklamation braucht laut Regel eine Freigabe

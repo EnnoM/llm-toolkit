@@ -3,12 +3,14 @@
   "model": "openai/gpt-4.1-nano",
   "run": 2,
   "summary": {
-    "category": "11/13",
-    "priority": "10/13",
-    "both": "9/13",
-    "severe": 0
+    "category": "12/14",
+    "priority": "11/14",
+    "both": "10/14",
+    "severe": 0,
+    "assessment": "9/11",
+    "drafts_with_unverified_facts": 0
   },
-  "cost_usd": 0.0006628000000000001,
+  "cost_usd": 0.0024776,
   "results": [
     {
       "id": "m01",
@@ -18,7 +20,7 @@
       "priority_ok": true,
       "severe": false,
       "reason": "The customer received a damaged item and needs a replacement quickly.",
-      "cost_usd": 5.7e-05
+      "cost_usd": 5.71e-05
     },
     {
       "id": "m02",
@@ -78,7 +80,7 @@
       "priority_ok": true,
       "severe": false,
       "reason": "The customer is concerned about a delayed delivery for a gift.",
-      "cost_usd": 5.58e-05
+      "cost_usd": 5.59e-05
     },
     {
       "id": "m08",
@@ -127,7 +129,7 @@
       "category_ok": false,
       "priority_ok": false,
       "severe": false,
-      "reason": "The model returned an invalid classification: 1 validation error for Classification\n  Invalid JSON: trailing characters at line 3 column 1 [type=json_invalid, input_value='{\"reason\":\"Customer requ...sist with that request.', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/json_invalid",
+      "reason": "The model returned an invalid classification: 1 validation error for Classification\n  Invalid JSON: control character (\\u0000-\\u001F) found while parsing a string at line 2 column 0 [type=json_invalid, input_value='{\"reason\":\"Customer requ...sist with that request.', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/json_invalid",
       "cost_usd": 0.0
     },
     {
@@ -139,6 +141,117 @@
       "severe": false,
       "reason": "The customer is asking about product features before purchasing.",
       "cost_usd": 5.29e-05
+    },
+    {
+      "id": "m14",
+      "expected": "order_status/high",
+      "got": "order_status/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer reports a missing delivery despite tracking indicating it was delivered.",
+      "cost_usd": 5.61e-05
+    }
+  ],
+  "drafts": [
+    {
+      "id": "m01",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The policy states a free replacement is sent within 1 business day for goods damaged on arrival, which applies in this case.",
+      "cost_usd": 0.0001495
+    },
+    {
+      "id": "m02",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The shop data indicates the product is out of stock and will be shipped once available, which is on 28 October 2026.",
+      "cost_usd": 0.0001759
+    },
+    {
+      "id": "m03",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The customer is within the 30-day return window and the headphones are unused and in original packaging, so a return is possible.",
+      "cost_usd": 0.0001612
+    },
+    {
+      "id": "m04",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The product details explicitly state that the cast iron pan works on all hobs including induction and is oven-safe.",
+      "cost_usd": 0.0001406
+    },
+    {
+      "id": "m06",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The second charge is an authorization hold that will be released automatically within 5 business days.",
+      "cost_usd": 0.000159
+    },
+    {
+      "id": "m07",
+      "expected": "clear",
+      "got": "unclear",
+      "assessment_ok": false,
+      "unverified_facts": [],
+      "reason": "The tracking shows a delay at the hub with a new delivery date of October 28, which is after Thursday.",
+      "cost_usd": 0.000183
+    },
+    {
+      "id": "m08",
+      "expected": "clear",
+      "got": "unclear",
+      "assessment_ok": false,
+      "unverified_facts": [],
+      "reason": "The shop data indicates large orders get a quote and invoices are possible, but does not specify discounts.",
+      "cost_usd": 0.0001623
+    },
+    {
+      "id": "m10",
+      "expected": "unclear",
+      "got": "unclear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The refund is on hold and waiting for a decision by customer service, so the process is not complete.",
+      "cost_usd": 0.0001594
+    },
+    {
+      "id": "m11",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The shop has already announced a change to more sustainable packaging and welcomes feedback, so no further action is needed.",
+      "cost_usd": 0.0001479
+    },
+    {
+      "id": "m13",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The product details include specific temperature settings and capacity, directly answering the questions.",
+      "cost_usd": 0.0001478
+    },
+    {
+      "id": "m14",
+      "expected": "unclear",
+      "got": "unclear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The delivery was marked as left at the front door, but the customer reports not receiving it, and no photo of the delivery is available.",
+      "cost_usd": 0.0001719
     }
   ]
 }
