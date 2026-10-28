@@ -746,7 +746,7 @@
 - id: mcp_server
   name: MCP-Server
   phase: 4
-  status: geplant
+  status: in_arbeit
   kurz: "Stellt Werkzeuge dieses Projekts über das Model Context Protocol für Claude Desktop und andere KI-Apps bereit."
   beschreibung: |
     MCP (Model Context Protocol) ist ein offener Standard, über den KI-Anwendungen wie Claude
@@ -770,18 +770,25 @@
     - **Ausprobieren:** kleines Formular, das ein Werkzeug direkt lokal aufruft und das Ergebnis
       zeigt
   lernziele:
-    - "MCP-Architektur aus Client, Server und Werkzeugen: ein Standard statt vieler Einzelanbindungen"
+    - "MCP-Architektur aus Host, Client, Server und Werkzeugen: einmal gebaut, in jeder MCP-App nutzbar"
     - "Einen MCP-Server in Python mit dem offiziellen SDK schreiben"
+    - "Das Protokoll verstehen: JSON-RPC über stdio mit initialize, tools/list und tools/call"
     - "Werkzeugbeschreibungen so formulieren, dass ein Modell sie richtig einsetzt"
-    - "Rechte bewusst begrenzen: Werkzeuge nur lesend anbieten"
+    - "Rechte bewusst begrenzen: Werkzeuge nur lesend anbieten und so kennzeichnen"
   akzeptanz:
     - "Der Server startet mit einem Befehl und bietet mindestens drei Werkzeuge an, sichtbar im MCP Inspector"
     - "Nach der Anleitung eingebunden, ruft Claude Desktop ein Werkzeug auf und verwendet dessen Ergebnis in der Antwort"
     - "Die Anleitung enthält die vollständige Konfiguration für Claude Desktop mit einem Platzhalter für den Pfad"
     - "Jedes Werkzeug hat einen Unit-Test, der ohne MCP-Client auskommt"
     - "Kein Werkzeug kann Dateien oder Daten verändern"
-  arbeitsstand: "noch nicht begonnen"
-  naechster_schritt: "noch nicht begonnen"
+  arbeitsstand: |
+    Schritt 1 lokal (28.10.2026): Server mit dem offiziellen Python-SDK (mcp 2.3, MCPServer) in
+    core/mcp_server.py mit vier nur lesenden Werkzeugen: query_shop_database (AI Data Analyst),
+    lookup_order und lookup_customer (Approval Workflow), search_documents (RAG). Client in
+    core/mcp_client.py startet den Server über stdio und schreibt jede JSON-RPC-Nachricht mit.
+    Seite app_pages/mcp.py: Werkzeugliste, Aufruf mit Formular, Protokoll, Anleitung für
+    Claude Desktop. Noch nicht online.
+  naechster_schritt: "In Claude Desktop einbinden und einen echten Werkzeugaufruf prüfen (Akzeptanzkriterium 2)"
   notizen: |
     - Stolperstein: Streamlit Community Cloud kann den Server nicht für Claude Desktop
       bereitstellen. Er läuft lokal, die Seite in der App dokumentiert ihn nur.

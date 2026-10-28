@@ -729,6 +729,48 @@ minus 1, ein Test hält beides gleich. `st.navigation` mit einem Dict ergibt die
 steht im Abschnitt mit leerem Namen und hat so keine Überschrift. In der Seitenleiste nur
 „Level 3“, weil Streamlit längere Abschnittsnamen abschneidet.
 
+## MCP-Server
+
+**Schritt 1 (28.10.2026, lokal):** Server mit dem offiziellen Python-SDK, Client, Seite, Tests.
+
+- **SDK in Version 2:** `FastMCP` heißt jetzt `MCPServer` (`mcp.server.mcpserver`), die Typen
+  liegen im eigenen Paket `mcp-types`. Was ich aus Version 1 kannte, lief nicht mehr; die
+  Fehlermeldung des SDK verwies direkt auf den Migrationsleitfaden.
+- **Vier Werkzeuge, alle nur lesend**, aus anderen Modulen wiederverwendet:
+  `query_shop_database` (SQL-Schutz des AI Data Analyst), `lookup_order` und `lookup_customer`
+  (Shop-Daten des Approval Workflow), `search_documents` (Dokumentsuche aus Tool Use/RAG). Jede
+  ist eine normale Funktion und ohne MCP-Client getestet; `ToolAnnotations(readOnlyHint=True)`
+  sagt der KI-App, dass nichts verändert wird, erzwungen wird es trotzdem im Code.
+- **Beschreibungen für fremde Modelle:** Die SQL-Beschreibung enthält das Schema der Datenbank,
+  sonst kann kein fremdes Modell eine Abfrage schreiben. Die Beschreibung der Dokumentsuche war
+  im ersten Entwurf falsch („zwei schwäbische Regionalpläne“ statt drei bayerische Dokumente):
+  So ein Fehler lenkt ein fremdes Modell in die Irre, und niemand sieht ihn im eigenen Code.
+- **Fehler an das Modell:** Eigene Ausnahmen kamen als „Error executing tool“ an, ohne Grund.
+  Nur Unterklassen des `ToolError` aus dem SDK geben ihre Meldung weiter („Only SELECT queries
+  are allowed“), dann als Ergebnis mit `isError: true`.
+- **Client mit Mitschreiber** (`core/mcp_client.py`): Die Seite startet den Server wie Claude
+  Desktop als eigenen Prozess über stdio und schreibt jede JSON-RPC-Nachricht in beide
+  Richtungen mit. Streamlit ist synchron, das SDK asynchron: Die Verbindung läuft in einem
+  eigenen Thread mit eigener Ereignisschleife und bleibt offen, alle anyio-Kontexte in einer
+  Aufgabe, weil sie dort geschlossen werden müssen, wo sie geöffnet wurden. Dadurch startet der
+  Server einmal und der Suchindex wird nur einmal gebaut.
+- **Beobachtet im Protokoll:** Nach initialize schickt der Client die Bestätigung
+  `notifications/initialized`; vor dem ersten Werkzeugaufruf holt das SDK von selbst noch einmal
+  `tools/list`, um das Ergebnis gegen das Schema prüfen zu können.
+- **stdout gehört dem Protokoll:** Jede andere Ausgabe dort würde die Nachrichten zerstören,
+  Logs gehen nach stderr (`log_level="WARNING"`).
+- `tests/test_requirements.py` meldete beim ersten Lauf sofort `mcp`, `mcp-types` und `anyio`
+  als fehlend, genau dafür war er gebaut worden.
+- Offen: in Claude Desktop einbinden und einen echten Aufruf prüfen (Akzeptanzkriterium 2).
+
+## Modulköpfe und Home (28.10.2026)
+
+Durchsicht der App: Auf den Modulseiten fehlte eine Erklärung, was sie zeigen; die Techniken
+standen nur im Katalog. Jetzt hat jede Modulseite denselben Kopf (Satz, Techniken als Badges,
+Popover „How it works“), Home zeigt die Techniken auf den Kacheln, dazu „Built by Enno“ und den
+Link zum Code. Der Kopf machte die Chat-Seiten zu hoch (Titel rutschte aus dem Bild);
+`--chat-offset` in `chat.css` rechnet ihn jetzt ein.
+
 ## Offene Punkte
 
 - Nächstes Modul: MCP-Server (Phase 4).

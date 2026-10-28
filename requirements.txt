@@ -9,3 +9,6 @@ pandas>=2.2  # Tabellen in mehreren Modulen; kommt sonst nur über streamlit mit
 ddgs>=9.16.0
 httpx>=0.28  # Wetterdienst in core/tools.py; kommt nicht mehr über openai mit
 duckdb>=2.0
+mcp>=2.3  # MCP-Server und -Client (core/mcp_server.py, core/mcp_client.py)
+anyio>=4.0  # Streams im MCP-Client; kommt sonst nur über mcp mit
+mcp-types>=2.3  # Typen wie ToolAnnotations; eigenes Paket seit mcp 2

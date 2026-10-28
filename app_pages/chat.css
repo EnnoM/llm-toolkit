@@ -13,7 +13,9 @@
 /* Höhe für alle drei Spalten: Fensterhöhe minus Seitenkopf mit Titel oben und Eingabefeld
    unten. Ist die Seite nie höher als das Fenster, scrollt sie nicht und alles bleibt stehen. */
 :root {
-  --chat-offset: 300px; /* 153 px Kopf mit Titel + 147 px Bereich mit Eingabefeld */
+  /* 153 px Kopf mit Titel + 92 px Modulkopf (core/page_intro.py, bis zwei Zeilen)
+     + 147 px Bereich mit Eingabefeld */
+  --chat-offset: 392px;
   --chat-offset-mobile: 210px; /* 60 px Seitenkopf + 150 px Bereich mit Eingabefeld */
 }
 

@@ -12,6 +12,7 @@ from core.chat_ui import load_chat_css, scroll_chat_to_bottom, show_meta, show_q
 from core.config import get_secret
 from core.llm import DEFAULT_MAX_TOKENS, LLMError, Usage, stream
 from core.models import format_cost, model_name, model_options, model_price
+from core.page_intro import show_intro
 from core.rag import (
     DEFAULT_CHUNK_SIZE,
     DEFAULT_OVERLAP,
@@ -134,6 +135,7 @@ def show_passages(hits: list[Hit]) -> None:
 
 
 st.title("RAG Chatbot")
+show_intro("rag_chatbot")
 settings, chat, stats = st.columns([1, 2, 1], gap="large")
 
 # Die Container mit key bekommen die CSS-Klasse st-key-<key>, darüber greift chat.css

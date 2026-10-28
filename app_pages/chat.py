@@ -15,6 +15,7 @@ from core.models import (
     model_options,
     model_price,
 )
+from core.page_intro import show_intro
 
 st.set_page_config(layout="wide")  # drei Spalten brauchen die volle Breite
 load_chat_css()
@@ -22,6 +23,7 @@ st.session_state.setdefault("chat_history", [])
 history: list[ChatTurn] = st.session_state.chat_history
 
 st.title("Chat")
+show_intro("chat")
 settings, chat, stats = st.columns([1, 2, 1], gap="large")
 
 # Die Container mit key bekommen die CSS-Klasse st-key-<key>, darüber greift chat.css

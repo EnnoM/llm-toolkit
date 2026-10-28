@@ -57,9 +57,9 @@ def test_home_lists_every_module_and_marks_upcoming_as_wip(monkeypatch):
     at = run_app(monkeypatch, "true")
     links = module_links(at)
     assert len(links) == len(built_modules())
-    assert "Approval Workflow" in links[0]  # neuestes Modul zuerst
+    assert "MCP Server" in links[0]  # neuestes Modul zuerst
     wip = [c.value for c in at.caption if ":gray-badge[WIP]" in c.value]
-    assert "MCP Server" in wip[0]
+    assert "Agent" in wip[0]
 
 
 def test_start_is_hidden_without_the_local_switch(monkeypatch):

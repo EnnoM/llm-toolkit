@@ -16,6 +16,9 @@ class CatalogEntry:
     techniques: tuple[str, ...]
     level: int  # Schwierigkeitsstufe, Schlüssel in LEVELS; entspricht Phase minus 1
     page: str | None = None  # None: noch nicht gebaut, erscheint auf Home als WIP
+    how: tuple[
+        str, ...
+    ] = ()  # „How it works“ auf der Modulseite, drei bis vier Schritte
 
 
 # Stufen für Seitenleiste und Home: vom einzelnen Aufruf bis zu ganzen Anwendungen
@@ -37,6 +40,11 @@ CATALOG = (
         ),
         techniques=("Streaming", "System prompt", "Token and cost tracking"),
         level=1,
+        how=(
+            "Your messages and the system prompt go to the model you pick, through OpenRouter. The whole conversation is sent again with every question.",
+            "The answer streams in piece by piece. Temperature controls how much it varies.",
+            "OpenRouter reports the tokens and cost of every answer; the right column adds them up.",
+        ),
         page="app_pages/chat.py",
     ),
     CatalogEntry(
@@ -49,6 +57,11 @@ CATALOG = (
         ),
         techniques=("Zero-shot", "Few-shot", "Role prompting", "Step by step"),
         level=1,
+        how=(
+            "Pick a task with a known correct answer and up to four prompting techniques.",
+            "The same input goes to the model once per technique, at temperature 0, so only the prompt differs.",
+            "The answers are checked against the reference and compared by cost, tokens and time.",
+        ),
         page="app_pages/prompt_lab.py",
     ),
     CatalogEntry(
@@ -61,6 +74,11 @@ CATALOG = (
         ),
         techniques=("Structured outputs", "Pydantic validation", "Self-correction"),
         level=1,
+        how=(
+            "Each document type is a Pydantic schema: fields, types and rules.",
+            "The model has to answer in exactly that JSON schema (structured outputs).",
+            "Pydantic validates the answer. Errors go back to the model, which may correct itself up to two times.",
+        ),
         page="app_pages/extraction.py",
     ),
     CatalogEntry(
@@ -73,6 +91,11 @@ CATALOG = (
         ),
         techniques=("Chunking", "Embeddings", "Vector search", "Source citations"),
         level=2,
+        how=(
+            "The PDFs are split into overlapping chunks, and each chunk becomes an embedding, a list of numbers that captures its meaning.",
+            "Your question becomes an embedding too; the most similar chunks are found by comparing the numbers.",
+            "Only these passages go to the model. It has to answer from them and cite file and page.",
+        ),
         page="app_pages/rag.py",
     ),
     CatalogEntry(
@@ -85,6 +108,11 @@ CATALOG = (
         ),
         techniques=("Function calling", "Tool loop", "Step-by-step trace"),
         level=2,
+        how=(
+            "The model gets your question and a description of every selected tool.",
+            "If it needs a tool, it answers with a tool call instead of text; the app runs the tool and sends back the result.",
+            "This repeats for up to five rounds until the model answers. Every call is listed under the answer.",
+        ),
         page="app_pages/tool_use.py",
     ),
     CatalogEntry(
@@ -97,6 +125,11 @@ CATALOG = (
         ),
         techniques=("Text to SQL", "Read-only queries", "Charts"),
         level=2,
+        how=(
+            "The model gets the database schema and your question and writes one SQL query.",
+            "Only a single SELECT runs, on a read-only connection. If it fails, the model sees the error and may correct the query once.",
+            "The page shows a one-sentence answer, a chart, the table and always the SQL, so every number can be checked.",
+        ),
         page="app_pages/analyst.py",
     ),
     CatalogEntry(
@@ -109,6 +142,12 @@ CATALOG = (
         ),
         techniques=("Classification", "Grounding", "Human in the loop", "Audit log"),
         level=3,
+        how=(
+            "The model sorts each email into a category and a priority (structured output).",
+            "The app looks up the sender's orders, deliveries, payments and returns, the products mentioned and the shop policies in the shop's database.",
+            "The model drafts a reply from these facts only, lists the facts it used and marks cases the data cannot settle as unclear, in red.",
+            "A human edits, approves or discards every draft. Nothing is sent automatically, and every step is logged.",
+        ),
         page="app_pages/workflow.py",
     ),
     CatalogEntry(
@@ -119,8 +158,19 @@ CATALOG = (
             "Makes the tools of this project available to Claude Desktop and other "
             "AI apps through the Model Context Protocol."
         ),
-        techniques=("Model Context Protocol", "Tool server"),
+        techniques=(
+            "Model Context Protocol",
+            "JSON-RPC over stdio",
+            "Tool descriptions",
+            "Read-only tools",
+        ),
         level=3,
+        page="app_pages/mcp.py",
+        how=(
+            "The MCP server is a small separate program that offers read-only tools from this project: SQL on the shop database, order and customer lookup, document search.",
+            "An AI app starts it and talks to it over stdin and stdout in JSON-RPC: initialize, tools/list, tools/call. Here this page plays the app; normally it is Claude Desktop.",
+            "The app's model reads the tool descriptions, decides which tool to call and uses the result in its answer.",
+        ),
     ),
     CatalogEntry(
         id="agent",

@@ -22,10 +22,12 @@ from core.models import (
     model_options,
     model_price,
 )
+from core.page_intro import show_intro
 
 st.set_page_config(layout="wide")  # drei Spalten brauchen die volle Breite
 
 st.title("Data Extraction")
+show_intro("datenextraktion")
 settings, main, stats = st.columns([1, 2, 1], gap="large")
 
 with settings:

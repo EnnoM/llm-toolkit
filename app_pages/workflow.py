@@ -22,6 +22,7 @@ from core.models import (
     model_options,
     model_price,
 )
+from core.page_intro import show_intro
 from core.workflow import (
     BUCKETS,
     DB_PATH,
@@ -154,13 +155,10 @@ head.markdown(
         + (f" Last step: {format_usage(last)}." if last else "")
     ),
 )
+show_intro("workflow_freigabe")
 st.caption(
-    "Fictional emails to a fictional shop. The model sorts them and drafts replies, a human "
-    "approves every reply. Nothing is really sent. Before drafting, the app looks up the "
-    "sender's orders, deliveries, payments and returns, the products mentioned and the shop "
-    "policies in the shop's database (fictional as well). The model may only use these facts "
-    "and lists the ones it used. Cases the data cannot settle, for example a parcel marked as "
-    "delivered that the customer never got, are marked red and left for a human to decide."
+    "Fictional emails to a fictional shop and a fictional shop database. Nothing is really "
+    "sent."
 )
 
 # ------------------------------------------------------------------ Einstellungen

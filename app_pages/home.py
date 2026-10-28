@@ -12,7 +12,10 @@ from core.catalog import LEVELS, level_title, levels_newest_first
 st.set_page_config(layout="wide")  # Raster über die ganze Breite
 
 COLUMNS = 3  # breit genug für die Kurzbeschreibung; auf dem Handy untereinander
-TILE_HEIGHT = 190  # feste Höhe, damit alle Kacheln gleich groß sind
+TILE_HEIGHT = (
+    280  # feste Höhe, damit alle Kacheln gleich groß sind (mit Technik-Badges)
+)
+REPOSITORY = "https://github.com/EnnoM/llm-toolkit"
 
 st.title("LLM Toolkit")
 st.markdown(
@@ -21,6 +24,7 @@ st.markdown(
     "build with AI: every module calls real models through OpenRouter and shows the tokens "
     "and cost of each request."
 )
+st.caption(f"Built by Enno · [Source code on GitHub]({REPOSITORY})")
 
 for level, entries in levels_newest_first():
     st.markdown(f"#### {level_title(level)}")
@@ -38,6 +42,8 @@ for level, entries in levels_newest_first():
                     )
                     # Gleiche Schriftgröße wie bei den geplanten, nur nicht grau
                     st.markdown(f":small[{entry.summary}]")
+                    # Die Techniken als Stichworte: zeigen auf einen Blick, was gebaut wurde
+                    st.markdown(" ".join(f":gray-badge[{t}]" for t in entry.techniques))
                 else:
                     # Ausgegraut über st.caption: geplante Module haben noch keine Seite
                     st.caption(f"**{entry.icon} {entry.title}** :gray-badge[WIP]")

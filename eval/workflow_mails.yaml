@@ -12,7 +12,8 @@
 #
 # Die Musterlösung ist eine menschliche Entscheidung, kein Messwert. Grenzfälle sind unter why
 # markiert; dort ließe sich auch anders entscheiden. Entwurf von Claude, von Enno am
-# 28.10.2026 bestätigt bzw. bei m04, m11, m12 und m13 entschieden.
+# 28.10.2026 bestätigt bzw. bei m04, m11, m12 und m13 entschieden. m14 kam später dazu,
+# Vorschlag von Claude, von Enno am 28.10.2026 bestätigt.
 
 - id: m01
   sender: "Julia Hartmann <julia.hartmann@example.com>"

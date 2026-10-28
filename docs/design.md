@@ -19,6 +19,14 @@ neben `app.py`, das im Passwortfeld das zweite Auge des Browsers und den Enter-H
   Code-Kommentare. In `docs/modules.yaml` stehen Beschriftungen der Oberfläche trotzdem so,
   wie sie im Modul erscheinen, also englisch (z. B. Button „Clear chat“).
 
+## Kopf jeder Modulseite
+
+- Unter dem Titel derselbe Satz wie auf der Kachel in Home, dahinter die Techniken als graue
+  Badges und rechts in derselben Zeile ein Popover „How it works“ mit drei bis vier Schritten.
+  Baustein `show_intro()` in `core/page_intro.py`, Texte in `core/catalog.py`.
+- Popover statt Expander: Aufgeklappt schiebt es nichts nach unten. Die Chat-Seiten rechnen mit
+  einer festen Kopfhöhe (`--chat-offset` in `app_pages/chat.css`), die den Modulkopf einschließt.
+
 ## Icons
 
 - Keine bunten Emojis, weder in Titeln, Tabellen, Buttons noch als Favicon.

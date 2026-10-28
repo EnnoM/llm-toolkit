@@ -14,6 +14,7 @@ from core.models import (
     model_options,
     model_price,
 )
+from core.page_intro import show_intro
 from core.prompt_lab import (
     TASKS,
     TECHNIQUES,
@@ -26,6 +27,7 @@ from core.prompt_lab import (
 st.set_page_config(layout="wide")  # drei Spalten brauchen die volle Breite
 
 st.title("Prompt Lab")
+show_intro("prompt_labor")
 settings, main, stats = st.columns([1, 2, 1], gap="large")
 
 with settings:

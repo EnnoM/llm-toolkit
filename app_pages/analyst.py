@@ -26,6 +26,7 @@ from core.models import (
     model_options,
     model_price,
 )
+from core.page_intro import show_intro
 
 st.set_page_config(layout="wide")  # drei Spalten brauchen die volle Breite
 
@@ -43,6 +44,7 @@ EXAMPLES = [
 st.html(Path(__file__).with_name("analyst.css"))
 
 st.title("AI Data Analyst")
+show_intro("ki_datenanalyst")
 settings, main, stats = st.columns([1, 2, 1], gap="large")
 
 
