@@ -1,0 +1,20 @@
+/*
+ * Anmeldung (app.py): Edge und ältere Browser blenden im Passwortfeld ein eigenes Auge zum
+ * Aufdecken ein, Streamlit hat schon eins; zusammen standen zwei Augen nebeneinander. Dazu lag
+ * der Hinweis "Press Enter to submit form" im Feld unter den Augen. Beides blendet diese Datei
+ * aus, nur im Container mit key login (Ausnahme, siehe docs/design.md).
+ *
+ * Achtung wie in chat.css: nie eine spitze Klammer vor einem Buchstaben, auch nicht in
+ * Kommentaren, sonst verwirft Streamlit den ganzen Style.
+ */
+
+/* Eigenes Auge und Löschkreuz des Browsers (Edge, ältere Internet-Explorer-Technik) */
+.st-key-login input::-ms-reveal,
+.st-key-login input::-ms-clear {
+  display: none;
+}
+
+/* Hinweis "Press Enter to submit form": Enter funktioniert trotzdem, dafür gibt es den Button */
+.st-key-login [data-testid="InputInstructions"] {
+  display: none;
+}

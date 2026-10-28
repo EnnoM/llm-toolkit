@@ -366,7 +366,8 @@ def metric(at: AppTest, label: str) -> str:
 def test_page_shows_tools_examples_and_metrics():
     at = open_page()
     assert not at.exception
-    assert [t.label for t in at.toggle] == [tool.label for tool in TOOLS]
+    tools = at.get("button_group")[0]  # Werkzeuge als Buttons über dem Chat
+    assert tools.options == [t.label for t in TOOLS]  # Icons zählt AppTest nicht mit
     assert any(b.label == "What's the weather in Hamburg?" for b in at.button)
     assert metric(at, "Tool calls") == "0"
 

@@ -1,6 +1,7 @@
 """Einstiegspunkt: Passwortabfrage, danach Navigation zwischen den Seiten."""
 
 import hmac
+from pathlib import Path
 
 import streamlit as st
 
@@ -18,9 +19,13 @@ def login() -> None:
         st.error("APP_PASSWORD is not set (st.secrets or .env).")
         return
 
-    with st.form("login"):
+    # Ein Auge statt zwei, kein Enter-Hinweis im Feld (login.css)
+    st.html(Path(__file__).with_name("login.css"))
+    with st.container(key="login"), st.form("login_form"):
         password = st.text_input("Password", type="password")
-        submitted = st.form_submit_button("Sign in")
+        submitted = st.form_submit_button(
+            "Sign in", type="primary", icon=":material/lock_open:"
+        )
 
     if submitted:
         # compare_digest vergleicht zeitkonstant und verhindert so Timing-Angriffe.

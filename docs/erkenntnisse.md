@@ -591,6 +591,28 @@ einem frischen Build, lokal war es noch installiert. Behoben, dann in einer leer
 mit `requirements.txt` jede Seite gerendert. Seitdem prüft `tests/test_requirements.py`, dass
 jedes direkt importierte Fremdpaket in `requirements.txt` steht; er fand dabei auch pandas
 (kam nur über streamlit). Lehre: Lokal grüne Tests sagen nichts über eine frische Umgebung.
+**Überarbeitung Tool Use (28.10.2026, auf Ennos Wunsch):** Werkzeuge und Beispiele stehen nicht
+mehr links, sondern in einer umrahmten Leiste über dem Chat; links bleibt nur das Modell.
+Werkzeuge als Buttons zum An- und Abwählen (`st.pills`, mehrfach), Beispiele hinter
+„Examples“ wie im AI Data Analyst.
+
+- Stolperstein 1: In einer waagerechten Zeile bricht `st.pills` nicht um und lief rechts
+  hinaus. Deshalb Werkzeuge mit `wrap=True` und die Beispiele darunter.
+- Stolperstein 2: `chat.css` rechnet die Höhe des Verlaufs als Fensterhöhe minus feste Zahl.
+  Mit der Leiste darüber passt keine feste Zahl, weil die Leiste je nach Breite ein- oder
+  zweizeilig ist. `app_pages/tool_use.css` macht deshalb den mittleren Bereich fensterhoch und
+  lässt den Verlauf den Rest füllen. Die Höhe musste an das Hüll-Element um den Container,
+  nicht an den Container selbst; im ersten Versuch war der Verlauf 0 px hoch und die Antwort
+  unsichtbar.
+
+## Anmeldung (28.10.2026)
+
+Edge zeigte im Passwortfeld zwei Augen (das eigene des Browsers und das von Streamlit), dazu
+lag „Press Enter to submit form“ darunter. `login.css` blendet das Browser-Auge
+(`::-ms-reveal`) und den Hinweis aus; „Sign in“ ist jetzt der Hauptbutton. In Chromium nicht
+prüfbar, weil es das zusätzliche Auge dort nicht gibt. Für Screenshots der Anmeldung gibt es in
+`.claude/launch.json` eine zweite Instanz auf Port 8502 ohne `SKIP_LOGIN`.
+
 ## Workflow mit Freigabe
 
 **Schritt 1 (28.10.2026, nur lokal):** Posteingang mit 13 selbst geschriebenen Mails an den

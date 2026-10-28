@@ -1,11 +1,14 @@
 """Tool Use: Das Modell ruft selbst Werkzeuge auf, jeder Aufruf ist sichtbar.
 
-Layout nach docs/design.md: Einstellungen | Chat | Kennzahlen im Verhältnis 1:2:1, der Chat
-sieht aus wie auf der Chat-Seite (gemeinsame Bausteine in core/chat_ui.py, CSS in chat.css).
+Layout nach docs/design.md: Modell | Chat | Kennzahlen im Verhältnis 1:2:1, der Chat sieht aus
+wie auf der Chat-Seite (gemeinsame Bausteine in core/chat_ui.py, CSS in chat.css). Werkzeuge
+und Beispiele stehen in einer umrahmten Leiste über dem Chat, weil sie zur Frage gehören; damit
+der Verlauf darunter trotzdem genau bis zum Eingabefeld reicht, gibt es tool_use.css.
 Die Schleife selbst steht in core/tool_use.py, die Werkzeuge in core/tools.py.
 """
 
 import json
+from pathlib import Path
 
 import streamlit as st
 
@@ -25,8 +28,19 @@ EXAMPLES = [
     "Explain photosynthesis in two sentences.",
 ]
 
+# Symbol pro Werkzeug für die Buttons in der Leiste
+TOOL_ICONS = {
+    "calculate": ":material/calculate:",
+    "get_current_datetime": ":material/schedule:",
+    "get_weather": ":material/partly_cloudy_day:",
+    "web_search": ":material/travel_explore:",
+    "search_documents": ":material/find_in_page:",
+}
+TOOL_LABELS = {tool.name: tool.label for tool in TOOLS}
+
 st.set_page_config(layout="wide")  # drei Spalten brauchen die volle Breite
 load_chat_css()
+st.html(Path(__file__).with_name("tool_use.css"))
 history: list[ToolTurn] = st.session_state.setdefault("tool_history", [])
 
 
@@ -75,18 +89,6 @@ settings, chat, stats = st.columns([1, 2, 1], gap="large")
 
 # Die Container mit key bekommen die CSS-Klasse st-key-<key>, darüber greift chat.css
 with settings.container(key="chat_settings"):
-    st.markdown("##### Tools")
-    enabled = [
-        tool.name
-        for tool in TOOLS
-        if st.toggle(
-            tool.label,
-            value=True,
-            key=f"tool_{tool.name}",
-            help=tool.description.split(". ")[0] + ".",
-        )
-    ]
-
     st.markdown("##### Model")
     default_model = get_secret("OPENROUTER_MODEL")
     options = model_options(default_model)  # nach Preis sortiert, günstigstes zuerst
@@ -103,16 +105,6 @@ with settings.container(key="chat_settings"):
             "so a question with tools costs two to three times as much as one without."
         ),
     )
-
-    st.markdown("##### Examples")
-    for example in EXAMPLES:
-        st.button(
-            example,
-            type="tertiary",
-            on_click=ask_example,
-            args=(example,),
-            key=f"example_{example}",
-        )
 
 with stats.container(key="chat_stats"):
     st.markdown("##### Session")
@@ -144,7 +136,36 @@ def show_summary() -> None:
         st.metric("Tool calls", sum(len(turn.steps) for turn in history))
 
 
-with chat:
+# Mitte: Leiste mit Werkzeugen und Beispielen, darunter der Verlauf. Der Container chat_main
+# ist so hoch wie das Fenster erlaubt, der Verlauf füllt den Rest (tool_use.css)
+main = chat.container(key="chat_main")
+with main.container(border=True, key="tool_bar"):
+    # Untereinander statt in einer Zeile: In einer Zeile brechen die Buttons nicht um und
+    # liefen bei schmalen Fenstern rechts hinaus
+    enabled = st.pills(
+        "Tools",
+        list(TOOL_ICONS),
+        selection_mode="multi",
+        default=list(TOOL_ICONS),
+        format_func=lambda name: f"{TOOL_ICONS[name]} {TOOL_LABELS[name]}",
+        key="tool_enabled",
+        wrap=True,
+        help=(
+            "Only the selected tools are offered to the model. Without tools it answers "
+            "from its own knowledge."
+        ),
+    )
+    with st.popover("Examples", icon=":material/lightbulb:"):
+        for example in EXAMPLES:
+            st.button(
+                example,
+                type="tertiary",
+                on_click=ask_example,
+                args=(example,),
+                key=f"example_{example}",
+            )
+
+with main:
     if not get_secret("OPENROUTER_API_KEY"):
         st.warning(
             "OPENROUTER_API_KEY is not set, the assistant cannot answer.",
@@ -166,7 +187,7 @@ show_summary()
 with messages:
     if not history and not prompt:
         st.caption(
-            "Ask a question below or pick an example on the left. The model decides "
+            "Ask a question below or pick one of the examples above. The model decides "
             "itself whether it needs a tool; every call appears under the answer."
         )
     for turn in history:

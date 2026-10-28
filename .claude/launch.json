@@ -6,6 +6,12 @@
       "runtimeExecutable": "/usr/bin/env",
       "runtimeArgs": ["SKIP_LOGIN=true", "SHOW_INTERNAL_PAGES=true", ".venv/bin/streamlit", "run", "app.py", "--server.port", "8501", "--server.headless", "true"],
       "port": 8501
+    },
+    {
+      "name": "streamlit-login",
+      "runtimeExecutable": "/usr/bin/env",
+      "runtimeArgs": ["SKIP_LOGIN=false", ".venv/bin/streamlit", "run", "app.py", "--server.port", "8502", "--server.headless", "true"],
+      "port": 8502
     }
   ]
 }
