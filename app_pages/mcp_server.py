@@ -1,5 +1,8 @@
 """MCP Server: Die Seite spielt die KI-App, startet den Server und zeigt jede Nachricht.
 
+Die Datei heißt nicht mcp.py: Liegt app_pages auf dem Importpfad, fände „import mcp“ sonst diese
+Seite statt des SDK und importierte sie im Kreis (so geschehen in einer frischen Umgebung).
+
 Layout wie im Approval Workflow: Kopf, dann ein Rahmen „Server“ mit der Werkzeugliste links und
 dem ausgewählten Werkzeug rechts (Formular, Ergebnis, Protokoll), darunter ein Rahmen mit der
 Anleitung für Claude Desktop. Server in core/mcp_server.py, Client in core/mcp_client.py.

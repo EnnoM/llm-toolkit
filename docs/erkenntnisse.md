@@ -780,6 +780,11 @@ Platz hat.
 - `tests/test_requirements.py` meldete beim ersten Lauf sofort `mcp`, `mcp-types` und `anyio`
   als fehlend, genau dafür war er gebaut worden.
 - Offen: in Claude Desktop einbinden und einen echten Aufruf prüfen (Akzeptanzkriterium 2).
+- **Namenskonflikt vor dem Deploy gefunden:** Die Seite hieß zuerst `app_pages/mcp.py`. In der
+  frischen Umgebung (nur `requirements.txt`) fand `import mcp` dann die eigene Seite statt des
+  SDK und importierte sie im Kreis. In den normalen Tests fiel es nicht auf, weil dort das echte
+  Paket schon geladen war. Umbenannt in `app_pages/mcp_server.py`. Lehre: Dateien nie wie
+  installierte Pakete nennen.
 
 ## Modulköpfe und Home (28.10.2026)
 

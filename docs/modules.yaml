@@ -786,7 +786,7 @@
     core/mcp_server.py mit vier nur lesenden Werkzeugen: query_shop_database (AI Data Analyst),
     lookup_order und lookup_customer (Approval Workflow), search_documents (RAG). Client in
     core/mcp_client.py startet den Server über stdio und schreibt jede JSON-RPC-Nachricht mit.
-    Seite app_pages/mcp.py: Werkzeugliste, Aufruf mit Formular, Protokoll, Anleitung für
+    Seite app_pages/mcp_server.py: Werkzeugliste, Aufruf mit Formular, Protokoll, Anleitung für
     Claude Desktop. Noch nicht online.
   naechster_schritt: "In Claude Desktop einbinden und einen echten Werkzeugaufruf prüfen (Akzeptanzkriterium 2)"
   notizen: |

@@ -134,7 +134,7 @@ def test_refused_query_comes_back_as_tool_error(connection):
 
 
 def test_page_lists_tools_and_the_claude_config():
-    at = AppTest.from_file("../app_pages/mcp.py", default_timeout=60).run()
+    at = AppTest.from_file("../app_pages/mcp_server.py", default_timeout=60).run()
     assert not at.exception
     assert at.radio(key="mcp_tool").options == [
         "query_shop_database",

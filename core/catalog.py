@@ -165,7 +165,7 @@ CATALOG = (
             "Read-only tools",
         ),
         level=3,
-        page="app_pages/mcp.py",
+        page="app_pages/mcp_server.py",
         how=(
             "The MCP server is a small separate program that offers read-only tools from this project: SQL on the shop database, order and customer lookup, document search.",
             "An AI app starts it and talks to it over stdin and stdout in JSON-RPC: initialize, tools/list, tools/call. Here this page plays the app; normally it is Claude Desktop.",
