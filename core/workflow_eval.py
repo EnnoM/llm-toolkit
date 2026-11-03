@@ -36,7 +36,7 @@ from core.workflow import (
     unverified,
 )
 
-DEFAULT_MODEL = "google/gemini-2.5-flash-lite"
+DEFAULT_MODEL = "openai/gpt-4.1-nano"
 RETRIES = 3  # Rate-Limits der Anbieter (429) verfälschen sonst die Quote
 RETRY_PAUSE = 10  # Sekunden
 

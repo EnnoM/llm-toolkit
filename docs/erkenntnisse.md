@@ -794,6 +794,13 @@ Popover „How it works“), Home zeigt „Built by Enno“ und den Link zum Cod
 auf den Kacheln von Home waren Enno zu überladen und sind dort wieder entfernt. Der Kopf machte die Chat-Seiten zu hoch (Titel rutschte aus dem Bild);
 `--chat-offset` in `chat.css` rechnet ihn jetzt ein.
 
+## Standardmodell gpt-4.1-nano (03.11.2026)
+
+gemini-2.5-flash-lite fiel online zu oft aus (429 „Too many requests“ beim Anbieter, Timeouts).
+Neues Standardmodell in allen Modulen und Evals ist gpt-4.1-nano, gleicher Preis ($0.10 in,
+$0.40 out). Nachteil: In der Tool-Use-Eval war nano das schwächste der drei günstigen Modelle
+(7/12 gegen 9/12 bei gemini). Online gilt der Wert `OPENROUTER_MODEL` in den Secrets der App.
+
 ## Offene Punkte
 
 - Nächstes Modul: MCP-Server (Phase 4).
