@@ -1,0 +1,257 @@
+{
+  "date": "2026-11-03",
+  "model": "mistralai/mistral-small-3.2-24b-instruct",
+  "run": 1,
+  "summary": {
+    "category": "14/14",
+    "priority": "14/14",
+    "both": "14/14",
+    "severe": 0,
+    "assessment": "10/11",
+    "drafts_with_unverified_facts": 0
+  },
+  "cost_usd": 0.00248287375,
+  "results": [
+    {
+      "id": "m01",
+      "expected": "complaint/high",
+      "got": "complaint/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer reports a damaged product with a deadline within a few days.",
+      "cost_usd": 3.74e-05
+    },
+    {
+      "id": "m02",
+      "expected": "order_status/normal",
+      "got": "order_status/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is asking for an update on the status of their order, which is still in the 'label created' stage, and is not indicating any urgency or dissatisfaction.",
+      "cost_usd": 3.9325e-05
+    },
+    {
+      "id": "m03",
+      "expected": "return_refund/normal",
+      "got": "return_refund/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer wants to return unused headphones and get a refund.",
+      "cost_usd": 3.6375e-05
+    },
+    {
+      "id": "m04",
+      "expected": "product_question/normal",
+      "got": "product_question/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is asking about product features before making a purchase.",
+      "cost_usd": 3.4825e-05
+    },
+    {
+      "id": "m05",
+      "expected": "spam/low",
+      "got": "spam/low",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The email is a phishing attempt to steal bank details, not written by a real customer.",
+      "cost_usd": 3.69e-05
+    },
+    {
+      "id": "m06",
+      "expected": "return_refund/high",
+      "got": "return_refund/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer was charged twice for the same order and requests a refund for the second payment.",
+      "cost_usd": 3.655e-05
+    },
+    {
+      "id": "m07",
+      "expected": "order_status/high",
+      "got": "order_status/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is worried because a gift is needed by Thursday and the order has not arrived or been updated in four days.",
+      "cost_usd": 3.8525e-05
+    },
+    {
+      "id": "m08",
+      "expected": "product_question/normal",
+      "got": "product_question/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "This is a business inquiry about product compatibility, discounts, and invoicing for a bulk order of 25 smartwatches.",
+      "cost_usd": 3.965e-05
+    },
+    {
+      "id": "m09",
+      "expected": "spam/low",
+      "got": "spam/low",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "This is a phishing attempt to get login credentials, not a real customer email.",
+      "cost_usd": 4.496875e-05
+    },
+    {
+      "id": "m10",
+      "expected": "return_refund/high",
+      "got": "return_refund/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is threatening to escalate the issue to their bank and leave negative reviews if they do not receive a refund for a returned item within a specified deadline.",
+      "cost_usd": 5.21875e-05
+    },
+    {
+      "id": "m11",
+      "expected": "complaint/low",
+      "got": "complaint/low",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is expressing concern about excessive packaging for a small item, without any damage or urgency.",
+      "cost_usd": 3.5925e-05
+    },
+    {
+      "id": "m12",
+      "expected": "spam/low",
+      "got": "spam/low",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The email is from a non-customer address and contains instructions to the AI assistant, which makes it spam.",
+      "cost_usd": 3.8625e-05
+    },
+    {
+      "id": "m13",
+      "expected": "product_question/normal",
+      "got": "product_question/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is asking about the features and capacity of an electric kettle, indicating a product question.",
+      "cost_usd": 3.6275e-05
+    },
+    {
+      "id": "m14",
+      "expected": "order_status/high",
+      "got": "order_status/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is asking for help because their order was not delivered despite the tracking information indicating it was.",
+      "cost_usd": 3.75e-05
+    }
+  ],
+  "drafts": [
+    {
+      "id": "m01",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The policy for damaged goods clearly states that a free replacement will be sent by express within 1 business day.",
+      "cost_usd": 0.00016293
+    },
+    {
+      "id": "m02",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The shop data gives one obvious answer. The order is waiting for stock and the product is back in stock on 28 October 2026. Open orders ship the same day.",
+      "cost_usd": 0.000120925
+    },
+    {
+      "id": "m03",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The order is within the 30-day return window, and the customer states the item is unused and in the original packaging, so the return and refund policy applies.",
+      "cost_usd": 0.000125875
+    },
+    {
+      "id": "m04",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The product data gives one obvious answer.",
+      "cost_usd": 0.0001084375
+    },
+    {
+      "id": "m06",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The shop data and the policies give one obvious answer.",
+      "cost_usd": 0.00014205
+    },
+    {
+      "id": "m07",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The policy says that a carrier investigation is opened after 5 business days without tracking updates, and the data shows that the tracking has not updated for 4 days, so a carrier investigation is opened now.",
+      "cost_usd": 0.000139925
+    },
+    {
+      "id": "m08",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The policies give one obvious answer.",
+      "cost_usd": 0.0005856
+    },
+    {
+      "id": "m10",
+      "expected": "unclear",
+      "got": "unclear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The data shows that the refund is on hold because the kettle was used, but it is unclear if this is a reason to refuse the refund or if the customer service just needs to decide what to do.",
+      "cost_usd": 0.000161775
+    },
+    {
+      "id": "m11",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The policy explicitly states the change in packaging material and the date it will take effect.",
+      "cost_usd": 0.00015375
+    },
+    {
+      "id": "m13",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The shop data contains all the information needed to answer the customer's questions about the electric kettle.",
+      "cost_usd": 9.825e-05
+    },
+    {
+      "id": "m14",
+      "expected": "unclear",
+      "got": "clear",
+      "assessment_ok": false,
+      "unverified_facts": [],
+      "reason": "The policy for missing parcels gives a clear answer.",
+      "cost_usd": 0.000138325
+    }
+  ]
+}

@@ -275,6 +275,13 @@ CLASSIFY_FORMAT = {
 }
 
 
+# Typische Weigerungen; kommt so in keiner normalen Begründung vor
+REFUSAL = re.compile(
+    r"\b(?:I'm sorry|I am sorry|I cannot assist|I can't assist|I can't help)[^\"]*",
+    re.IGNORECASE,
+)
+
+
 def classify(
     mail: Mail, model: str, client: OpenAI | None = None
 ) -> tuple[Classification, Usage]:
@@ -289,12 +296,14 @@ def classify(
         extra_body=PROVIDER_PREFERENCES,
         client=client,
     )
-    if not response.text.lstrip().startswith("{"):
-        # Kein JSON, sondern eine Weigerung („I'm sorry, but I cannot assist …“): gpt-4.1-nano
-        # antwortete so am 03.11.2026 auf die Mail mit Prompt Injection. Wer das Modell zum
-        # Verweigern bringt, ist kein normaler Kunde; also Spam, ein Mensch kann ihn öffnen
+    if REFUSAL.search(response.text):
+        # Eine Weigerung („I'm sorry, but I cannot assist …“) statt der Einordnung: gpt-4.1-nano
+        # antwortete so am 03.11.2026 auf die Mail mit Prompt Injection, mal als ganze Antwort,
+        # mal mitten im angefangenen JSON. Wer das Modell zum Verweigern bringt, ist kein
+        # normaler Kunde; also Spam, ein Mensch kann die Mail trotzdem öffnen
+        refusal = REFUSAL.search(response.text).group(0)
         return Classification(
-            reason=f"The model refused to classify this email: {response.text.strip()}",
+            reason=f"The model refused to classify this email ({refusal}).",
             category="spam",
             priority="low",
         ), response.usage

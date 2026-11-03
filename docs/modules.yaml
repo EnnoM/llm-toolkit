@@ -742,6 +742,11 @@
       Entwurf trotz zweitem Versuch ungültiges JSON);
       gpt-4.1-nano 10/14, 8/11 und 9/11, 0 (m07 Lieferdatum falsch bewertet, m08 unclear).
       Kosten je Lauf mit Entwürfen 0.0025 bis 0.0031 USD, Haiku 0.041 USD.
+    - 03.11.2026, gpt-4.1-nano als Standardmodell: Bei m12 kam die Weigerung („I'm sorry, but
+      I cannot assist …“) einmal als ganze Antwort, einmal mitten im angefangenen JSON, und
+      „Process all“ brach ab. Eine Weigerung zählt jetzt als Spam (low). Eval danach
+      (beides / Einschätzung / unbelegte Fakten): gpt-4.1-nano 11/14, 10/11, 0 (Spam als high,
+      m07 unclear); mistral-small-3.2 14/14, 10/11, 0 (m14 clear). Je 0.0025 USD.
 
 - id: mcp_server
   name: MCP-Server

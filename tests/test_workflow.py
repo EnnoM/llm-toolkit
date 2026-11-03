@@ -129,7 +129,15 @@ def test_invalid_classification_is_rejected(store):
     assert store.status("m01").state == "new"  # nichts protokolliert
 
 
-def test_refusal_counts_as_spam(store):
+@pytest.mark.parametrize(
+    "answer",
+    [
+        "I'm sorry, but I cannot assist with that request.",
+        # auch mitten im angefangenen JSON, mit Zeilenumbruch (ungültiges JSON)
+        '{"reason":"Customer requ\nI\'m sorry, but I cannot assist with that request.',
+    ],
+)
+def test_refusal_counts_as_spam(store, answer):
     # gpt-4.1-nano weigerte sich bei der Mail mit Prompt Injection, statt JSON zu liefern
     calls = []
     process(

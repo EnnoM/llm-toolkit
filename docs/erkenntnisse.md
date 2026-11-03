@@ -803,7 +803,9 @@ $0.40 out). Nachteil: In der Tool-Use-Eval war nano das schwächste der drei gü
 
 Erster Lauf online mit nano: Bei der Mail mit Prompt Injection lieferte nano statt JSON nur
 „I'm sorry, but I cannot assist with that request.“, und „Process all“ brach ab. Eine Weigerung
-beim Klassifizieren zählt jetzt als Spam (niedrige Priorität, Grund im Protokoll). Dieselbe
+beim Klassifizieren zählt jetzt als Spam (niedrige Priorität, Grund im Protokoll). Beim
+nächsten Lauf kam die Weigerung mitten im angefangenen JSON; erkannt wird sie deshalb am Text
+(„I'm sorry“, „cannot assist“), nicht daran, ob die Antwort mit `{` beginnt. Dieselbe
 Seite zeigte einmal „TypeError: Importing a module script failed“ in der Mailliste: Der offene
 Tab lud nach dem Deploy Skripte einer anderen Streamlit-Version. Neu laden hilft;
 `streamlit==1.64.0` ist jetzt fest, damit ein Deploy die Version nicht wechselt. Die
