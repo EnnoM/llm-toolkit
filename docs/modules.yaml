@@ -747,6 +747,9 @@
       „Process all“ brach ab. Eine Weigerung zählt jetzt als Spam (low). Eval danach
       (beides / Einschätzung / unbelegte Fakten): gpt-4.1-nano 11/14, 10/11, 0 (Spam als high,
       m07 unclear); mistral-small-3.2 14/14, 10/11, 0 (m14 clear). Je 0.0025 USD.
+    - 03.11.2026, Mistral schrieb bei jedem dritten Entwurf nur Leerzeichen bis zum Token-Limit.
+      Mit der Bitte um kompaktes JSON (Antwort mit Leerzeilen) 20/20 gültig; Eval danach
+      mistral-small-3.2 14/14, 11/11, 0, 0.0020 USD.
 
 - id: mcp_server
   name: MCP-Server

@@ -7,10 +7,10 @@
     "priority": "14/14",
     "both": "14/14",
     "severe": 0,
-    "assessment": "10/11",
+    "assessment": "11/11",
     "drafts_with_unverified_facts": 0
   },
-  "cost_usd": 0.00248287375,
+  "cost_usd": 0.0019957525,
   "results": [
     {
       "id": "m01",
@@ -19,7 +19,7 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "The customer reports a damaged product with a deadline within a few days.",
+      "reason": "The customer reports a damaged product with a deadline in a few days.",
       "cost_usd": 3.74e-05
     },
     {
@@ -29,8 +29,8 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "The customer is asking for an update on the status of their order, which is still in the 'label created' stage, and is not indicating any urgency or dissatisfaction.",
-      "cost_usd": 3.9325e-05
+      "reason": "The customer is asking for an update on the status of their order, specifically when it will ship, without any urgency or pressure.",
+      "cost_usd": 3.7725e-05
     },
     {
       "id": "m03",
@@ -50,7 +50,7 @@
       "priority_ok": true,
       "severe": false,
       "reason": "The customer is asking about product features before making a purchase.",
-      "cost_usd": 3.4825e-05
+      "cost_usd": 3.3825e-05
     },
     {
       "id": "m05",
@@ -59,8 +59,8 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "The email is a phishing attempt to steal bank details, not written by a real customer.",
-      "cost_usd": 3.69e-05
+      "reason": "The email is from an unknown sender and claims the recipient has won a prize, which is a common phishing tactic.",
+      "cost_usd": 3.79e-05
     },
     {
       "id": "m06",
@@ -69,7 +69,7 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "The customer was charged twice for the same order and requests a refund for the second payment.",
+      "reason": "The customer was charged twice for the same order and requests a refund of the second payment.",
       "cost_usd": 3.655e-05
     },
     {
@@ -79,8 +79,8 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "The customer is worried because a gift is needed by Thursday and the order has not arrived or been updated in four days.",
-      "cost_usd": 3.8525e-05
+      "reason": "Customer is worried because a gift is needed by Thursday and the order has not arrived or been tracked in four days.",
+      "cost_usd": 5.199e-05
     },
     {
       "id": "m08",
@@ -119,8 +119,8 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "The customer is expressing concern about excessive packaging for a small item, without any damage or urgency.",
-      "cost_usd": 3.5925e-05
+      "reason": "The customer is expressing concern about excessive packaging for a small item, without any damage or urgency mentioned.",
+      "cost_usd": 3.6125e-05
     },
     {
       "id": "m12",
@@ -160,8 +160,8 @@
       "got": "clear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The policy for damaged goods clearly states that a free replacement will be sent by express within 1 business day.",
-      "cost_usd": 0.00016293
+      "reason": "The policy for damaged goods gives one obvious answer.",
+      "cost_usd": 0.00015096875
     },
     {
       "id": "m02",
@@ -169,8 +169,8 @@
       "got": "clear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The shop data gives one obvious answer. The order is waiting for stock and the product is back in stock on 28 October 2026. Open orders ship the same day.",
-      "cost_usd": 0.000120925
+      "reason": "The shop data gives one obvious answer.",
+      "cost_usd": 0.000118575
     },
     {
       "id": "m03",
@@ -178,8 +178,8 @@
       "got": "clear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The order is within the 30-day return window, and the customer states the item is unused and in the original packaging, so the return and refund policy applies.",
-      "cost_usd": 0.000125875
+      "reason": "The shop data and the policies give one obvious answer.",
+      "cost_usd": 0.000132925
     },
     {
       "id": "m04",
@@ -187,8 +187,8 @@
       "got": "clear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The product data gives one obvious answer.",
-      "cost_usd": 0.0001084375
+      "reason": "The shop data contains all the information needed to answer the customer's questions.",
+      "cost_usd": 0.00011175
     },
     {
       "id": "m06",
@@ -196,8 +196,8 @@
       "got": "clear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The shop data and the policies give one obvious answer.",
-      "cost_usd": 0.00014205
+      "reason": "The shop data shows that the second charge is a card authorization hold, which is released automatically by the bank. The policy says that customer service cannot release it earlier.",
+      "cost_usd": 0.0001469
     },
     {
       "id": "m07",
@@ -205,8 +205,8 @@
       "got": "clear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The policy says that a carrier investigation is opened after 5 business days without tracking updates, and the data shows that the tracking has not updated for 4 days, so a carrier investigation is opened now.",
-      "cost_usd": 0.000139925
+      "reason": "The carrier note says the delay is resolved and gives a new delivery date.",
+      "cost_usd": 0.000141375
     },
     {
       "id": "m08",
@@ -214,8 +214,8 @@
       "got": "clear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The policies give one obvious answer.",
-      "cost_usd": 0.0005856
+      "reason": "the policies give one obvious answer.",
+      "cost_usd": 0.00010845
     },
     {
       "id": "m10",
@@ -223,8 +223,8 @@
       "got": "unclear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The data shows that the refund is on hold because the kettle was used, but it is unclear if this is a reason to refuse the refund or if the customer service just needs to decide what to do.",
-      "cost_usd": 0.000161775
+      "reason": "The refund is on hold because the kettle was used, which contradicts the return policy.",
+      "cost_usd": 0.000156025
     },
     {
       "id": "m11",
@@ -232,8 +232,8 @@
       "got": "clear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The policy explicitly states the change in packaging material and the date it will take effect.",
-      "cost_usd": 0.00015375
+      "reason": "The policy on packaging is clear and provides a direct response to the customer's feedback.",
+      "cost_usd": 0.0001258125
     },
     {
       "id": "m13",
@@ -241,17 +241,17 @@
       "got": "clear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The shop data contains all the information needed to answer the customer's questions about the electric kettle.",
-      "cost_usd": 9.825e-05
+      "reason": "The shop data gives all the information about the product.",
+      "cost_usd": 0.0001003
     },
     {
       "id": "m14",
       "expected": "unclear",
-      "got": "clear",
-      "assessment_ok": false,
+      "got": "unclear",
+      "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The policy for missing parcels gives a clear answer.",
-      "cost_usd": 0.000138325
+      "reason": "The policy says a team lead's approval is needed for a replacement or refund before the claim is decided.",
+      "cost_usd": 0.000145575
     }
   ]
 }

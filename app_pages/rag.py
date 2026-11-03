@@ -363,11 +363,14 @@ show_summary()
 
 with messages:
     if not history and not prompt:
+        # Erster Satz nur, solange noch keine Dokumente geladen sind
+        first_step = (
+            "" if documents else "Load the example documents or upload a PDF above. "
+        )
         st.caption(
-            "Load the example documents or upload a PDF above, then ask a question "
-            "below. The example documents are German, so German questions work best, "
-            "for example: Ab welcher Größe kommen zusammenhängende Flächen als "
-            "Vorranggebiet für die Landwirtschaft in Frage?"
+            f"{first_step}Ask a question below. The example documents are German, so "
+            "German questions work best, for example: Ab welcher Größe kommen "
+            "zusammenhängende Flächen als Vorranggebiet für die Landwirtschaft in Frage?"
         )
     for turn in history:
         if turn.role == "user":

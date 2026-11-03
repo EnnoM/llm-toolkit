@@ -53,7 +53,8 @@ with settings.container(key="chat_settings"):
     system_prompt = st.text_area(
         "System prompt",
         DEFAULT_SYSTEM_PROMPT,
-        height=114,  # inkl. Beschriftung; drei Zeilen des Standard-Prompts ohne Scrollen
+        # inkl. Beschriftung; gut zwei Zeilen, mehr passt bei Laptophöhe nicht in die Spalte
+        height=100,
         help=(
             "A hidden instruction sent ahead of the conversation that sets the model's role, "
             "tone and rules. Changes apply from the next message on."

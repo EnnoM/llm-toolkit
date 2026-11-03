@@ -62,10 +62,16 @@
     font-size: 24px;
   }
 
-  /* Weniger Abstand zwischen den Kennzahlen (Streamlit: 16 px). Tool Use hat sechs davon,
-     mit den üblichen Abständen passt die Spalte bei Laptophöhe (860 px) nicht ins Fenster. */
+  /* Weniger Abstand in den Seitenspalten (Streamlit: 16 px). Tool Use hat sechs Kennzahlen,
+     der Chat links Modell, System-Prompt und Regler; mit den üblichen Abständen passten die
+     Spalten bei Laptophöhe (860 px) nicht ins Fenster und scrollten unsichtbar. */
+  .st-key-chat_settings,
+  .st-key-chat_stats,
   .st-key-chat_stats [data-testid="stVerticalBlock"] {
     gap: 8px;
+  }
+  .st-key-chat_settings [role="radiogroup"] {
+    gap: 4px;
   }
 
   /* Elemente darin nicht zusammenquetschen, lieber scrollen */
@@ -99,6 +105,16 @@
   .st-key-chat_input_row [data-testid="stColumn"]:not(:has([data-testid="stChatInput"])) {
     display: none;
   }
+}
+
+/* Beispielfragen im Tool Use: Buttons zentrieren ihren Text, eine umbrechende Frage stand
+   dann mittig über zwei Zeilen. Linksbündig wie eine Liste. */
+.st-key-tool_examples button {
+  justify-content: flex-start;
+  text-align: left;
+}
+.st-key-tool_examples button p {
+  text-align: left;
 }
 
 /* Nummerierte Listen im Verlauf etwas weiter einrücken: Der Scrollbereich schneidet alles ab,

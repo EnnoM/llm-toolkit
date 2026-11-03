@@ -832,6 +832,18 @@ Gefunden:
   danach luden einzelne Skripte nicht. Streamlit meldete keine Störung; ohne Zugriff auf die
   Logs ungeklärt. Für Vorführungen die Seite vorher öffnen.
 
+## Zweite Prüfung: Mistral-Entwürfe (03.11.2026)
+
+Mit Mistral als Standard brach „Process all“ nach anderthalb Minuten ab: Jeder dritte Entwurf
+bestand aus Leerzeichen bis zum Token-Limit (bei DeepInfra und Parasail gleich, der Anbieter
+Mistral ist über OpenRouter nicht erreichbar). Die Bitte am Ende des Prompts, das JSON kompakt
+ohne Einrückung zu schreiben, beseitigte das (20 von 20 gültig). Die erste Fassung („on a single
+line“) nahm dem Entwurf auch die Absätze; jetzt steht ausdrücklich da, dass die Antwort selbst
+Leerzeilen (`\n\n`) behält. Eval danach: 14/14, Einschätzung 11/11, keine unbelegten Fakten.
+Dazu kleinere Dinge: Beispiele im Tool Use linksbündig (zentrierter Umbruch), MCP-Ergebnisse ohne
+Tabelle gleich aufgeklappt, RAG-Hinweis ohne „Load…“, sobald Dokumente geladen sind, und die
+linke Spalte im Chat kompakter, damit der Temperatur-Regler bei 860 px Höhe sichtbar bleibt.
+
 ## Offene Punkte
 
 - Nächstes Modul: MCP-Server (Phase 4).

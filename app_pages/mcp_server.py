@@ -29,7 +29,10 @@ EXAMPLE_ARGUMENTS = {
     },
     "lookup_order": {"order_id": 40477},
     "lookup_customer": {"email": "daniel.roth@example.com"},
-    "search_documents": {"query": "Which towns in Schwaben are Oberzentren?"},
+    # Deutsch wie die Dokumente: Die englische Frage fand zuerst die Mittelzentren
+    "search_documents": {
+        "query": "Welche Gemeinden im Regierungsbezirk Schwaben sind Oberzentren?"
+    },
 }
 
 CLAUDE_CONFIG = {
@@ -96,8 +99,17 @@ def show_result(tool_name: str, result) -> None:
         st.dataframe(
             pd.DataFrame(data["rows"], columns=data["columns"]), hide_index=True
         )
-    with st.expander("Raw result (JSON)", icon=":material/data_object:"):
-        st.code(json.dumps(data, ensure_ascii=False, indent=2), language="json")
+    # Ohne Tabelle ist das JSON das Ergebnis selbst, dann gleich aufgeklappt
+    with st.expander(
+        "Raw result (JSON)",
+        icon=":material/data_object:",
+        expanded=tool_name != "query_shop_database",
+    ):
+        st.code(
+            json.dumps(data, ensure_ascii=False, indent=2),
+            language="json",
+            wrap_lines=True,
+        )
 
 
 st.title("MCP Server")

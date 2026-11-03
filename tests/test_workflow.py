@@ -374,3 +374,34 @@ def test_invalid_draft_json_gets_one_more_try(store):
     )
     assert store.status("m01").draft == DRAFT
     assert len(calls) == 3  # Klassifikation, kaputter Entwurf, zweiter Versuch
+
+
+def test_apology_in_the_reason_is_not_a_refusal(store):
+    # Nur „I'm sorry, but …“ oder „cannot assist“ gelten als Weigerung, nicht jede Entschuldigung
+    answer = json.dumps(
+        {
+            "reason": "The customer writes 'I'm sorry to bother you' and asks for the status.",
+            "category": "order_status",
+            "priority": "normal",
+        }
+    )
+    process(
+        mail_by_id("m02"),
+        store,
+        "test/model",
+        client=fake_client([answer, draft(DRAFT)], []),
+    )
+    assert store.status("m02").classification.category == "order_status"
+
+
+def test_draft_gives_up_after_three_invalid_answers(store):
+    calls = []
+    with pytest.raises(workflow.LLMError, match="invalid draft"):
+        process(
+            mail_by_id("m01"),
+            store,
+            "test/model",
+            client=fake_client([classification(), "  ", "  ", "  "], calls),
+        )
+    assert len(calls) == 4  # Klassifikation und drei Versuche
+    assert store.status("m01").state == "classified"

@@ -34,10 +34,7 @@ EXAMPLES = [
     # Deutsch, weil die Dokumente deutsch sind: Englische Fragen fanden am 03.11.2026 die
     # falschen Abschnitte (Schwaben-Frage mit nano und Mistral falsch beantwortet). Ohne den
     # Verweis auf die Dokumente antwortete Mistral ohne Werkzeug und erfand „50 Hektar“
-    (
-        "Laut den bayerischen Planungsdokumenten: Ab welcher Größe kommen Flächen als "
-        "Vorranggebiet für die Landwirtschaft in Frage?"
-    ),
+    "Laut den Planungsdokumenten: Wie groß muss ein Vorranggebiet Landwirtschaft sein?",
     "Explain photosynthesis in two sentences.",
 ]
 
@@ -167,7 +164,11 @@ with main.container(border=True, key="tool_bar"):
             "from its own knowledge."
         ),
     )
-    with st.popover("Examples", icon=":material/lightbulb:"):
+    # Container mit key, damit chat.css lange Beispiele linksbündig umbrechen kann
+    with (
+        st.popover("Examples", icon=":material/lightbulb:"),
+        st.container(key="tool_examples"),
+    ):
         for example in EXAMPLES:
             st.button(
                 example,
