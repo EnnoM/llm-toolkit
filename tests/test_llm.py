@@ -7,6 +7,7 @@ import openai
 import pytest
 from openai.types.chat import ChatCompletionChunk
 
+from core import llm
 from core.llm import LLMError, complete, get_client, stream
 
 REQUEST = httpx2.Request("POST", "https://openrouter.ai/api/v1/chat/completions")
@@ -43,6 +44,39 @@ def chunk(content=None, finish_reason=None, usage=None) -> ChatCompletionChunk:
             "usage": usage,
         }
     )
+
+
+@pytest.fixture(autouse=True)
+def no_rate_limit_pause(monkeypatch):
+    # Die Pausen bei 429 sind für echte Anbieter gedacht, nicht für Tests
+    monkeypatch.setattr(llm, "RATE_LIMIT_PAUSE", 0)
+
+
+def test_rate_limit_is_retried_before_giving_up():
+    calls = []
+
+    def create(**_):
+        calls.append(1)
+        if len(calls) < 3:
+            raise status_error(429)
+        return SimpleNamespace(
+            choices=[
+                SimpleNamespace(
+                    message=SimpleNamespace(content="Hallo", tool_calls=None)
+                )
+            ],
+            model="test/model",
+            usage=None,
+        )
+
+    client = SimpleNamespace(
+        chat=SimpleNamespace(completions=SimpleNamespace(create=create))
+    )
+    response = complete(
+        [{"role": "user", "content": "Hi"}], "test/model", client=client
+    )
+    assert response.text == "Hallo"
+    assert len(calls) == 3  # zweimal 429, dann die Antwort
 
 
 def test_missing_api_key_gives_clear_error(monkeypatch):

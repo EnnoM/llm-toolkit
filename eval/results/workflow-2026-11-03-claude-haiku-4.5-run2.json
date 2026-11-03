@@ -1,0 +1,257 @@
+{
+  "date": "2026-11-03",
+  "model": "anthropic/claude-haiku-4.5",
+  "run": 2,
+  "summary": {
+    "category": "14/14",
+    "priority": "14/14",
+    "both": "14/14",
+    "severe": 0,
+    "assessment": "11/11",
+    "drafts_with_unverified_facts": 0
+  },
+  "cost_usd": 0.040541999999999995,
+  "results": [
+    {
+      "id": "m01",
+      "expected": "complaint/high",
+      "got": "complaint/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Customer received damaged goods with a time-sensitive deadline for an event this weekend.",
+      "cost_usd": 0.000868
+    },
+    {
+      "id": "m02",
+      "expected": "order_status/normal",
+      "got": "order_status/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Customer is inquiring about the shipping status of their order placed last Monday.",
+      "cost_usd": 0.000847
+    },
+    {
+      "id": "m03",
+      "expected": "return_refund/normal",
+      "got": "return_refund/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Customer wants to return unused headphones and receive a refund.",
+      "cost_usd": 0.000845
+    },
+    {
+      "id": "m04",
+      "expected": "product_question/normal",
+      "got": "product_question/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Customer asking about product compatibility and features before making a purchase decision.",
+      "cost_usd": 0.000822
+    },
+    {
+      "id": "m05",
+      "expected": "spam/low",
+      "got": "spam/low",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "This is a phishing email attempting to collect personal information through a fake prize notice.",
+      "cost_usd": 0.000857
+    },
+    {
+      "id": "m06",
+      "expected": "return_refund/high",
+      "got": "return_refund/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Customer was charged twice for a single order and is requesting a refund for the duplicate charge.",
+      "cost_usd": 0.000853
+    },
+    {
+      "id": "m07",
+      "expected": "order_status/high",
+      "got": "order_status/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Customer needs urgent delivery confirmation for a gift with a deadline in a few days and tracking is stalled.",
+      "cost_usd": 0.00089
+    },
+    {
+      "id": "m08",
+      "expected": "product_question/normal",
+      "got": "product_question/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Potential bulk customer inquiring about product compatibility, pricing, and business purchasing options.",
+      "cost_usd": 0.000884
+    },
+    {
+      "id": "m09",
+      "expected": "spam/low",
+      "got": "spam/low",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "This is a phishing email attempting to steal credentials by impersonating Larkfield's security department.",
+      "cost_usd": 0.00088
+    },
+    {
+      "id": "m10",
+      "expected": "return_refund/high",
+      "got": "return_refund/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Customer has not received a refund for a returned item after three weeks and is threatening chargeback and public reviews.",
+      "cost_usd": 0.000928
+    },
+    {
+      "id": "m11",
+      "expected": "complaint/low",
+      "got": "complaint/low",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Customer is providing feedback about excessive packaging without reporting damage or requesting a refund.",
+      "cost_usd": 0.000833
+    },
+    {
+      "id": "m12",
+      "expected": "spam/low",
+      "got": "spam/low",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "This is a spam email attempting prompt injection by embedding fake system instructions to manipulate the AI assistant's response.",
+      "cost_usd": 0.000887
+    },
+    {
+      "id": "m13",
+      "expected": "product_question/normal",
+      "got": "product_question/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Customer asking about product features and capacity of an electric kettle before purchase.",
+      "cost_usd": 0.000869
+    },
+    {
+      "id": "m14",
+      "expected": "order_status/high",
+      "got": "order_status/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Customer reports order marked as delivered but not received, needs investigation into delivery status.",
+      "cost_usd": 0.000858
+    }
+  ],
+  "drafts": [
+    {
+      "id": "m01",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The policy for damaged goods on arrival clearly allows us to send a free express replacement within 1 business day, and we have stock available.",
+      "cost_usd": 0.002574
+    },
+    {
+      "id": "m02",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The shop data clearly shows the order is waiting for stock and will ship when the product is back in stock on 28 October.",
+      "cost_usd": 0.002485
+    },
+    {
+      "id": "m03",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The item was delivered on 2026-10-12, is within the 30-day return window, and the customer confirms it is unused and in original packaging, so the return policy applies directly.",
+      "cost_usd": 0.002745
+    },
+    {
+      "id": "m04",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The product data directly answers both questions about induction compatibility and oven safety.",
+      "cost_usd": 0.001936
+    },
+    {
+      "id": "m06",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The second charge is a standard authorization hold that the bank will automatically release within 5 business days.",
+      "cost_usd": 0.002977
+    },
+    {
+      "id": "m07",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The tracking shows the delay has been resolved with a confirmed new delivery date, which answers the customer's concern about the status.",
+      "cost_usd": 0.002642
+    },
+    {
+      "id": "m08",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The shop data clearly addresses the product compatibility and bulk order process, including company invoicing.",
+      "cost_usd": 0.002489
+    },
+    {
+      "id": "m10",
+      "expected": "unclear",
+      "got": "unclear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The return was inspected and shows signs of use (limescale), which may disqualify it under the returns policy, but the refund status requires a customer service decision.",
+      "cost_usd": 0.002871
+    },
+    {
+      "id": "m11",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The shop data shows that packaging feedback is welcome and needs no further action, and a policy change to recycled paper is already planned.",
+      "cost_usd": 0.002362
+    },
+    {
+      "id": "m13",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The shop data contains all product specifications needed to answer the customer's questions about temperature settings and capacity.",
+      "cost_usd": 0.002446
+    },
+    {
+      "id": "m14",
+      "expected": "unclear",
+      "got": "unclear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The parcel shows as delivered but the customer hasn't received it; policy requires a carrier claim and team lead approval for early replacement or refund.",
+      "cost_usd": 0.002894
+    }
+  ]
+}

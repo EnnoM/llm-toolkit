@@ -4,6 +4,7 @@ OpenRouter ist OpenAI-kompatibel, daher genügt das openai-SDK mit eigener base_
 Die Kosten berechnet OpenRouter selbst und liefert sie im Feld usage.cost mit.
 """
 
+import time
 from collections.abc import Iterable, Iterator
 
 import openai
@@ -16,6 +17,13 @@ from core.config import get_secret
 
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 DEFAULT_MAX_TOKENS = 1024  # Kostenbremse pro Antwort
+# Ohne eigene Grenze wartet das openai-SDK bis zu 10 Minuten auf eine Antwort. Der längste
+# normale Aufruf (ein missratener Entwurf bis zum Token-Limit) dauert gut 30 Sekunden
+REQUEST_TIMEOUT = 120  # Sekunden
+# „Too many requests“ (429): Das SDK wiederholt selbst zweimal nach weniger als zwei Sekunden.
+# Gemini brauchte am 21.10. und 03.11.2026 länger; danach noch zweimal mit längerer Pause
+RATE_LIMIT_RETRIES = 2
+RATE_LIMIT_PAUSE = 5  # Sekunden, beim zweiten Mal doppelt so lang
 
 Message = dict[str, str]  # {"role": "user", "content": "..."}
 
@@ -110,7 +118,21 @@ def get_client() -> OpenAI:
         raise LLMError(
             "OPENROUTER_API_KEY is missing. Add it to .env or the app secrets."
         )
-    return OpenAI(base_url=OPENROUTER_BASE_URL, api_key=api_key)
+    return OpenAI(
+        base_url=OPENROUTER_BASE_URL, api_key=api_key, timeout=REQUEST_TIMEOUT
+    )
+
+
+def create_completion(client: OpenAI, **kwargs):
+    """chat.completions.create mit längeren Pausen bei 429; Fehler werden zu LLMError."""
+    for attempt in range(RATE_LIMIT_RETRIES + 1):
+        try:
+            return client.chat.completions.create(**kwargs)
+        except openai.OpenAIError as err:
+            rate_limited = getattr(err, "status_code", None) == 429
+            if not rate_limited or attempt == RATE_LIMIT_RETRIES:
+                raise LLMError(explain_error(err)) from err
+            time.sleep(RATE_LIMIT_PAUSE * (attempt + 1))
 
 
 def default_model() -> str:
@@ -133,15 +155,13 @@ def complete(
 ) -> LLMResponse:
     """Schickt die Nachrichten ab und wartet auf die komplette Antwort."""
     client = client or get_client()
-    try:
-        response = client.chat.completions.create(
-            model=model or default_model(),
-            messages=messages,
-            max_tokens=max_tokens,
-            **kwargs,
-        )
-    except openai.OpenAIError as err:
-        raise LLMError(explain_error(err)) from err
+    response = create_completion(
+        client,
+        model=model or default_model(),
+        messages=messages,
+        max_tokens=max_tokens,
+        **kwargs,
+    )
     message = response.choices[0].message
     return LLMResponse(
         text=message.content or "",
@@ -238,14 +258,12 @@ def stream(
     """Wie complete(), liefert die Antwort aber Stück für Stück."""
     client = client or get_client()
     model = model or default_model()
-    try:
-        chunks = client.chat.completions.create(
-            model=model,
-            messages=messages,
-            max_tokens=max_tokens,
-            stream=True,
-            **kwargs,
-        )
-    except openai.OpenAIError as err:
-        raise LLMError(explain_error(err)) from err
+    chunks = create_completion(
+        client,
+        model=model,
+        messages=messages,
+        max_tokens=max_tokens,
+        stream=True,
+        **kwargs,
+    )
     return StreamResponse(chunks, model=model)

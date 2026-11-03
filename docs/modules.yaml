@@ -750,6 +750,11 @@
     - 03.11.2026, Mistral schrieb bei jedem dritten Entwurf nur Leerzeichen bis zum Token-Limit.
       Mit der Bitte um kompaktes JSON (Antwort mit Leerzeilen) 20/20 gültig; Eval danach
       mistral-small-3.2 14/14, 11/11, 0, 0.0020 USD.
+    - 03.11.2026, alle vier Modelle je zwei Läufe (beides / Einschätzung / unbelegte Fakten):
+      claude-haiku-4.5 14/14, 11/11, 0 (0.041 USD); mistral-small-3.2 14/14, 10/11, 0;
+      gemini-2.5-flash-lite 13/14, 11/11, 0 (m12 als return_refund); gpt-4.1-nano 11/14,
+      9/11, einmal 1 (Spam als high, jetzt fest low). App-Weg mit process() für alle 14 Mails
+      bei allen Modellen ohne Fehler, 34 s (nano) bis 70 s (Mistral).
 
 - id: mcp_server
   name: MCP-Server

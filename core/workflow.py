@@ -308,10 +308,15 @@ def classify(
             priority="low",
         ), response.usage
     try:
-        return Classification.model_validate_json(response.text), response.usage
+        classification = Classification.model_validate_json(response.text)
     except ValidationError as err:
         # Mit Structured Outputs selten; dann lieber abbrechen als eine Kategorie raten
         raise LLMError(f"The model returned an invalid classification: {err}") from err
+    if classification.category == "spam":
+        # Feste Regel statt Modellurteil: Spam braucht keine Antwort, also immer low.
+        # gpt-4.1-nano stufte Spam am 03.11.2026 trotz Prompt in jedem Lauf als high ein
+        classification.priority = "low"
+    return classification, response.usage
 
 
 # ------------------------------------------------------------------ Schritt 2: Entwurf

@@ -405,3 +405,14 @@ def test_draft_gives_up_after_three_invalid_answers(store):
         )
     assert len(calls) == 4  # Klassifikation und drei Versuche
     assert store.status("m01").state == "classified"
+
+
+def test_spam_is_always_low_priority(store):
+    # Das Modell sagt high, die feste Regel macht low daraus
+    process(
+        mail_by_id("m05"),
+        store,
+        "test/model",
+        client=fake_client([classification("spam", "high")], []),
+    )
+    assert store.status("m05").classification.priority == "low"

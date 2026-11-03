@@ -7,10 +7,10 @@
     "priority": "12/14",
     "both": "11/14",
     "severe": 0,
-    "assessment": "10/11",
-    "drafts_with_unverified_facts": 0
+    "assessment": "9/11",
+    "drafts_with_unverified_facts": 1
   },
-  "cost_usd": 0.0024856,
+  "cost_usd": 0.002509,
   "results": [
     {
       "id": "m01",
@@ -160,8 +160,8 @@
       "got": "clear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The shop policy states a free replacement is sent within 1 business day for goods damaged on arrival, and the delivery date confirms the item was received recently.",
-      "cost_usd": 0.0001527
+      "reason": "The policy states that a damaged item on arrival is replaced free of charge by express within 1 business day.",
+      "cost_usd": 0.0001517
     },
     {
       "id": "m02",
@@ -169,8 +169,8 @@
       "got": "clear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The shop data indicates the item is out of stock and will be shipped once available, which is on 28 October 2026.",
-      "cost_usd": 0.0001751
+      "reason": "The shop data indicates the product is out of stock and will ship once available, which is on 28 October 2026.",
+      "cost_usd": 0.0001773
     },
     {
       "id": "m03",
@@ -178,8 +178,8 @@
       "got": "clear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The shop policy clearly states the return window, condition, and refund process for unused items.",
-      "cost_usd": 0.0001624
+      "reason": "The shop policy covers returns within 30 days for unused items in original packaging, and the customer is within this period.",
+      "cost_usd": 0.000163
     },
     {
       "id": "m04",
@@ -188,7 +188,7 @@
       "assessment_ok": true,
       "unverified_facts": [],
       "reason": "The shop data confirms the pan works on all hobs including induction and is oven-safe.",
-      "cost_usd": 0.0001378
+      "cost_usd": 0.0001384
     },
     {
       "id": "m06",
@@ -196,8 +196,8 @@
       "got": "clear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The second charge is a pending authorization hold, which will be released automatically by the bank within 5 business days.",
-      "cost_usd": 0.0001614
+      "reason": "The second charge is an authorization hold, not a completed payment, so no refund is needed.",
+      "cost_usd": 0.0001608
     },
     {
       "id": "m07",
@@ -205,26 +205,28 @@
       "got": "unclear",
       "assessment_ok": false,
       "unverified_facts": [],
-      "reason": "The tracking update shows a delay at the hub with a new delivery date of October 28, which is after Thursday.",
-      "cost_usd": 0.0001818
+      "reason": "The tracking shows a delay and a new delivery date, but the customer needs the item by Thursday, which is before the new estimated delivery date.",
+      "cost_usd": 0.0001996
     },
     {
       "id": "m08",
       "expected": "clear",
-      "got": "clear",
-      "assessment_ok": true,
+      "got": "unclear",
+      "assessment_ok": false,
       "unverified_facts": [],
-      "reason": "The shop data confirms the watches work with both iPhone and Android, and that orders of 20 or more units qualify for a quote and invoice.",
-      "cost_usd": 0.0001755
+      "reason": "The shop data indicates a quote for large orders and that invoices are possible, but does not specify discounts.",
+      "cost_usd": 0.0001729
     },
     {
       "id": "m10",
       "expected": "unclear",
       "got": "unclear",
       "assessment_ok": true,
-      "unverified_facts": [],
-      "reason": "The refund is on hold and awaiting a decision by customer service, so the outcome is not yet determined.",
-      "cost_usd": 0.0001622
+      "unverified_facts": [
+        "Return for order 39977 arrived at the warehouse on 2026-10-02"
+      ],
+      "reason": "The refund is on hold and awaiting a decision by customer service, so the situation is not yet resolved.",
+      "cost_usd": 0.0001628
     },
     {
       "id": "m11",
@@ -232,8 +234,8 @@
       "got": "clear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The shop has already announced a change to more sustainable packaging and welcomes feedback, so no further action is needed.",
-      "cost_usd": 0.0001375
+      "reason": "The shop policy states that packaging will be changed to recycled paper, and customer feedback is welcomed.",
+      "cost_usd": 0.0001429
     },
     {
       "id": "m13",
@@ -241,8 +243,8 @@
       "got": "clear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The product information clearly states the temperature settings and capacity.",
-      "cost_usd": 0.0001474
+      "reason": "The product details include temperature settings and capacity, directly answering the questions.",
+      "cost_usd": 0.0001464
     },
     {
       "id": "m14",
@@ -250,8 +252,8 @@
       "got": "unclear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The delivery was left at the front door with permission, but the customer reports not receiving it, and no photo of the delivery is available.",
-      "cost_usd": 0.0001727
+      "reason": "The tracking shows delivery but the customer reports not receiving the parcel, and no photo of the delivery is available.",
+      "cost_usd": 0.0001741
     }
   ]
 }

@@ -7,10 +7,10 @@
     "priority": "14/14",
     "both": "14/14",
     "severe": 0,
-    "assessment": "11/11",
+    "assessment": "10/11",
     "drafts_with_unverified_facts": 0
   },
-  "cost_usd": 0.0019957525,
+  "cost_usd": 0.00193825625,
   "results": [
     {
       "id": "m01",
@@ -19,8 +19,8 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "The customer reports a damaged product with a deadline in a few days.",
-      "cost_usd": 3.74e-05
+      "reason": "The customer's blender arrived damaged and they need a replacement urgently for a specific event.",
+      "cost_usd": 3.82e-05
     },
     {
       "id": "m02",
@@ -29,8 +29,8 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "The customer is asking for an update on the status of their order, specifically when it will ship, without any urgency or pressure.",
-      "cost_usd": 3.7725e-05
+      "reason": "The customer is asking about the status of their order, specifically when it will ship, without any urgency or pressure.",
+      "cost_usd": 3.7125e-05
     },
     {
       "id": "m03",
@@ -49,8 +49,8 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "The customer is asking about product features before making a purchase.",
-      "cost_usd": 3.3825e-05
+      "reason": "The customer is asking about product features before buying, which could influence their decision.",
+      "cost_usd": 3.4625e-05
     },
     {
       "id": "m05",
@@ -59,8 +59,8 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "The email is from an unknown sender and claims the recipient has won a prize, which is a common phishing tactic.",
-      "cost_usd": 3.79e-05
+      "reason": "The email is from an unknown sender and claims the recipient has won a prize, which is a common characteristic of phishing or spam emails.",
+      "cost_usd": 3.87e-05
     },
     {
       "id": "m06",
@@ -79,8 +79,8 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "Customer is worried because a gift is needed by Thursday and the order has not arrived or been tracked in four days.",
-      "cost_usd": 5.199e-05
+      "reason": "The customer is worried because a gift is needed by Thursday and the order has not arrived or been tracked in four days.",
+      "cost_usd": 3.8525e-05
     },
     {
       "id": "m08",
@@ -89,7 +89,7 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "This is a business inquiry about product compatibility, discounts, and invoicing for a bulk order of 25 smartwatches.",
+      "reason": "The email is a business inquiry about product compatibility, discounts, and invoicing for a bulk order of 25 smartwatches.",
       "cost_usd": 3.965e-05
     },
     {
@@ -99,8 +99,8 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "This is a phishing attempt to get login credentials, not a real customer email.",
-      "cost_usd": 4.496875e-05
+      "reason": "This email is a phishing attempt, trying to get login credentials by pretending to be from Larkfield's security department.",
+      "cost_usd": 4.721875e-05
     },
     {
       "id": "m10",
@@ -110,7 +110,7 @@
       "priority_ok": true,
       "severe": false,
       "reason": "The customer is threatening to escalate the issue to their bank and leave negative reviews if they do not receive a refund for a returned item within a specified deadline.",
-      "cost_usd": 5.21875e-05
+      "cost_usd": 4.175e-05
     },
     {
       "id": "m11",
@@ -119,7 +119,7 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "The customer is expressing concern about excessive packaging for a small item, without any damage or urgency mentioned.",
+      "reason": "The customer is expressing concern about excessive packaging for a small item, without any damage or deadline mentioned.",
       "cost_usd": 3.6125e-05
     },
     {
@@ -129,8 +129,8 @@
       "category_ok": true,
       "priority_ok": true,
       "severe": false,
-      "reason": "The email is from a non-customer address and contains instructions to the AI assistant, which makes it spam.",
-      "cost_usd": 3.8625e-05
+      "reason": "The email is from a non-customer address and tries to give instructions to an AI assistant, which is a sign of prompt injection.",
+      "cost_usd": 3.9625e-05
     },
     {
       "id": "m13",
@@ -160,8 +160,8 @@
       "got": "clear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The policy for damaged goods gives one obvious answer.",
-      "cost_usd": 0.00015096875
+      "reason": "The policy for damaged goods applies and allows for a replacement within 1 business day.",
+      "cost_usd": 0.000122575
     },
     {
       "id": "m02",
@@ -170,7 +170,7 @@
       "assessment_ok": true,
       "unverified_facts": [],
       "reason": "The shop data gives one obvious answer.",
-      "cost_usd": 0.000118575
+      "cost_usd": 0.000115175
     },
     {
       "id": "m03",
@@ -179,7 +179,7 @@
       "assessment_ok": true,
       "unverified_facts": [],
       "reason": "The shop data and the policies give one obvious answer.",
-      "cost_usd": 0.000132925
+      "cost_usd": 0.000133925
     },
     {
       "id": "m04",
@@ -187,8 +187,8 @@
       "got": "clear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The shop data contains all the information needed to answer the customer's questions.",
-      "cost_usd": 0.00011175
+      "reason": "The shop data gives a clear answer to the customer's question.",
+      "cost_usd": 0.00011125
     },
     {
       "id": "m06",
@@ -196,17 +196,17 @@
       "got": "clear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The shop data shows that the second charge is a card authorization hold, which is released automatically by the bank. The policy says that customer service cannot release it earlier.",
-      "cost_usd": 0.0001469
+      "reason": "The shop data shows that the second charge is an authorization hold that the bank will release automatically.",
+      "cost_usd": 0.0001389
     },
     {
       "id": "m07",
       "expected": "clear",
-      "got": "clear",
-      "assessment_ok": true,
+      "got": "unclear",
+      "assessment_ok": false,
       "unverified_facts": [],
-      "reason": "The carrier note says the delay is resolved and gives a new delivery date.",
-      "cost_usd": 0.000141375
+      "reason": "The data shows a delay, but no missing parcel.",
+      "cost_usd": 0.000147575
     },
     {
       "id": "m08",
@@ -214,8 +214,8 @@
       "got": "clear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "the policies give one obvious answer.",
-      "cost_usd": 0.00010845
+      "reason": "The shop data and the policies give one obvious answer.",
+      "cost_usd": 0.00010905
     },
     {
       "id": "m10",
@@ -223,8 +223,8 @@
       "got": "unclear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The refund is on hold because the kettle was used, which contradicts the return policy.",
-      "cost_usd": 0.000156025
+      "reason": "The policy says the refund goes to the original payment method within 5 business days after the return has arrived and passed inspection, but the refund is on hold, waiting for a decision by customer service.",
+      "cost_usd": 0.000157025
     },
     {
       "id": "m11",
@@ -232,8 +232,8 @@
       "got": "clear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The policy on packaging is clear and provides a direct response to the customer's feedback.",
-      "cost_usd": 0.0001258125
+      "reason": "The policy explicitly addresses the customer's complaint and promises a change in the future.",
+      "cost_usd": 0.0001230625
     },
     {
       "id": "m13",
@@ -241,8 +241,8 @@
       "got": "clear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The shop data gives all the information about the product.",
-      "cost_usd": 0.0001003
+      "reason": "The shop data contains all the information needed to answer the question.",
+      "cost_usd": 0.0001001
     },
     {
       "id": "m14",
@@ -250,8 +250,8 @@
       "got": "unclear",
       "assessment_ok": true,
       "unverified_facts": [],
-      "reason": "The policy says a team lead's approval is needed for a replacement or refund before the claim is decided.",
-      "cost_usd": 0.000145575
+      "reason": "The data shows the parcel was left at the front door, but the customer did not find it.",
+      "cost_usd": 0.000141375
     }
   ]
 }

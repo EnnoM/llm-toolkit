@@ -844,6 +844,20 @@ Dazu kleinere Dinge: Beispiele im Tool Use linksbündig (zentrierter Umbruch), M
 Tabelle gleich aufgeklappt, RAG-Hinweis ohne „Load…“, sobald Dokumente geladen sind, und die
 linke Spalte im Chat kompakter, damit der Temperatur-Regler bei 860 px Höhe sichtbar bleibt.
 
+## Approval Workflow mit allen vier Modellen (03.11.2026)
+
+Frage von Enno: Ist der Workflow nur auf Gemini abgestimmt? Nein. Eval je zweimal und der
+App-Weg (`process()` für alle 14 Mails) mit jedem Modell, alles ohne Abbruch. Einordnung /
+Einschätzung: claude-haiku-4.5 14/14, 11/11; mistral-small-3.2 14/14, 10/11;
+gemini-2.5-flash-lite 13/14, 11/11 (m12 als return_refund); gpt-4.1-nano 11/14, 9/11.
+Paul Fischer (m14) und Daniel Roth (m10) waren bei allen Modellen „unclear“.
+
+Echte Lücke dabei: Der Eval wiederholte Anfragen bei 429, die App nicht. Das openai-SDK
+wiederholt nur zweimal nach weniger als zwei Sekunden, bei Gemini zu kurz, und wartet sonst
+bis zu zehn Minuten auf eine Antwort. Jetzt in `core/llm.py` für alle Module: Timeout 120 s,
+bei 429 zwei weitere Versuche nach 5 und 10 s. Spam ist außerdem fest „low“, statt dem Modell
+zu vertrauen (nano sagte in jedem Lauf „high“).
+
 ## Offene Punkte
 
 - Nächstes Modul: MCP-Server (Phase 4).

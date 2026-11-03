@@ -1,0 +1,257 @@
+{
+  "date": "2026-11-03",
+  "model": "openai/gpt-4.1-nano",
+  "run": 2,
+  "summary": {
+    "category": "13/14",
+    "priority": "12/14",
+    "both": "11/14",
+    "severe": 0,
+    "assessment": "9/11",
+    "drafts_with_unverified_facts": 0
+  },
+  "cost_usd": 0.00243852,
+  "results": [
+    {
+      "id": "m01",
+      "expected": "complaint/high",
+      "got": "return_refund/high",
+      "category_ok": false,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer received a damaged item and needs a replacement quickly.",
+      "cost_usd": 5.71e-05
+    },
+    {
+      "id": "m02",
+      "expected": "order_status/normal",
+      "got": "order_status/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is inquiring about the shipping status of their order.",
+      "cost_usd": 5.49e-05
+    },
+    {
+      "id": "m03",
+      "expected": "return_refund/normal",
+      "got": "return_refund/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer wants to return unused headphones and inquire about the refund process.",
+      "cost_usd": 5.64e-05
+    },
+    {
+      "id": "m04",
+      "expected": "product_question/normal",
+      "got": "product_question/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is asking about product compatibility and safety.",
+      "cost_usd": 5.19e-05
+    },
+    {
+      "id": "m05",
+      "expected": "spam/low",
+      "got": "spam/high",
+      "category_ok": true,
+      "priority_ok": false,
+      "severe": false,
+      "reason": "This appears to be a phishing attempt or spam email.",
+      "cost_usd": 5.47e-05
+    },
+    {
+      "id": "m06",
+      "expected": "return_refund/high",
+      "got": "return_refund/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Customer was charged twice for a single order and requests a refund.",
+      "cost_usd": 5.52e-05
+    },
+    {
+      "id": "m07",
+      "expected": "order_status/high",
+      "got": "order_status/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is concerned about a delayed delivery for a gift.",
+      "cost_usd": 5.59e-05
+    },
+    {
+      "id": "m08",
+      "expected": "product_question/normal",
+      "got": "product_question/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is inquiring about product compatibility, discounts, and invoicing for a bulk order.",
+      "cost_usd": 5.92e-05
+    },
+    {
+      "id": "m09",
+      "expected": "spam/low",
+      "got": "spam/high",
+      "category_ok": true,
+      "priority_ok": false,
+      "severe": false,
+      "reason": "The email is a phishing attempt asking for login credentials.",
+      "cost_usd": 5.46e-05
+    },
+    {
+      "id": "m10",
+      "expected": "return_refund/high",
+      "got": "return_refund/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "Customer has not received a refund after returning an item.",
+      "cost_usd": 5.75e-05
+    },
+    {
+      "id": "m11",
+      "expected": "complaint/low",
+      "got": "complaint/low",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is providing feedback about packaging waste.",
+      "cost_usd": 5.27e-05
+    },
+    {
+      "id": "m12",
+      "expected": "spam/low",
+      "got": "spam/low",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The model refused to classify this email (I'm sorry, but I cannot assist with that request.).",
+      "cost_usd": 0.0
+    },
+    {
+      "id": "m13",
+      "expected": "product_question/normal",
+      "got": "product_question/normal",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer is asking about product features before purchasing.",
+      "cost_usd": 5.29e-05
+    },
+    {
+      "id": "m14",
+      "expected": "order_status/high",
+      "got": "order_status/high",
+      "category_ok": true,
+      "priority_ok": true,
+      "severe": false,
+      "reason": "The customer reports a missing delivery despite tracking indicating it was delivered.",
+      "cost_usd": 5.61e-05
+    }
+  ],
+  "drafts": [
+    {
+      "id": "m01",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The policy states a free replacement is sent within 1 business day for goods damaged on arrival, and the delivery was recent.",
+      "cost_usd": 0.0001517
+    },
+    {
+      "id": "m02",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The shop data indicates the product is out of stock and will ship once back in stock on October 28, 2026.",
+      "cost_usd": 0.0001801
+    },
+    {
+      "id": "m03",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The shop policy covers returns within 30 days for unused items in original packaging, and the customer is within this period.",
+      "cost_usd": 0.0001674
+    },
+    {
+      "id": "m04",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The product details explicitly state it works on all hobs including induction and is oven-safe.",
+      "cost_usd": 0.0001372
+    },
+    {
+      "id": "m06",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The second charge is an authorization hold, not a completed payment, so no refund is needed.",
+      "cost_usd": 8.832e-05
+    },
+    {
+      "id": "m07",
+      "expected": "clear",
+      "got": "unclear",
+      "assessment_ok": false,
+      "unverified_facts": [],
+      "reason": "The tracking update shows a delay and a new delivery date of October 28, which is after Thursday.",
+      "cost_usd": 0.0001932
+    },
+    {
+      "id": "m08",
+      "expected": "clear",
+      "got": "unclear",
+      "assessment_ok": false,
+      "unverified_facts": [],
+      "reason": "The shop data indicates a quote for large orders and invoices are possible, but does not specify discounts.",
+      "cost_usd": 0.0001709
+    },
+    {
+      "id": "m10",
+      "expected": "unclear",
+      "got": "unclear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The refund is on hold and awaiting a decision by customer service, so the outcome is not yet determined.",
+      "cost_usd": 0.0001668
+    },
+    {
+      "id": "m11",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The shop policy states that packaging will be with recycled paper and customer feedback is welcome, so no further action is needed.",
+      "cost_usd": 0.0001445
+    },
+    {
+      "id": "m13",
+      "expected": "clear",
+      "got": "clear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The product details include temperature settings and capacity, directly answering the questions.",
+      "cost_usd": 0.0001456
+    },
+    {
+      "id": "m14",
+      "expected": "unclear",
+      "got": "unclear",
+      "assessment_ok": true,
+      "unverified_facts": [],
+      "reason": "The tracking shows delivery but the customer reports not receiving the parcel, and no photo of the delivery is available.",
+      "cost_usd": 0.0001737
+    }
+  ]
+}
