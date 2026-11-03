@@ -801,6 +801,14 @@ Neues Standardmodell in allen Modulen und Evals ist gpt-4.1-nano, gleicher Preis
 $0.40 out). Nachteil: In der Tool-Use-Eval war nano das schwächste der drei günstigen Modelle
 (7/12 gegen 9/12 bei gemini). Online gilt der Wert `OPENROUTER_MODEL` in den Secrets der App.
 
+Erster Lauf online mit nano: Bei der Mail mit Prompt Injection lieferte nano statt JSON nur
+„I'm sorry, but I cannot assist with that request.“, und „Process all“ brach ab. Eine Weigerung
+beim Klassifizieren zählt jetzt als Spam (niedrige Priorität, Grund im Protokoll). Dieselbe
+Seite zeigte einmal „TypeError: Importing a module script failed“ in der Mailliste: Der offene
+Tab lud nach dem Deploy Skripte einer anderen Streamlit-Version. Neu laden hilft;
+`streamlit==1.64.0` ist jetzt fest, damit ein Deploy die Version nicht wechselt. Die
+Modellauswahl ist jetzt `st.pills` (vier getrennte Buttons) statt `st.segmented_control`.
+
 ## Offene Punkte
 
 - Nächstes Modul: MCP-Server (Phase 4).

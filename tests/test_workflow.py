@@ -129,6 +129,23 @@ def test_invalid_classification_is_rejected(store):
     assert store.status("m01").state == "new"  # nichts protokolliert
 
 
+def test_refusal_counts_as_spam(store):
+    # gpt-4.1-nano weigerte sich bei der Mail mit Prompt Injection, statt JSON zu liefern
+    calls = []
+    process(
+        mail_by_id("m05"),
+        store,
+        "test/model",
+        client=fake_client(
+            ["I'm sorry, but I cannot assist with that request."], calls
+        ),
+    )
+    status = store.status("m05")
+    assert status.classification.category == "spam"
+    assert "refused" in status.classification.reason
+    assert len(calls) == 1  # kein Entwurf
+
+
 def test_a_mail_is_not_processed_twice(store):
     drafted(store)
     with pytest.raises(WorkflowError):

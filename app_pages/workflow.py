@@ -170,7 +170,9 @@ with model_box.container(border=True, height="stretch"):
     st.markdown("**Model**")
     default_model = get_secret("OPENROUTER_MODEL")
     options = model_options(default_model)  # nach Preis sortiert, günstigstes zuerst
-    model = st.segmented_control(
+    # Pills statt segmented_control: vier getrennte, abgerundete Buttons statt einer Leiste,
+    # die bei schmalem Fenster an beliebiger Stelle umbricht
+    model = st.pills(
         "Model",
         options,
         default=default_model if default_model in options else options[0],
@@ -181,6 +183,7 @@ with model_box.container(border=True, height="stretch"):
         ),
         key="workflow_model",
         label_visibility="collapsed",
+        wrap=True,
     )
     st.caption(
         "USD per million input / output tokens. The model sorts the emails and writes "

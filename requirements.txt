@@ -1,4 +1,4 @@
-streamlit>=1.64
+streamlit==1.64.0  # fest: ein Versionswechsel beim Deploy lässt offene Tabs alte Skripte laden
 openai>=3.15
 python-dotenv>=1.2
 pydantic>=2.13

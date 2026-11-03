@@ -289,6 +289,15 @@ def classify(
         extra_body=PROVIDER_PREFERENCES,
         client=client,
     )
+    if not response.text.lstrip().startswith("{"):
+        # Kein JSON, sondern eine Weigerung („I'm sorry, but I cannot assist …“): gpt-4.1-nano
+        # antwortete so am 03.11.2026 auf die Mail mit Prompt Injection. Wer das Modell zum
+        # Verweigern bringt, ist kein normaler Kunde; also Spam, ein Mensch kann ihn öffnen
+        return Classification(
+            reason=f"The model refused to classify this email: {response.text.strip()}",
+            category="spam",
+            priority="low",
+        ), response.usage
     try:
         return Classification.model_validate_json(response.text), response.usage
     except ValidationError as err:
