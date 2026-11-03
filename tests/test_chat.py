@@ -135,7 +135,7 @@ def test_clearing_the_chat_resets_history_and_cost(monkeypatch):
     monkeypatch.setattr(core.llm, "get_client", lambda: fake_client([]))
     at = open_chat()
     at.chat_input[0].set_value("Hallo").run()
-    next(b for b in at.button if b.label == "Clear chat").click().run()
+    next(b for b in at.button if b.label == "Clear").click().run()
 
     assert at.session_state["chat_history"] == []
     assert metric(at, "Cost (USD)") == "0.000000"

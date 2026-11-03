@@ -33,6 +33,6 @@ def test_model_options_are_sorted_by_price():
         options[0] == "mistralai/mistral-small-3.2-24b-instruct"
     )  # günstigstes zuerst
     # Das Standardmodell ändert die Reihenfolge nicht, es wird nur vorausgewählt
-    assert model_options("openai/gpt-4.1-nano") == options
+    assert model_options("mistralai/mistral-small-3.2-24b-instruct") == options
     # Ein unbekanntes Standardmodell (ohne Preis) kommt ans Ende
     assert model_options("anderes/modell") == [*options, "anderes/modell"]

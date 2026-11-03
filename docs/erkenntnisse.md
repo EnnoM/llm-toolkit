@@ -811,6 +811,27 @@ Tab lud nach dem Deploy Skripte einer anderen Streamlit-Version. Neu laden hilft
 `streamlit==1.64.0` ist jetzt fest, damit ein Deploy die Version nicht wechselt. Die
 Modellauswahl ist jetzt `st.pills` (vier getrennte Buttons) statt `st.segmented_control`.
 
+## Prüfung vor der Vorführung, Mistral als Standard (03.11.2026)
+
+Alle acht Module mit einem echten Beispiel in Laptopgröße (1512 × 860) durchgespielt und die
+vier Evals mit nano und Mistral laufen lassen. Mistral war überall mindestens so gut und ist
+günstiger (Workflow 14/14 gegen 11/14, RAG 9/10 gegen 6/10, Tool Use 10/12 gegen 8/12, Analyst
+beide 5/5), deshalb ist es jetzt das Standardmodell. Der Wechsel auf nano am Morgen war nur
+wegen der Ausfälle von Gemini; gemessen hatte ich vorher nicht.
+
+Gefunden:
+- Englische Fragen zu den deutschen PDFs gehen schief: Die vorgeschlagene Schwaben-Frage
+  beantworteten nano („Augsburg“) und Mistral (Liste von Mittelzentren) falsch, nano hielt
+  Solarparks in Vorranggebieten für erlaubt. Beispielfragen dort jetzt deutsch.
+- Im Tool Use antwortete Mistral auf „Ab welcher Größe …“ ohne Werkzeug und erfand
+  „50 Hektar“. Mit „Laut den bayerischen Planungsdokumenten: …“ sucht es in den Dokumenten.
+- Die Kennzahlen-Spalte der Chat-Seiten passte bei 860 px Höhe nicht ins Fenster und scrollte
+  unsichtbar; „Clear chat“ war nicht zu sehen. Jetzt steht „Clear“ neben der Überschrift, und
+  die Kennzahlen sind kompakter (24 px, 8 px Abstand).
+- Online blieb die Seite nach einem Push eine Weile weiß: Health-Check erst 500, dann ok,
+  danach luden einzelne Skripte nicht. Streamlit meldete keine Störung; ohne Zugriff auf die
+  Logs ungeklärt. Für Vorführungen die Seite vorher öffnen.
+
 ## Offene Punkte
 
 - Nächstes Modul: MCP-Server (Phase 4).

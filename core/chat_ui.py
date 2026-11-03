@@ -21,6 +21,22 @@ def load_chat_css() -> None:
     st.html(CHAT_CSS)
 
 
+def session_header() -> bool:
+    """Überschrift „Session“ mit Button „Clear“ in derselben Zeile; True, wenn geklickt.
+
+    In einer Zeile statt unter den Kennzahlen: Bei Laptophöhe passt die Spalte sonst nicht
+    ganz ins Fenster, und der Button verschwand unten im unsichtbaren Scrollbereich.
+    """
+    row = st.container(
+        horizontal=True, horizontal_alignment="distribute", vertical_alignment="center"
+    )
+    row.markdown("##### Session")
+    # „Clear“ statt „Clear chat“: Mit dem längeren Text passt die Zeile nicht in die Spalte
+    return row.button(
+        "Clear", icon=":material/delete:", type="tertiary", help="Clear chat"
+    )
+
+
 def show_question(text: str) -> None:
     """Frage als gefüllte, rechts eingerückte Box (st.info ohne Icon), wie in Claude Code."""
     _, box = st.columns([1, 5])

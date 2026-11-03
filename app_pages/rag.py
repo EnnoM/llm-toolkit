@@ -10,7 +10,13 @@ geladen sind, danach zu, damit der Chat Platz hat.
 
 import streamlit as st
 
-from core.chat_ui import load_chat_css, scroll_chat_to_bottom, show_meta, show_question
+from core.chat_ui import (
+    load_chat_css,
+    scroll_chat_to_bottom,
+    session_header,
+    show_meta,
+    show_question,
+)
 from core.config import get_secret
 from core.llm import DEFAULT_MAX_TOKENS, LLMError, Usage, stream
 from core.models import format_cost, model_name, model_options, model_price
@@ -269,11 +275,10 @@ with main.expander(
         index_status = st.empty()
 
 with stats.container(key="chat_stats"):
-    st.markdown("##### Session")
-    summary = st.empty()  # nach einer neuen Antwort erneut gefüllt
     # Setzt den Verlauf zurück; Dokumente und Embeddings bleiben
-    if st.button("Clear chat", icon=":material/delete:"):
+    if session_header():
         history.clear()
+    summary = st.empty()  # nach einer neuen Antwort erneut gefüllt
     # Unsichtbarer Platzhalter für das Skript aus scroll_chat_to_bottom
     scroll_trigger = st.empty()
 
@@ -360,7 +365,9 @@ with messages:
     if not history and not prompt:
         st.caption(
             "Load the example documents or upload a PDF above, then ask a question "
-            "below, for example: Which towns are regional centres (Oberzentren)?"
+            "below. The example documents are German, so German questions work best, "
+            "for example: Ab welcher Größe kommen zusammenhängende Flächen als "
+            "Vorranggebiet für die Landwirtschaft in Frage?"
         )
     for turn in history:
         if turn.role == "user":

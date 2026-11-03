@@ -24,7 +24,7 @@ from core.llm import LLMError
 EVAL_DIR = Path(__file__).resolve().parent.parent / "eval"
 QUESTIONS_FILE = EVAL_DIR / "analyst_questions.yaml"
 RESULTS_DIR = EVAL_DIR / "results"
-DEFAULT_MODEL = "openai/gpt-4.1-nano"
+DEFAULT_MODEL = "mistralai/mistral-small-3.2-24b-instruct"
 
 
 class AnalystQuestion(BaseModel):

@@ -50,7 +50,7 @@
       und Antwort springt der Verlauf ans Ende, ein runder Pfeil zeigt, wenn weiter unten noch
       etwas kommt; die Eingabezeile „Message the model“ sitzt fest am unteren Bildschirmrand
     - **Rechts (Session):** Kosten in USD, Tokens in (mit Hilfetext, warum sie wachsen), Tokens
-      out, Tokens total, Anzahl Responses, Button „Clear chat“
+      out, Tokens total, Anzahl Responses, Button „Clear“
   lernziele:
     - "Chat-Completions-API mit den Rollen system, user und assistant: das Grundmuster, auf dem alle weiteren Module aufbauen"
     - "Streaming mit st.write_stream: Antworten wirken schneller, weil die ersten Wörter sofort erscheinen"
@@ -60,7 +60,7 @@
   akzeptanz:
     - "Die ersten Wörter einer Antwort sind sichtbar, bevor die Antwort vollständig ist"
     - "Unter jeder Antwort stehen Eingabetokens, Ausgabetokens und Kosten in USD aus dem usage-Feld von OpenRouter"
-    - "Die Sitzungskosten entsprechen der Summe der Einzelkosten und stehen nach „Clear chat“ wieder auf 0"
+    - "Die Sitzungskosten entsprechen der Summe der Einzelkosten und stehen nach „Clear“ wieder auf 0"
     - "Mit dem System-Prompt „Answer only in German.“ kommt die nächste Antwort auf Deutsch, auch bei englischer Frage"
     - "Fehlt der API-Key, erscheint eine verständliche Fehlermeldung statt eines Tracebacks"
   arbeitsstand: "abgeschlossen"

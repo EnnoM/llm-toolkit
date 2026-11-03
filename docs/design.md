@@ -14,6 +14,9 @@ neben `app.py`, das im Passwortfeld das zweite Auge des Browsers und den Enter-H
   Beispielfragen, Standard-Prompts und alle Meldungen, auch Fehlermeldungen aus `core/`, die im
   Modul erscheinen.
 - Zahlen im Modul im englischen Format mit Dezimalpunkt (`0.000040 USD`).
+- Ausnahme: Beispielfragen zu den deutschen Beispiel-PDFs (RAG Chatbot, Dokumentsuche im Tool
+  Use) sind deutsch. Englische Fragen finden dort die falschen Abschnitte, die Antworten waren
+  am 03.11.2026 mit nano und Mistral falsch.
 - **Auf Deutsch bleiben:** die interne Seite „Start“ (Arbeits-Checkliste, nur lokal), `docs/modules.yaml` und
   Code-Kommentare. In `docs/modules.yaml` stehen Beschriftungen der Oberfläche trotzdem so,
   wie sie im Modul erscheinen, also englisch (z. B. Button „Clear chat“).

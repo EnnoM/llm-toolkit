@@ -59,7 +59,13 @@
 
   /* Kennzahlen etwas kleiner (Streamlit: 36 px), damit die Session-Spalte ohne Scrollen passt */
   .st-key-chat_stats [data-testid="stMetricValue"] {
-    font-size: 28px;
+    font-size: 24px;
+  }
+
+  /* Weniger Abstand zwischen den Kennzahlen (Streamlit: 16 px). Tool Use hat sechs davon,
+     mit den üblichen Abständen passt die Spalte bei Laptophöhe (860 px) nicht ins Fenster. */
+  .st-key-chat_stats [data-testid="stVerticalBlock"] {
+    gap: 8px;
   }
 
   /* Elemente darin nicht zusammenquetschen, lieber scrollen */

@@ -6,7 +6,13 @@ Layout nach docs/design.md: Einstellungen | Chat | Kennzahlen im Verhältnis 1:2
 import streamlit as st
 
 from core.chat import DEFAULT_SYSTEM_PROMPT, ChatTurn, build_messages, session_usage
-from core.chat_ui import load_chat_css, scroll_chat_to_bottom, show_meta, show_question
+from core.chat_ui import (
+    load_chat_css,
+    scroll_chat_to_bottom,
+    session_header,
+    show_meta,
+    show_question,
+)
 from core.config import get_secret
 from core.llm import DEFAULT_MAX_TOKENS, LLMError, stream
 from core.models import (
@@ -66,11 +72,10 @@ with settings.container(key="chat_settings"):
         ),
     )
 with stats.container(key="chat_stats"):
-    st.markdown("##### Session")
-    summary = st.empty()  # nach einer neuen Antwort erneut gefüllt
-    # Setzt Verlauf und alle Zahlen dieser Spalte zurück, deshalb steht der Button hier
-    if st.button("Clear chat", icon=":material/delete:"):
+    # Setzt Verlauf und alle Zahlen dieser Spalte zurück
+    if session_header():
         history.clear()
+    summary = st.empty()  # nach einer neuen Antwort erneut gefüllt
     # Unsichtbarer Platzhalter für das Skript aus scroll_chat_to_bottom (core/chat_ui.py)
     scroll_trigger = st.empty()
 

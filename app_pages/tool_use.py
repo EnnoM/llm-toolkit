@@ -12,7 +12,13 @@ import json
 
 import streamlit as st
 
-from core.chat_ui import load_chat_css, scroll_chat_to_bottom, show_meta, show_question
+from core.chat_ui import (
+    load_chat_css,
+    scroll_chat_to_bottom,
+    session_header,
+    show_meta,
+    show_question,
+)
 from core.config import get_secret
 from core.llm import LLMError, Usage
 from core.models import format_cost, model_name, model_options, model_price
@@ -25,7 +31,13 @@ EXAMPLES = [
     "What is 17 percent of 2,340 euros?",
     "What is the latest Python release?",
     "How many days are left until Christmas Eve?",
-    "Which towns in Swabia are regional centres (Oberzentren)?",
+    # Deutsch, weil die Dokumente deutsch sind: Englische Fragen fanden am 03.11.2026 die
+    # falschen Abschnitte (Schwaben-Frage mit nano und Mistral falsch beantwortet). Ohne den
+    # Verweis auf die Dokumente antwortete Mistral ohne Werkzeug und erfand „50 Hektar“
+    (
+        "Laut den bayerischen Planungsdokumenten: Ab welcher Größe kommen Flächen als "
+        "Vorranggebiet für die Landwirtschaft in Frage?"
+    ),
     "Explain photosynthesis in two sentences.",
 ]
 
@@ -108,10 +120,9 @@ with settings.container(key="chat_settings"):
     )
 
 with stats.container(key="chat_stats"):
-    st.markdown("##### Session")
-    summary = st.empty()  # nach einer neuen Antwort erneut gefüllt
-    if st.button("Clear chat", icon=":material/delete:"):
+    if session_header():
         history.clear()
+    summary = st.empty()  # nach einer neuen Antwort erneut gefüllt
     # Unsichtbarer Platzhalter für das Skript aus scroll_chat_to_bottom
     scroll_trigger = st.empty()
 
