@@ -858,6 +858,17 @@ bis zu zehn Minuten auf eine Antwort. Jetzt in `core/llm.py` für alle Module: T
 bei 429 zwei weitere Versuche nach 5 und 10 s. Spam ist außerdem fest „low“, statt dem Modell
 zu vertrauen (nano sagte in jedem Lauf „high“).
 
+## Online-Abstürze: MCP-Server erst auf Knopfdruck (04.11.2026)
+
+Seit dem 03.11. blieb die Online-Seite mehrmals minutenlang weiß; selbst der Health-Check von
+Streamlit antwortete nicht, danach lief die App wieder (Muster eines Neustarts). Logs von
+Streamlit Cloud standen mir nicht zur Verfügung. Lokal gemessen: App mit allen Seiten rund
+270 MB, der Serverprozess der MCP-Seite noch einmal rund 250 bis 300 MB, weil er Datenbank,
+pandas und Dokumentsuche selbst lädt. Er startete bei jedem Besuch der Seite und lief danach
+für immer weiter. Community Cloud garantiert nur etwa 690 MB und wenig CPU. Jetzt startet der
+Server erst mit „Start the server“ und beendet sich nach fünf Minuten ohne Aufruf
+(`IDLE_TIMEOUT` in `core/mcp_client.py`); danach verbindet die Seite neu.
+
 ## Offene Punkte
 
 - Nächstes Modul: MCP-Server (Phase 4).

@@ -47,9 +47,18 @@ CLAUDE_CONFIG = {
 
 
 @st.cache_resource(show_spinner="Starting the MCP server …")
-def get_connection() -> McpConnection:
-    """Ein Serverprozess für die ganze App; er bleibt offen, Aufrufe laufen nacheinander."""
+def start_connection() -> McpConnection:
+    """Ein Serverprozess für die ganze App; Aufrufe laufen nacheinander."""
     return McpConnection()
+
+
+def get_connection() -> McpConnection:
+    """Die laufende Verbindung; hat sich der Server im Leerlauf beendet, eine neue."""
+    connection = start_connection()
+    if connection.closed:
+        start_connection.clear()
+        connection = start_connection()
+    return connection
 
 
 def show_messages(messages: list[Message], title: str) -> None:
@@ -112,8 +121,49 @@ def show_result(tool_name: str, result) -> None:
         )
 
 
+def show_claude_desktop() -> None:
+    """Anleitung für Claude Desktop; steht auch da, solange der Server nicht läuft."""
+    with st.container(border=True):
+        st.markdown("**Connect to Claude Desktop**")
+        st.caption(
+            "The same server works in Claude Desktop and other MCP apps. It runs on your own "
+            "computer; this hosted page cannot offer it to other apps."
+        )
+        steps, config = st.columns([1, 1], gap="large")
+        with steps:
+            st.markdown(
+                "1. Clone the project and install it: `pip install -r requirements.txt`.\n"
+                "2. In Claude Desktop open **Settings → Developer → Edit Config** and add the "
+                "configuration on the right to `claude_desktop_config.json`. Replace "
+                "`/path/to/llm-toolkit` with the folder of your copy.\n"
+                "3. Restart Claude Desktop. The four tools appear in the tools menu. Ask for "
+                'example *"Which sales channel had the most orders?"* and allow the tool call.'
+            )
+        config.code(
+            json.dumps(CLAUDE_CONFIG, indent=2), language="json", wrap_lines=True
+        )
+
+
 st.title("MCP Server")
 show_intro("mcp_server")
+
+# Der Server ist ein eigener Prozess mit rund 250 MB. Er startet erst auf Knopfdruck, damit er
+# online nicht bei jedem Besuch der Seite Speicher belegt (Details in core/mcp_client.py)
+if not st.session_state.get("mcp_started"):
+    with st.container(border=True):
+        st.markdown(
+            "**Server `llm-toolkit`** :gray-badge[stdio] :gray-badge[read-only]"
+        )
+        st.caption(
+            "This page acts as the AI app. It starts the MCP server as a separate process, "
+            "says hello (initialize) and asks for its tools (tools/list). The server stops "
+            "by itself after five minutes without a call."
+        )
+        if st.button("Start the server", type="primary", icon=":material/play_arrow:"):
+            st.session_state.mcp_started = True
+            st.rerun()
+    show_claude_desktop()
+    st.stop()
 
 try:
     connection = get_connection()
@@ -183,20 +233,4 @@ with st.container(border=True):
 
 # ------------------------------------------------------------------ Claude Desktop
 
-with st.container(border=True):
-    st.markdown("**Connect to Claude Desktop**")
-    st.caption(
-        "The same server works in Claude Desktop and other MCP apps. It runs on your own "
-        "computer; this hosted page cannot offer it to other apps."
-    )
-    steps, config = st.columns([1, 1], gap="large")
-    with steps:
-        st.markdown(
-            "1. Clone the project and install it: `pip install -r requirements.txt`.\n"
-            "2. In Claude Desktop open **Settings → Developer → Edit Config** and add the "
-            "configuration on the right to `claude_desktop_config.json`. Replace "
-            "`/path/to/llm-toolkit` with the folder of your copy.\n"
-            "3. Restart Claude Desktop. The four tools appear in the tools menu. Ask for "
-            'example *"Which sales channel had the most orders?"* and allow the tool call.'
-        )
-    config.code(json.dumps(CLAUDE_CONFIG, indent=2), language="json", wrap_lines=True)
+show_claude_desktop()

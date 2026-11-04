@@ -27,6 +27,10 @@ from core.config import get_secret
 
 SERVER_SCRIPT = Path(__file__).with_name("mcp_server.py")
 TIMEOUT = 120  # Sekunden; die erste Dokumentsuche baut den Suchindex (Embeddings)
+# Der Serverprozess braucht rund 250 MB, so viel wie die ganze App. Auf Streamlit Community
+# Cloud (ab etwa 690 MB) stürzte die App am 03./04.11.2026 mehrmals ab, vermutlich deshalb.
+# Ohne Aufruf beendet sich die Verbindung samt Prozess nach dieser Zeit
+IDLE_TIMEOUT = 300  # Sekunden
 
 
 @dataclass
@@ -71,6 +75,9 @@ class McpConnection:
         self._loop = asyncio.new_event_loop()
         self._jobs: asyncio.Queue | None = None
         self.server_name = ""
+        self.closed = (
+            False  # Prozess beendet (Leerlauf oder Fehler); dann neu verbinden
+        )
         ready: Future = Future()
         threading.Thread(target=self._run, args=(ready,), daemon=True).start()
         ready.result(timeout=TIMEOUT)
@@ -123,20 +130,30 @@ class McpConnection:
                         await anyio.sleep(0.05)
                         ready.set_result(True)
                         while True:
-                            job, future = await self._jobs.get()
+                            try:
+                                job, future = await asyncio.wait_for(
+                                    self._jobs.get(), IDLE_TIMEOUT
+                                )
+                            except TimeoutError:
+                                break  # Leerlauf: Sitzung und Prozess schließen
                             try:
                                 future.set_result(await job(session))
                             except Exception as err:  # noqa: BLE001  (gehört der wartenden Seite)
                                 future.set_exception(err)
+                    tasks.cancel_scope.cancel()  # Mitschreiber beenden
         except Exception as err:  # noqa: BLE001  (Startfehler an den Konstruktor)
             if not ready.done():
                 ready.set_exception(err)
+        finally:
+            self.closed = True
 
     # ---------------------------------------------------------------- aus der Seite
 
     def _submit(self, job) -> tuple[object, list[Message]]:
         """Führt job(session) im Verbindungs-Thread aus; liefert Ergebnis und Nachrichten."""
         with self._lock:
+            if self.closed:
+                raise ConnectionError("The MCP server has stopped. Reload the page.")
             self._log = []
             future: Future = Future()
             self._loop.call_soon_threadsafe(self._jobs.put_nowait, (job, future))

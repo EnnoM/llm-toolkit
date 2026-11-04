@@ -1,11 +1,12 @@
 """MCP-Server und -Client: Werkzeuge ohne Client, Server-Liste, echte stdio-Verbindung, Seite."""
 
 import asyncio
+import time
 
 import pytest
 from streamlit.testing.v1 import AppTest
 
-from core import mcp_server
+from core import mcp_client, mcp_server
 from core.mcp_client import McpConnection
 from core.mcp_server import (
     ToolFailure,
@@ -133,8 +134,29 @@ def test_refused_query_comes_back_as_tool_error(connection):
 # ------------------------------------------------------------------ Seite
 
 
+def test_page_starts_the_server_only_on_request():
+    at = AppTest.from_file("../app_pages/mcp_server.py", default_timeout=60).run()
+    assert not at.exception
+    assert not at.radio  # noch kein Serverprozess
+    assert any(
+        '"mcpServers"' in c.value for c in at.code
+    )  # Anleitung steht trotzdem da
+
+
+def test_idle_connection_stops_the_server(monkeypatch):
+    monkeypatch.setattr(mcp_client, "IDLE_TIMEOUT", 0.5)
+    link = McpConnection()
+    deadline = time.time() + 20
+    while not link.closed and time.time() < deadline:
+        time.sleep(0.2)
+    assert link.closed
+    with pytest.raises(ConnectionError, match="stopped"):
+        link.list_tools()
+
+
 def test_page_lists_tools_and_the_claude_config():
     at = AppTest.from_file("../app_pages/mcp_server.py", default_timeout=60).run()
+    next(b for b in at.button if b.label == "Start the server").click().run()
     assert not at.exception
     assert at.radio(key="mcp_tool").options == [
         "query_shop_database",
