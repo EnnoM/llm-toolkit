@@ -869,6 +869,21 @@ für immer weiter. Community Cloud garantiert nur etwa 690 MB und wenig CPU. Jet
 Server erst mit „Start the server“ und beendet sich nach fünf Minuten ohne Aufruf
 (`IDLE_TIMEOUT` in `core/mcp_client.py`); danach verbindet die Seite neu.
 
+## Ursache der weißen Seite: Streamlit 1.64.0 online (04.11.2026)
+
+Das Log von Streamlit Cloud zeigte: Online lief bis 03.11., 21:22 Uhr (UTC 20:22) Streamlit
+1.66.1, weil `streamlit>=1.64` die neueste Version erlaubte. Mein Festschreiben auf 1.64.0 hat
+heruntergestuft, und zwar im laufenden Betrieb (Pakete getauscht, eine Seite brach dabei mit
+`KeyError: 'core.page_intro'` ab). Ab da hing online etwa jede vierte Anfrage bis zu 47 s und
+endete mit 500, auch der Health-Check und statische Skripte; im Browser „error loading
+dynamically imported module“. Zwei fremde Apps auf derselben Plattform, eine davon mit 1.66.1
+und uvicorn, antworteten im selben Zeitraum immer. Kein Speicherproblem im Log (kein Kill, kein
+Neustart); der MCP-Fix von heute früh war also nicht die Ursache. Ein Reboot half nicht.
+Jetzt fest auf 1.66.1. Mit 1.66 meldet AppTest Expander mit Symbol unter `expander` statt
+`status`; zwei Tests prüfen jetzt beides. Lehre: Version nur festschreiben, nachdem ich
+nachgesehen habe, welche online läuft, und nach einer Änderung an `requirements.txt` einmal
+„Reboot“ statt des Austauschs im laufenden Betrieb.
+
 ## Offene Punkte
 
 - Nächstes Modul: MCP-Server (Phase 4).

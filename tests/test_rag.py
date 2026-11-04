@@ -476,7 +476,7 @@ def test_question_is_answered_from_passages_with_sources(calls, chats):
     assert "Passages:" in chat["messages"][-1]["content"]
     assert any(ANSWER in md.value for md in at.markdown)
     # Expander mit Icon führt AppTest als Status
-    assert any(e.label == "Retrieved passages" for e in at.status)
+    assert any(e.label == "Retrieved passages" for e in [*at.expander, *at.status])
     assert any("similarity" in md.value for md in at.markdown)
     assert metric(at, "Answers") == "1"
     assert float(metric(at, "Cost (USD)")) > 0.0001  # Antwort plus Embeddings

@@ -387,7 +387,9 @@ def test_example_question_runs_tool_and_shows_steps(monkeypatch):
     ).click().run()
     assert not at.exception
     assert any("397.8 euros" in md.value for md in at.markdown)
-    assert any(e.label == "Tool calls (1)" for e in at.status)  # Expander mit Icon
+    assert any(
+        e.label == "Tool calls (1)" for e in [*at.expander, *at.status]
+    )  # Expander mit Icon
     assert metric(at, "Tool calls") == "1"
     assert metric(at, "Answers") == "1"
 
