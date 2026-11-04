@@ -7,8 +7,18 @@ import streamlit as st
 
 from core.catalog import LEVELS, built_modules
 from core.config import get_secret
+from core.server_tuning import extend_keep_alive
 
 st.set_page_config(page_title="LLM Toolkit", page_icon=":material/handyman:")
+
+
+@st.cache_resource
+def tune_server() -> int:
+    """Einmal pro Serverprozess: längere Keep-Alive-Zeit (Grund in core/server_tuning.py)."""
+    return extend_keep_alive()
+
+
+tune_server()
 
 
 def login() -> None:

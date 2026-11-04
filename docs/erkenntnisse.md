@@ -884,6 +884,17 @@ Jetzt fest auf 1.66.1. Mit 1.66 meldet AppTest Expander mit Symbol unter `expand
 nachgesehen habe, welche online läuft, und nach einer Änderung an `requirements.txt` einmal
 „Reboot“ statt des Austauschs im laufenden Betrieb.
 
+## Eigentliche Ursache: Keep-Alive von uvicorn (04.11.2026)
+
+Auch mit 1.66.1 und nach Reboot hing online jede vierte Anfrage. Das Log zeigte: Am 03.11. um
+20:14 UTC startete der Container neu und installierte alles frisch (uvicorn 0.54.0, starlette
+1.10.0); der Modellwechsel hatte damit nichts zu tun. uvicorn schließt ruhende Verbindungen nach
+5 Sekunden, der Google-Load-Balancer davor nutzt sie bis zu 600 Sekunden. Lokal nachgestellt mit
+vier dauerhaften Verbindungen und Pausen von 0.1 bis 6 Sekunden: 17 von 60 Anfragen mit
+ConnectionResetError. Streamlit hat keine Einstellung dafür; `core/server_tuning.py` setzt die
+Zeit beim ersten Seitenaufruf an der laufenden uvicorn-Konfiguration auf 650 Sekunden. Danach
+60 von 60. Vielbesuchte Apps trifft das kaum, weil ihre Verbindungen nie 5 Sekunden ruhen.
+
 ## Offene Punkte
 
 - Nächstes Modul: MCP-Server (Phase 4).
